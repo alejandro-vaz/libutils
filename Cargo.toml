@@ -2,6 +2,8 @@
 name = "libutils"
 version = "0.0.1"
 edition = "2024"
+description = "Common library types for faster development"
+license = "NONE"
 
 [dev-dependencies]
 criterion = "0.8.2"
