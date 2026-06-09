@@ -1,0 +1,21 @@
+[package]
+name = "libutils"
+version = "0.0.1"
+edition = "2024"
+
+[dev-dependencies]
+criterion = "0.8.2"
+
+[[bench]]
+name = "cage"
+harness = false
+
+[profile.bench]
+lto = "fat"
+opt-level = 3
+strip = true
+debug = false
+
+[profile.release]
+lto = "fat"
+opt-level = 3
