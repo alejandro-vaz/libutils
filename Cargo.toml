@@ -1,6 +1,6 @@
 [package]
 name = "libutils"
-version = "0.0.1"
+version = "3.6.9"
 edition = "2024"
 description = "Common library types for faster development"
 license = "MIT"
@@ -17,7 +17,12 @@ lto = "fat"
 opt-level = 3
 strip = true
 debug = false
+codegen-units = 1
 
 [profile.release]
-lto = "fat"
 opt-level = 3
+
+[features]
+default = ["cage", "report"]
+cage = []
+report = []

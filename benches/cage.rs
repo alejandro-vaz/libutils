@@ -3,7 +3,7 @@
 //^
 
 //> HEAD -> API
-use libutils::cage::*;
+use libutils::cage::Cage;
 
 //> HEAD -> STD
 use std::{
@@ -26,7 +26,7 @@ use criterion::{
 //^
 
 //> BENCHES -> DATA
-const ITERATIONS: u64 = 2u64.pow(16);
+const ITERATIONS: u64 = 2u64.pow(18);
 
 //> BENCHES -> BENCH
 fn bench(criterion: &mut Criterion) -> () {

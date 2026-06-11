@@ -14,13 +14,6 @@ use std::sync::Mutex;
 //^
 
 //> CAGE -> DEFINITION
-/// Thread-safe static mutable wrapper
-/// ```
-/// # use libutils::cage::Cage;
-/// let cage = Cage::new("hello".to_string());
-/// cage.free(|s| s.push_str(", world!"));
-/// assert_eq!(cage.release(), "hello, world!");
-/// ```
 pub struct Cage<Type: ?Sized>(Mutex<Type>);
 
 //> CAGE -> NEW
