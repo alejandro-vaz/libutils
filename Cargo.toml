@@ -1,6 +1,6 @@
 [package]
 name = "libutils"
-version = "3.6.9"
+version = "3.6.10"
 edition = "2024"
 description = "Common library types for faster development"
 license = "MIT"
@@ -10,6 +10,10 @@ criterion = "0.8.2"
 
 [[bench]]
 name = "cage"
+harness = false
+
+[[bench]]
+name = "report"
 harness = false
 
 [profile.bench]

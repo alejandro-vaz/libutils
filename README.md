@@ -4,7 +4,7 @@ This library is meant to have types that may be useful for coding executables an
 
 Some of the features of the library may work without the standard library.
 
-| Type | Description | Use cases | Requires `std` |
+| Module | Description | Use cases | Requires `std` |
 |:-|:-|:-|:-|
-| `Cage` | A thread-safe static mutable wrapper | Allocator APIs, safe mutable statics, atomic types | Yes |
-| `Report` / `Action` | Comprehensive error wrappers for detailed logs | Compilers, error chains, logs | Yes |
+| `cage` | A thread-safe static mutable wrapper | Allocator APIs, safe mutable statics, atomic types | Yes |
+| `report` | Comprehensive error wrappers for detailed logs | Compilers, error chains, logs | Yes |

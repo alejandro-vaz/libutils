@@ -27,8 +27,8 @@ use super::toissue::ToIssue;
 pub struct Action<Problem: ToIssue, Type> {
     pub start: Instant,
     pub duration: Duration,
-    pub(super) problems: Vec<Problem>,
-    pub(super) value: Option<Type>
+    pub problems: Vec<Problem>,
+    pub value: Option<Type>
 }
 
 //> ACTION -> DISPLAY
@@ -37,11 +37,4 @@ impl<Problem: ToIssue, Type> Display for Action<Problem, Type> {
         for problem in self.problems.iter() {write!(formatter, "{}", problem.to_issue())?};
         return Ok(());
     }
-}
-
-//> ACTION -> IMPLEMENTATION
-impl<Problem: ToIssue, Type> Action<Problem, Type> {
-    pub fn problems<'valid>(&'valid self) -> &'valid [Problem] {return &self.problems}
-    #[inline]
-    pub fn result(self) -> Option<Type> {return self.value}
 }

@@ -3,9 +3,9 @@
 //^
 
 //> HEAD -> MODULES
-pub mod action;
-pub mod issue;
-pub mod toissue;
+mod action;
+mod issue;
+mod toissue;
 
 //> HEAD -> STD
 use std::time::Instant;
@@ -14,10 +14,13 @@ use std::time::Instant;
 use core::default::Default;
 
 //> HEAD -> ACTION
-use action::Action;
+pub use action::Action;
 
 //> HEAD -> TOISSUE
-use toissue::ToIssue;
+pub use toissue::ToIssue;
+
+//> HEAD -> ISSUE
+pub use issue::Issue;
 
 
 //^
@@ -54,4 +57,8 @@ impl<Problem: ToIssue> Report<Problem> {
         problems: self.problems,
         value: Some(value)
     }}
+    pub fn attach<Inferior>(&mut self, action: Action<Problem, Inferior>) -> Option<Inferior> {
+        self.problems.extend(action.problems);
+        return action.value;
+    }
 }
