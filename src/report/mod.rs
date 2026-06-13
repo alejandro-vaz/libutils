@@ -5,6 +5,7 @@
 //> HEAD -> MODULES
 mod action;
 mod issue;
+mod problem;
 mod toissue;
 
 //> HEAD -> STD
@@ -22,43 +23,57 @@ pub use toissue::ToIssue;
 //> HEAD -> ISSUE
 pub use issue::Issue;
 
+//> HEAD -> PROBLEM
+use problem::Problem;
+
 
 //^
 //^ REPORT
 //^
 
 //> REPORT -> STRUCT
-pub struct Report<Problem: ToIssue> {
+pub struct Report<Object: ToIssue, Output: Fn(String) -> ()> {
     start: Instant,
-    problems: Vec<Problem>
+    problems: Vec<Problem<Object>>,
+    output: Output
 }
 
 //> REPORT -> DEFAULT
-impl<Problem: ToIssue> Default for Report<Problem> {
+impl<Object: ToIssue> Default for Report<Object, fn(String) -> ()> {
     fn default() -> Self {return Self {
         start: Instant::now(),
-        problems: Vec::new()
+        problems: Vec::new(),
+        output: |string| eprintln!("{string}")
     }}
 }
 
 //> REPORT -> IMPLEMENTATION
-impl<Problem: ToIssue> Report<Problem> {
+impl<Object: ToIssue, Output: Fn(String) -> ()> Report<Object, Output> {
+    pub fn buffered(output: Output) -> Self {return Self {
+        start: Instant::now(),
+        problems: Vec::new(),
+        output: output
+    }}
     #[inline]
-    pub fn warn(&mut self, problem: Problem) -> () {self.problems.push(problem)}
-    pub fn fail<Type>(self) -> Action<Problem, Type> {return Action {
+    pub fn warn(&mut self, object: Object) -> () {
+        (self.output)(object.to_issue().to_string());
+        self.problems.push(Problem::new(object));
+    }
+    pub fn abort<Type>(self) -> Action<Type, Object> {return Action {
         start: self.start,
         duration: Instant::duration_since(&Instant::now(), self.start),
         problems: self.problems,
         value: None
     }}
-    pub fn conclude<Type>(self, value: Type) -> Action<Problem, Type> {return Action {
+    pub fn conclude<Type>(self, value: Type) -> Action<Type, Object> {return Action {
         start: self.start,
         duration: Instant::duration_since(&Instant::now(), self.start),
         problems: self.problems,
         value: Some(value)
     }}
-    pub fn attach<Inferior>(&mut self, action: Action<Problem, Inferior>) -> Option<Inferior> {
+    pub fn attach<Inferior>(&mut self, action: Action<Inferior, Object>) -> Option<Inferior> {
         self.problems.extend(action.problems);
+        self.problems.sort_by(|first, second| first.at.cmp(&second.at));
         return action.value;
     }
 }

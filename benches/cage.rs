@@ -37,14 +37,21 @@ fn bench(criterion: &mut Criterion) -> () {
     group.measurement_time(Duration::from_secs(10));
     group.warm_up_time(Duration::from_secs(5));
     group.throughput(Throughput::Elements(ITERATIONS));
+    group.bench_function("peak", |bencher| bencher.iter(peak));
     group.bench_function("free", |bencher| bencher.iter(free));
     group.finish();
+}
+
+//> BENCHES -> PEAK
+fn peak() -> () {
+    let cage = Cage::new(0usize);
+    for _ in 0..ITERATIONS {black_box(cage.peak(|x| x.add_assign(1)))}
 }
 
 //> BENCHES -> FREE
 fn free() -> () {
     let cage = Cage::new(0usize);
-    for _ in 0..ITERATIONS {black_box(cage.free(|x| x.add_assign(1)))}
+    for _ in 0..ITERATIONS {black_box(cage.free().add_assign(1))}
 }
 
 //> BENCHES -> SETUP

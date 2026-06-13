@@ -13,9 +13,9 @@ use libutils::report::Report;
 //> TEST -> STRING
 #[test]
 fn string() -> () {
-    let mut report: Report<&'static str> = Report::default();
+    let mut report: Report<&'static str, _> = Report::default();
     report.warn("hello");
-    assert_eq!(report.conclude(0).value, Some(0));
+    assert_eq!(report.abort::<()>().value, None);
 }
 
 //> TEST -> HIERARCHY

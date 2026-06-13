@@ -42,7 +42,7 @@ fn bench(criterion: &mut Criterion) -> () {
 
 //> BENCHES -> ATTACH
 fn attach() -> () {
-    let mut superior = Report::<&'static str>::default();
+    let mut superior = Report::<&'static str, _>::default();
     for _ in 0..ITERATIONS {
         black_box(superior.attach(black_box(Report::default().conclude(black_box(())))));
     }

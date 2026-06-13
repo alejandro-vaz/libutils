@@ -1,6 +1,6 @@
 [package]
 name = "libutils"
-version = "3.6.10"
+version = "3.7.11"
 edition = "2024"
 description = "Common library types for faster development"
 license = "MIT"

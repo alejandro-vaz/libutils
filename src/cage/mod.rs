@@ -6,7 +6,10 @@
 use core::ops::DerefMut;
 
 //> HEAD -> STD
-use std::sync::Mutex;
+use std::sync::{
+    Mutex,
+    MutexGuard
+};
 
 
 //^
@@ -14,6 +17,7 @@ use std::sync::Mutex;
 //^
 
 //> CAGE -> DEFINITION
+#[derive(Debug)]
 pub struct Cage<Type: ?Sized>(Mutex<Type>);
 
 //> CAGE -> NEW
@@ -25,9 +29,11 @@ impl<Type: Sized> Cage<Type> {
 //> CAGE -> IMPLEMENTATION
 impl<Type: ?Sized> Cage<Type> {
     #[inline]
-    pub fn free<Return, Closure: FnOnce(&mut Type) -> Return>(&self, closure: Closure) -> Return {
+    pub fn peak<Return, Closure: FnOnce(&mut Type) -> Return>(&self, closure: Closure) -> Return {
         return closure(self.0.lock().unwrap().deref_mut());
     }
+    #[inline]
+    pub fn free(&self) -> MutexGuard<'_, Type> {return self.0.lock().unwrap()}
 }
 
 //> CAGE -> SNAPSHOT
