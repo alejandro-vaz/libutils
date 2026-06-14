@@ -5,7 +5,6 @@
 //> UTILS -> ATTRIBUTES
 #![allow(incomplete_features)]
 #![feature(generic_const_exprs)]
-#![feature(const_convert)]
 #![feature(const_trait_impl)]
 
 //> UTILS -> ARRAY
