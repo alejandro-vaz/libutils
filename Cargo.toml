@@ -1,6 +1,6 @@
 [package]
 name = "libutils"
-version = "4.12.17"
+version = "4.12.18"
 edition = "2024"
 rust-version = "1.98"
 description = "Common library types for faster development"
@@ -11,6 +11,10 @@ criterion = "0.8.2"
 
 [lib]
 path = "lib.rs"
+
+[[bench]]
+name = "array"
+harness = false
 
 [[bench]]
 name = "cage"

@@ -11,15 +11,12 @@ mod references;
 //> HEAD -> CORE
 use core::{
     mem::MaybeUninit,
+    ptr::copy,
     ops::Drop,
     fmt::{
         Debug,
         Formatter,
         Result as Format
-    },
-    hash::{
-        Hash,
-        Hasher
     }
 };
 
@@ -50,11 +47,6 @@ impl<Type, const N: usize> Array<Type, N> {
         length: 0
     }}
     #[inline]
-    pub const unsafe fn arranged(length: usize, data: MaybeUninit<[Type; N]>) -> Self {return Self {
-        length: length,
-        data: data
-    }}
-    #[inline]
     pub const fn len(&self) -> usize {return self.length}
     #[inline]
     pub const fn push(&mut self, value: Type) -> () {
@@ -80,6 +72,24 @@ impl<Type, const N: usize> Array<Type, N> {
     pub const fn get_mut<'valid>(&'valid mut self, index: usize) -> Option<&'valid mut Type> {
         return if self.length <= index {None} else {unsafe {self.mutptr().add(index).as_mut()}}
     }
+    #[inline]
+    pub const fn insert(&mut self, index: usize, value: Type) -> () {
+        if index > self.length {panic!("tried to insert out of bounds")}
+        if self.length == N {panic!("array capacity exceeded")}
+        let pointer = unsafe {self.mutptr().add(index)};
+        unsafe {copy(pointer, pointer.add(1), self.length - index)}
+        unsafe {pointer.write(value)}
+        self.length += 1;
+    }
+    #[inline]
+    pub const fn remove(&mut self, index: usize) -> Type {
+        if index >= self.length {panic!("access out of bounds")}
+        let pointer = unsafe {self.mutptr().add(index)};
+        let value = unsafe {pointer.read()};
+        unsafe {copy(pointer.add(1), pointer, self.length - 1 - index)};
+        self.length -= 1;
+        return value;
+    }
 }
 
 //> ARRAY -> DROP
@@ -92,17 +102,9 @@ impl<Type: Debug, const N: usize> Debug for Array<Type, N> {
     fn fmt(&self, formatter: &mut Formatter<'_>) -> Format {Debug::fmt(self.as_ref(), formatter)}
 }
 
-//> ARRAY -> HASH
-impl<Type: Hash, const N: usize> Hash for Array<Type, N> {
-    fn hash<Hashing: Hasher>(&self, state: &mut Hashing) {Hash::hash(self.as_ref(), state)}
-}
-
 //> ARRAY -> EXTEND
 impl<Type, const N: usize> Extend<Type> for Array<Type, N> {
-    fn extend<T: IntoIterator<Item = Type>>(&mut self, iter: T) {
-        let mut iterator = iter.into_iter();
-        while let Some(item) = iterator.next() {self.push(item)}
-    }
+    fn extend<T: IntoIterator<Item = Type>>(&mut self, iter: T) {for item in iter {self.push(item)}}
 }
 
 //> ARRAY -> CLONE

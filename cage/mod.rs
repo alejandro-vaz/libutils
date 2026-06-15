@@ -6,9 +6,16 @@
 use core::ops::DerefMut;
 
 //> HEAD -> STD
-use std::sync::{
-    Mutex,
-    MutexGuard
+use std::{
+    sync::{
+        Mutex,
+        MutexGuard
+    },
+    fmt::{
+        Debug,
+        Formatter,
+        Result as Format
+    }
 };
 
 
@@ -17,7 +24,6 @@ use std::sync::{
 //^
 
 //> CAGE -> DEFINITION
-#[derive(Debug)]
 pub struct Cage<Type: ?Sized>(Mutex<Type>);
 
 //> CAGE -> NEW
@@ -36,7 +42,14 @@ impl<Type: ?Sized> Cage<Type> {
     pub fn free(&self) -> MutexGuard<'_, Type> {return self.0.lock().unwrap()}
 }
 
-//> CAGE -> SNAPSHOT
+//> CAGE -> CLONED
 impl<Type: Clone> Cage<Type> {
-    pub fn snapshot(&self) -> Type {return self.0.lock().unwrap().clone()}
+    pub fn cloned(&self) -> Type {return self.0.lock().unwrap().clone()}
+}
+
+//> CAGE -> DEBUG
+impl<Type: Debug + ?Sized> Debug for Cage<Type> {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> Format {
+        write!(formatter, "Cage({:?})", &self.0)
+    }
 }

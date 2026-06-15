@@ -18,7 +18,7 @@ use core::ops::AddAssign;
 fn integer() -> () {
     static CAGE: Cage<usize> = Cage::new(0);
     CAGE.peak(|x| x.add_assign(1));
-    assert_eq!(CAGE.snapshot(), 1);
+    assert_eq!(CAGE.cloned(), 1);
 }
 
 //> TESTS -> STRING

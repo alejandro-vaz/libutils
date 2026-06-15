@@ -6,9 +6,15 @@
 use super::Array;
 
 //> HEAD -> CORE
-use core::mem::{
-    MaybeUninit,
-    forget
+use core::{
+    mem::{
+        MaybeUninit,
+        forget
+    },
+    slice::{
+        Iter,
+        IterMut
+    }
 };
 
 
@@ -57,4 +63,12 @@ impl<Type, const N: usize> IntoIterator for Array<Type, N> {
         forget(self);
         return iterator;
     }
+}
+
+//> ITERATORS -> METHODS
+impl<Type, const N: usize> Array<Type, N> {
+    #[inline]
+    pub fn iter<'valid>(&'valid self) -> Iter<'valid, Type> {return self.as_ref().into_iter()}
+    #[inline]
+    pub fn iter_mut<'valid>(&'valid mut self) -> IterMut<'valid, Type> {return self.as_mut().into_iter()}
 }

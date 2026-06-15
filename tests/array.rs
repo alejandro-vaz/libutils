@@ -5,12 +5,21 @@
 //> HEAD -> API
 use libutils::array::Array;
 
+//> HEAD -> CORE
+use core::hash::{
+    Hash,
+    Hasher
+};
+
+//> HEAD -> STD
+use std::hash::DefaultHasher;
+
 
 //^
 //^ TESTS
 //^
 
-//> TESTS -> BASIC
+//> TESTS -> PUSHPOP
 #[test]
 fn pushpop() -> () {
     let mut new = Array::<u8, 5>::new();
@@ -22,4 +31,161 @@ fn pushpop() -> () {
     new.pop();
     new.push(5);
     assert_eq!(new.as_ref(), &[0, 1, 2, 3, 5]);
+}
+
+//> TESTS -> PUSHPANIC
+#[test]
+#[should_panic]
+fn pushpanic() -> () {
+    let mut new = Array::<u8, 1>::new();
+    new.push(0);
+    new.push(1);
+}
+
+//> TESTS -> NONEPOP
+#[test]
+fn nonepop() -> () {
+    let mut new = Array::<u8, 1>::from([2]);
+    assert_eq!(new.pop(), Some(2));
+    assert_eq!(None, new.pop());
+}
+
+//> TESTS -> LEN
+#[test]
+fn len() -> () {
+    let mut new = Array::<u8, 5>::new();
+    new.push(0);
+    new.push(1);
+    assert_eq!(new.len(), 2);
+    new.pop();
+    assert_eq!(new.len(), 1);
+    new.extend([1, 2, 3]);
+    assert_eq!(new.len(), 4);
+}
+
+//> TESTS -> CLEAR
+#[test]
+fn clear() -> () {
+    let mut new = Array::<u8, 5>::from([1, 2, 3]);
+    new.clear();
+    assert_eq!(new.len(), 0);
+}
+
+//> TESTS -> DROP
+#[test]
+#[should_panic]
+fn drop() -> () {
+    struct Guard;
+    impl Drop for Guard {
+        fn drop(&mut self) {
+            panic!();
+        }
+    }
+    let _ = Array::<Guard, 1>::from([Guard]);
+}
+
+//> TESTS -> GET
+#[test]
+fn get() -> () {
+    let mut array = Array::<u8, 3>::from([1, 2, 3]);
+    assert_eq!(Some(&1), array.get(0));
+    assert_eq!(Some(&mut 2), array.get_mut(1));
+    assert_eq!(None, array.get(4));
+}
+
+//> TESTS -> HASH
+#[test]
+fn hash() -> () {
+    let array = Array::<u8, 3>::from([1, 2, 3]);
+    let mut hasher = DefaultHasher::new();
+    let mut comparison = DefaultHasher::new();
+    array.hash(&mut hasher);
+    array.as_ref().hash(&mut comparison);
+    assert_eq!(hasher.finish(), comparison.finish());
+}
+
+//> TESTS -> INTOITER
+#[test]
+fn intoiter() -> () {
+    let initial = [1, 2, 3];
+    let array = Array::<u8, 3>::from(initial.clone());
+    assert_eq!(array.into_iter().collect::<Vec<u8>>(), initial.into_iter().collect::<Vec<u8>>());
+}
+
+//> TESTS -> ITER
+#[test]
+fn iter() -> () {
+    let initial = [1, 2, 3];
+    let array = Array::<u8, 3>::from(initial.clone());
+    assert_eq!(array.iter().collect::<Vec<&u8>>(), initial.iter().collect::<Vec<&u8>>());
+}
+
+//> TESTS -> EQ
+#[test]
+fn eq() -> () {
+    let initial = [1, 2, 3];
+    let array = Array::<u8, 3>::from(initial.clone());
+    assert_eq!(array.as_ref(), initial);
+}
+
+//> TESTS -> ORD
+#[test]
+fn ord() -> () {
+    let initial = [1, 2, 3];
+    let array = Array::<u8, 3>::from(initial.clone());
+    assert_eq!(array.as_ref().cmp(&initial), initial.as_slice().cmp(array.as_ref()));
+}
+
+//> HEAD -> INSERT
+#[test]
+fn insert() -> () {
+    let mut array = Array::<u8, 6>::from([1, 2, 3]);
+    array.insert(0, 0);
+    assert_eq!(array.as_ref(), [0, 1, 2, 3]);
+    array.insert(1, 4);
+    assert_eq!(array.as_ref(), [0, 4, 1, 2, 3]);
+    array.insert(5, 0);
+    assert_eq!(array.as_ref(), [0, 4, 1, 2, 3, 0]);
+}
+
+//> HEAD -> INSERTNOLENGTH
+#[test]
+#[should_panic]
+fn insertnolength() -> () {
+    let mut array = Array::<u8, 6>::from([1, 2, 3]);
+    array.insert(5, 0);
+}
+
+//> HEAD -> INSERTNOCAP
+#[test]
+#[should_panic]
+fn insertnocap() -> () {
+    let mut array = Array::<u8, 3>::from([1, 2, 3]);
+    array.insert(3, 0);
+}
+
+//> HEAD -> REMOVE
+#[test]
+fn remove() -> () {
+    let mut array = Array::<u8, 3>::from([1, 2, 3]);
+    array.remove(1);
+    assert_eq!(array.as_ref(), [1, 3]);
+    array.remove(0);
+    assert_eq!(array.as_ref(), [3]);
+}
+
+//> HEAD -> REMOVENOLENGTH
+#[test]
+#[should_panic]
+fn removenolength() -> () {
+    let mut array = Array::<u8, 5>::new();
+    array.remove(0);
+}
+
+//> HEAD -> REMOVENOCAP
+#[test]
+#[should_panic]
+fn removenocap() -> () {
+    let mut array = Array::<u8, 7>::from([1, 2, 3]);
+    array.remove(5);
 }
