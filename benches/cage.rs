@@ -31,14 +31,24 @@ const ITERATIONS: u64 = 2u64.pow(15);
 fn bench(criterion: &mut Criterion) -> () {
     let mut group = criterion.benchmark_group("cage");
     group.throughput(Throughput::Elements(ITERATIONS));
-    group.bench_function("free", |bencher| bencher.iter(free));
+    group.bench_function("read", |bencher| bencher.iter(read));
+    group.bench_function("write", |bencher| bencher.iter(write));
     group.finish();
 }
 
-//> BENCHES -> FREE
-fn free() -> () {
+//> BENCHES -> READ
+fn read() -> () {
+    let cage = Cage::new("hello");
+    for _ in 0..ITERATIONS {
+        let ptr = black_box(cage.read().as_ptr());
+        black_box(ptr);
+    }
+}
+
+//> BENCHES -> WRITE
+fn write() -> () {
     let cage = Cage::new(0usize);
-    for _ in 0..ITERATIONS {black_box(cage.free().add_assign(1))}
+    for _ in 0..ITERATIONS {black_box(cage.write().add_assign(1))}
 }
 
 //> BENCHES -> SETUP

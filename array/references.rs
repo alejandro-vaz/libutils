@@ -24,7 +24,7 @@ use core::{
 
 //> REFERENCES -> SLICE
 impl<Type, const N: usize> AsRef<[Type]> for Array<Type, N> {
-    fn as_ref(&self) -> &[Type] {return unsafe {fat(self.ptr(), self.length)}}
+    fn as_ref(&self) -> &[Type] {return unsafe {fat(self.data.as_ptr() as *const Type, self.length)}}
 }
 
 //> REFERENCES -> MUTABLE SLICE

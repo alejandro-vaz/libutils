@@ -49,7 +49,7 @@ impl<Object: ToIssue> const Default for Report<Object> {
 impl<Object: ToIssue> Report<Object> {
     #[inline]
     pub fn warn(&mut self, object: Object) -> () {
-        TERMINAL.free().error(object.to_issue());
+        TERMINAL.write().error(object.to_issue());
         self.problems.push(Problem::new(object));
     }
     #[inline]

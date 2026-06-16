@@ -27,12 +27,8 @@ pub struct Issue {
 
 //> ISSUE -> DISPLAY
 impl Display for Issue {
-    fn fmt(&self, formatter: &mut Formatter<'_>) -> Format {write!(formatter, "{}", self.format())}
-}
-
-//> ISSUE -> IMPLEMENTATION
-impl Issue {
-    fn format(&self) -> String {return format!(
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> Format {return write!(
+        formatter,
         "error: {}{}", 
         self.name,
         if let Some(description) = &self.description {format!(

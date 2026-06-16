@@ -34,8 +34,6 @@ pub struct Array<Type, const N: usize> {
 //> ARRAY -> INTERNALS
 impl<Type, const N: usize> Array<Type, N> {
     #[inline]
-    const fn ptr(&self) -> *const Type {return self.data.as_ptr() as *const Type}
-    #[inline]
     const fn mutptr(&mut self) -> *mut Type {return self.data.as_mut_ptr() as *mut Type}
 }
 
@@ -61,12 +59,12 @@ impl<Type, const N: usize> Array<Type, N> {
     }}
     #[inline]
     pub fn clear(&mut self) -> () {
-        for index in 0..self.length {unsafe {self.mutptr().add(index).drop_in_place()}}
+        for index in 0..self.length {unsafe {drop(self.mutptr().add(index).read())}}
         self.length = 0;
     }
     #[inline]
     pub const fn get<'valid>(&'valid self, index: usize) -> Option<&'valid Type> {
-        return if self.length <= index {None} else {unsafe {self.ptr().add(index).as_ref()}}
+        return if self.length <= index {None} else {unsafe {(self.data.as_ptr() as *const Type).add(index).as_ref()}}
     }
     #[inline]
     pub const fn get_mut<'valid>(&'valid mut self, index: usize) -> Option<&'valid mut Type> {
