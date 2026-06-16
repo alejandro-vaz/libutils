@@ -1,6 +1,6 @@
 [package]
 name = "libutils"
-version = "4.12.18"
+version = "5.15.21"
 edition = "2024"
 rust-version = "1.98"
 description = "Common library types for faster development"
@@ -35,7 +35,8 @@ codegen-units = 1
 opt-level = 3
 
 [features]
-default = ["array", "cage", "report"]
+default = ["array", "cage", "report", "terminal"]
 array = []
 cage = []
-report = []
+report = ["terminal"]
+terminal = ["cage", "report"]

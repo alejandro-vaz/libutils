@@ -8,6 +8,13 @@ use super::toissue::ToIssue;
 //> HEAD -> STD
 use std::time::Instant;
 
+//> HEAD -> CORE
+use core::fmt::{
+    Debug,
+    Formatter,
+    Result as Format
+};
+
 
 //^
 //^ PROBLEM
@@ -16,7 +23,7 @@ use std::time::Instant;
 //> PROBLEM -> STRUCT
 pub struct Problem<Object: ToIssue> {
     pub at: Instant,
-    object: Object
+    pub object: Object
 }
 
 //> PROBLEM -> IMPLEMENTATION
@@ -25,4 +32,9 @@ impl<Object: ToIssue> Problem<Object> {
         at: Instant::now(),
         object: object
     }}
+}
+
+//> PROBLEM -> DEBUG
+impl<Object: ToIssue> Debug for Problem<Object> {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> Format {write!(formatter, "Problem")}
 }

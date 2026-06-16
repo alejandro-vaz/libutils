@@ -9,6 +9,9 @@ use core::fmt::{
     Result as Format
 };
 
+//> HEAD -> STD
+use std::process::ExitCode;
+
 
 //^
 //^ ISSUE
@@ -16,9 +19,25 @@ use core::fmt::{
 
 //> ISSUE -> STRUCT
 #[derive(Clone)]
-pub struct Issue(pub &'static str);
+pub struct Issue {
+    pub name: &'static str,
+    pub code: ExitCode,
+    pub description: Option<String>
+}
 
 //> ISSUE -> DISPLAY
 impl Display for Issue {
-    fn fmt(&self, formatter: &mut Formatter<'_>) -> Format {write!(formatter, "{}", self.0)}
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> Format {write!(formatter, "{}", self.format())}
+}
+
+//> ISSUE -> IMPLEMENTATION
+impl Issue {
+    fn format(&self) -> String {return format!(
+        "error: {}{}", 
+        self.name,
+        if let Some(description) = &self.description {format!(
+            "\n    > {}",
+            description
+        )} else {String::new()}
+    )}
 }

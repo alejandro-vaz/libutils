@@ -3,7 +3,10 @@
 //^
 
 //> HEAD -> API
-use libutils::report::Report;
+use libutils::report::{
+    Report,
+    Act
+};
 
 
 //^
@@ -13,18 +16,18 @@ use libutils::report::Report;
 //> TEST -> STRING
 #[test]
 fn string() -> () {
-    let mut report: Report<&'static str, _> = Report::default();
+    let mut report = Report::default();
     report.warn("hello");
-    assert_eq!(report.abort::<()>().value, None);
+    assert_eq!(report.fail::<()>().result(), None);
 }
 
 //> TEST -> HIERARCHY
 #[test]
-fn hierarchy() -> () {
+fn hierarchy() -> Act<(), &'static str> {
     let mut superior = Report::default();
     superior.warn("hello");
-    let inferior = Report::default().conclude(0);
+    let inferior = Report::default().succeed(0);
     let number = superior.attach(inferior);
     assert_eq!(Some(0), number);
-    superior.conclude(());
+    superior.succeed(())
 }

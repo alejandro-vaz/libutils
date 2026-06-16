@@ -6,6 +6,7 @@
 #![allow(incomplete_features)]
 #![feature(generic_const_exprs)]
 #![feature(const_trait_impl)]
+#![feature(const_default)]
 
 //> UTILS -> ARRAY
 #[cfg(feature = "array")]
@@ -18,3 +19,7 @@ pub mod cage;
 //> UTILS -> REPORT
 #[cfg(feature = "report")]
 pub mod report;
+
+//> UTILS -> TERMINAL
+#[cfg(feature = "terminal")]
+pub mod terminal;

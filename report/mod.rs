@@ -3,19 +3,18 @@
 //^
 
 //> HEAD -> MODULES
-mod action;
 mod issue;
 mod problem;
 mod toissue;
 
 //> HEAD -> STD
-use std::time::Instant;
+use std::process::{
+    Termination,
+    ExitCode
+};
 
 //> HEAD -> CORE
 use core::default::Default;
-
-//> HEAD -> ACTION
-pub use action::Action;
 
 //> HEAD -> TOISSUE
 pub use toissue::ToIssue;
@@ -26,54 +25,75 @@ pub use issue::Issue;
 //> HEAD -> PROBLEM
 use problem::Problem;
 
+//> HEAD -> CRATE
+use crate::terminal::TERMINAL;
+
 
 //^
 //^ REPORT
 //^
 
 //> REPORT -> STRUCT
-pub struct Report<Object: ToIssue, Output: Fn(String) -> ()> {
-    start: Instant,
-    problems: Vec<Problem<Object>>,
-    output: Output
+pub struct Report<Object: ToIssue> {
+    problems: Vec<Problem<Object>>
 }
 
 //> REPORT -> DEFAULT
-impl<Object: ToIssue> Default for Report<Object, fn(String) -> ()> {
+impl<Object: ToIssue> const Default for Report<Object> {
     fn default() -> Self {return Self {
-        start: Instant::now(),
-        problems: Vec::new(),
-        output: |string| eprintln!("{string}")
+        problems: Vec::new()
     }}
 }
 
 //> REPORT -> IMPLEMENTATION
-impl<Object: ToIssue, Output: Fn(String) -> ()> Report<Object, Output> {
-    pub fn buffered(output: Output) -> Self {return Self {
-        start: Instant::now(),
-        problems: Vec::new(),
-        output: output
-    }}
+impl<Object: ToIssue> Report<Object> {
     #[inline]
     pub fn warn(&mut self, object: Object) -> () {
-        (self.output)(object.to_issue().to_string());
+        TERMINAL.free().error(object.to_issue());
         self.problems.push(Problem::new(object));
     }
-    pub fn abort<Type>(self) -> Action<Type, Object> {return Action {
-        start: self.start,
-        duration: Instant::duration_since(&Instant::now(), self.start),
+    #[inline]
+    pub fn fail<Type>(self) -> Act<Type, Object> {return Act {
         problems: self.problems,
-        value: None
+        result: None
     }}
-    pub fn conclude<Type>(self, value: Type) -> Action<Type, Object> {return Action {
-        start: self.start,
-        duration: Instant::duration_since(&Instant::now(), self.start),
+    #[inline]
+    pub fn succeed<Type>(self, value: Type) -> Act<Type, Object> {return Act {
         problems: self.problems,
-        value: Some(value)
+        result: Some(value)
     }}
-    pub fn attach<Inferior>(&mut self, action: Action<Inferior, Object>) -> Option<Inferior> {
-        self.problems.extend(action.problems);
+    #[inline]
+    pub fn attach<Inferior>(&mut self, act: Act<Inferior, Object>) -> Option<Inferior> {
+        self.problems.extend(act.problems);
         self.problems.sort_by(|first, second| first.at.cmp(&second.at));
-        return action.value;
+        return act.result;
     }
+}
+
+
+//^
+//^ ACT
+//^
+
+//> ACT -> STRUCT
+pub struct Act<Type, Object: ToIssue> {
+    problems: Vec<Problem<Object>>,
+    result: Option<Type>
+}
+
+//> ACT -> TERMINATION
+impl<Object: ToIssue> Termination for Act<(), Object> {
+    fn report(self) -> ExitCode {
+        return match self.result {
+            Some(()) => ExitCode::SUCCESS,
+            None => if let Some(problem) = self.problems.last() {
+                problem.object.to_issue().code
+            } else {ExitCode::from(255)}
+        }
+    }
+}
+
+//> ACT -> IMPLEMENTATION
+impl<Type, Object: ToIssue> Act<Type, Object> {
+    pub fn result(self) -> Option<Type> {return self.result}
 }

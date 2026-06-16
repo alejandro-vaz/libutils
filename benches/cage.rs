@@ -31,15 +31,8 @@ const ITERATIONS: u64 = 2u64.pow(15);
 fn bench(criterion: &mut Criterion) -> () {
     let mut group = criterion.benchmark_group("cage");
     group.throughput(Throughput::Elements(ITERATIONS));
-    group.bench_function("peak", |bencher| bencher.iter(peak));
     group.bench_function("free", |bencher| bencher.iter(free));
     group.finish();
-}
-
-//> BENCHES -> PEAK
-fn peak() -> () {
-    let cage = Cage::new(0usize);
-    for _ in 0..ITERATIONS {black_box(cage.peak(|x| x.add_assign(1)))}
 }
 
 //> BENCHES -> FREE
