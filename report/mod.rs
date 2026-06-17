@@ -5,6 +5,7 @@
 //> HEAD -> MODULES
 mod issue;
 mod problem;
+mod shortcut;
 mod toissue;
 
 //> HEAD -> STD
@@ -27,6 +28,9 @@ use problem::Problem;
 
 //> HEAD -> CRATE
 use crate::terminal::TERMINAL;
+
+//> HEAD -> SHORTCUT
+use shortcut::Attachment;
 
 
 //^
@@ -53,20 +57,32 @@ impl<Object: ToIssue> Report<Object> {
         self.problems.push(Problem::new(object));
     }
     #[inline]
-    pub fn fail<Type>(self) -> Act<Type, Object> {return Act {
+    pub unsafe fn abort<Type>(self) -> Act<Type, Object> {return Act {
         problems: self.problems,
         result: None
     }}
+    #[inline]
+    pub fn fail<Type>(mut self, with: Object) -> Act<Type, Object> {
+        TERMINAL.write().error(with.to_issue());
+        self.problems.push(Problem::new(with));
+        return Act {
+            problems: self.problems,
+            result: None
+        }
+    }
     #[inline]
     pub fn succeed<Type>(self, value: Type) -> Act<Type, Object> {return Act {
         problems: self.problems,
         result: Some(value)
     }}
     #[inline]
-    pub fn attach<Inferior>(&mut self, act: Act<Inferior, Object>) -> Option<Inferior> {
+    pub fn attach<'valid, Inferior>(&'valid mut self, act: Act<Inferior, Object>) -> Attachment<'valid, Inferior, Object> {
         self.problems.extend(act.problems);
         self.problems.sort_by(|first, second| first.at.cmp(&second.at));
-        return act.result;
+        return Attachment {
+            report: Some(self),
+            result: act.result
+        }
     }
 }
 
@@ -78,22 +94,13 @@ impl<Object: ToIssue> Report<Object> {
 //> ACT -> STRUCT
 pub struct Act<Type, Object: ToIssue> {
     problems: Vec<Problem<Object>>,
-    result: Option<Type>
+    pub result: Option<Type>
 }
 
 //> ACT -> TERMINATION
 impl<Object: ToIssue> Termination for Act<(), Object> {
-    fn report(self) -> ExitCode {
-        return match self.result {
-            Some(()) => ExitCode::SUCCESS,
-            None => if let Some(problem) = self.problems.last() {
-                problem.object.to_issue().code
-            } else {ExitCode::from(255)}
-        }
-    }
-}
-
-//> ACT -> IMPLEMENTATION
-impl<Type, Object: ToIssue> Act<Type, Object> {
-    pub fn result(self) -> Option<Type> {return self.result}
+    fn report(self) -> ExitCode {return match self.result {
+        Some(()) => ExitCode::SUCCESS,
+        None => self.problems.last().unwrap().object.to_issue().code
+    }}
 }
