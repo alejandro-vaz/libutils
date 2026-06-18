@@ -27,5 +27,5 @@ fn string() -> () {
     let cage = Cage::new("hello".to_string());
     cage.write().push_str(", world!");
     let _ = cage.read().len();
-    assert_eq!(cage.release().as_str(), "hello, world!");
+    assert_eq!(cage.read().as_str(), "hello, world!");
 }

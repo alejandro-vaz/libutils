@@ -9,6 +9,8 @@
 #![feature(const_default)]
 #![feature(try_trait_v2)]
 #![feature(try_trait_v2_residual)]
+#![feature(default_field_values)]
+#![feature(const_convert)]
 
 //> UTILS -> ARRAY
 #[cfg(feature = "array")]

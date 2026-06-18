@@ -1,18 +1,10 @@
-//^
-//^ HEAD
-//^
-
-//> HEAD -> CRATE
-use crate::report::Issue;
-
-
 //^ 
 //^ LAYOUT
 //^ 
 
 //> LAYOUT -> STRUCT
 pub struct Layout {
-    pub logs: Vec<Issue>
+    pub logs: Vec<String>
 }
 
 //> LAYOUT -> DEFAULT
@@ -25,5 +17,5 @@ impl const Default for Layout {
 //> LAYOUT -> IMPLEMENTATION
 impl Layout {
     #[inline]
-    pub fn view(&self) -> String {return self.logs.iter().map(|issue| issue.to_string()).collect::<Vec<String>>().join("\n\n")}
+    pub fn view(&self) -> String {return self.logs.join("\n\n")}
 }

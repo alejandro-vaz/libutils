@@ -6,6 +6,7 @@
 mod diff;
 mod handler;
 mod layout;
+mod problem;
 
 //> HEAD -> STD
 use std::{
@@ -25,7 +26,7 @@ use core::default::Default;
 //> HEAD -> CRATE
 use crate::{
     cage::Cage,
-    report::Issue
+    report::ToIssue
 };
 
 //> HEAD -> DIFF
@@ -33,6 +34,9 @@ use diff::Diff;
 
 //> HEAD -> LAYOUT
 use layout::Layout;
+
+//> HEAD -> PROBLEM
+pub use problem::Problem;
 
 
 //^
@@ -64,8 +68,8 @@ impl Terminal {
         self.stderr = content;
     }
     #[inline]
-    pub fn error(&mut self, issue: Issue) -> () {
-        self.layout.logs.push(issue);
+    pub fn error<Object: ToIssue>(&mut self, problem: &Problem<Object>) -> () {
+        self.layout.logs.push(problem.to_string());
         self.render();
     }
 }

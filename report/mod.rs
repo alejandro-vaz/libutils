@@ -4,18 +4,17 @@
 
 //> HEAD -> MODULES
 mod issue;
-mod problem;
 mod shortcut;
 mod toissue;
 
 //> HEAD -> STD
-use std::process::{
-    Termination,
-    ExitCode
+use std::{
+    process::{
+        ExitCode, 
+        Termination
+    }, 
+    time::Instant
 };
-
-//> HEAD -> CORE
-use core::default::Default;
 
 //> HEAD -> TOISSUE
 pub use toissue::ToIssue;
@@ -23,11 +22,11 @@ pub use toissue::ToIssue;
 //> HEAD -> ISSUE
 pub use issue::Issue;
 
-//> HEAD -> PROBLEM
-use problem::Problem;
-
 //> HEAD -> CRATE
-use crate::terminal::TERMINAL;
+use crate::terminal::{
+    TERMINAL,
+    Problem
+};
 
 //> HEAD -> SHORTCUT
 use shortcut::Attachment;
@@ -39,22 +38,26 @@ use shortcut::Attachment;
 
 //> REPORT -> STRUCT
 pub struct Report<Object: ToIssue> {
-    problems: Vec<Problem<Object>>
-}
-
-//> REPORT -> DEFAULT
-impl<Object: ToIssue> const Default for Report<Object> {
-    fn default() -> Self {return Self {
-        problems: Vec::new()
-    }}
+    name: &'static str = "",
+    problems: Vec<Problem<Object>> = Vec::new()
 }
 
 //> REPORT -> IMPLEMENTATION
 impl<Object: ToIssue> Report<Object> {
     #[inline]
+    pub fn new(name: &'static str) -> Self {return Self {
+        name: name,
+        ..
+    }}
+    #[inline]
     pub fn warn(&mut self, object: Object) -> () {
-        TERMINAL.write().error(object.to_issue());
-        self.problems.push(Problem::new(object));
+        let problem = Problem {
+            chain: Vec::from([self.name]),
+            at: Instant::now(),
+            object: object
+        };
+        TERMINAL.write().error(&problem);
+        self.problems.push(problem);
     }
     #[inline]
     pub unsafe fn abort<Type>(self) -> Act<Type, Object> {return Act {
@@ -63,8 +66,13 @@ impl<Object: ToIssue> Report<Object> {
     }}
     #[inline]
     pub fn fail<Type>(mut self, with: Object) -> Act<Type, Object> {
-        TERMINAL.write().error(with.to_issue());
-        self.problems.push(Problem::new(with));
+        let problem = Problem {
+            chain: Vec::from([self.name]),
+            at: Instant::now(),
+            object: with
+        };
+        TERMINAL.write().error(&problem);
+        self.problems.push(problem);
         return Act {
             problems: self.problems,
             result: None
@@ -77,7 +85,10 @@ impl<Object: ToIssue> Report<Object> {
     }}
     #[inline]
     pub fn attach<'valid, Inferior>(&'valid mut self, act: Act<Inferior, Object>) -> Attachment<'valid, Inferior, Object> {
-        self.problems.extend(act.problems);
+        for mut problem in act.problems {
+            problem.chain.insert(0, self.name);
+            self.problems.push(problem);
+        }
         self.problems.sort_by(|first, second| first.at.cmp(&second.at));
         return Attachment {
             report: Some(self),
