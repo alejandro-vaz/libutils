@@ -5,6 +5,7 @@
 //> HEAD -> MODULES
 mod comparisons;
 mod conversions;
+mod index;
 mod iterators;
 mod references;
 

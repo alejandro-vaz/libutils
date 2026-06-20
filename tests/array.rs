@@ -136,7 +136,7 @@ fn ord() -> () {
     assert_eq!(array.as_ref().cmp(&initial), initial.as_slice().cmp(array.as_ref()));
 }
 
-//> HEAD -> INSERT
+//> TESTS -> INSERT
 #[test]
 fn insert() -> () {
     let mut array = Array::<u8, 6>::from([1, 2, 3]);
@@ -148,7 +148,7 @@ fn insert() -> () {
     assert_eq!(array.as_ref(), [0, 4, 1, 2, 3, 0]);
 }
 
-//> HEAD -> INSERTNOLENGTH
+//> TESTS -> INSERTNOLENGTH
 #[test]
 #[should_panic]
 fn insertnolength() -> () {
@@ -156,7 +156,7 @@ fn insertnolength() -> () {
     array.insert(5, 0);
 }
 
-//> HEAD -> INSERTNOCAP
+//> TESTS -> INSERTNOCAP
 #[test]
 #[should_panic]
 fn insertnocap() -> () {
@@ -164,7 +164,7 @@ fn insertnocap() -> () {
     array.insert(3, 0);
 }
 
-//> HEAD -> REMOVE
+//> TESTS -> REMOVE
 #[test]
 fn remove() -> () {
     let mut array = Array::<u8, 3>::from([1, 2, 3]);
@@ -174,7 +174,7 @@ fn remove() -> () {
     assert_eq!(array.as_ref(), [3]);
 }
 
-//> HEAD -> REMOVENOLENGTH
+//> TESTS -> REMOVENOLENGTH
 #[test]
 #[should_panic]
 fn removenolength() -> () {
@@ -182,10 +182,17 @@ fn removenolength() -> () {
     array.remove(0);
 }
 
-//> HEAD -> REMOVENOCAP
+//> TESTS -> REMOVENOCAP
 #[test]
 #[should_panic]
 fn removenocap() -> () {
     let mut array = Array::<u8, 7>::from([1, 2, 3]);
     array.remove(5);
+}
+
+//> TESTS -> INDEX
+#[test]
+fn index() -> () {
+    let x = Array::<usize, 5>::from([0]);
+    let _ = x[0];
 }
