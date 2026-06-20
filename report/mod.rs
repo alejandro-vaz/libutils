@@ -4,6 +4,7 @@
 
 //> HEAD -> MODULES
 mod issue;
+mod note;
 mod shortcut;
 mod toissue;
 
@@ -30,6 +31,9 @@ use crate::terminal::{
 
 //> HEAD -> SHORTCUT
 use shortcut::Attachment;
+
+//> HEAD -> NOTE
+pub use note::Note;
 
 
 //^
@@ -83,18 +87,14 @@ impl<Object: ToIssue> Report<Object> {
         problems: self.problems,
         result: Some(value)
     }}
-    #[inline]
-    pub fn attach<'valid, Inferior>(&'valid mut self, act: Act<Inferior, Object>) -> Attachment<'valid, Inferior, Object> {
-        for mut problem in act.problems {
-            problem.chain.insert(0, self.name);
-            self.problems.push(problem);
-        }
-        self.problems.sort_by(|first, second| first.at.cmp(&second.at));
-        return Attachment {
-            report: Some(self),
-            result: act.result
-        }
-    }
+    //#[inline]
+    //pub fn take<'valid, Inferior>(&'valid mut self, option: Option<Inferior>, object: Object) -> Attachment<'valid, Inferior, Object> {
+    //    if option.is_none() {self.warn(object)}
+    //    return Attachment {
+    //        report: Some(self),
+    //        result: option
+    //    };
+    //}
 }
 
 
@@ -114,4 +114,20 @@ impl<Object: ToIssue> Termination for Act<(), Object> {
         Some(()) => ExitCode::SUCCESS,
         None => self.problems.last().unwrap().object.to_issue().code
     }}
+}
+
+//> ACT -> ATTACH
+impl<Type, Object: ToIssue> Act<Type, Object> {
+    #[inline]
+    pub fn attach<'valid>(self, report: &'valid mut Report<Object>) -> Attachment<'valid, Type, Object> {
+        for mut problem in self.problems {
+            problem.chain.push(report.name);
+            report.problems.push(problem);
+        };
+        report.problems.sort_by(|first, second| first.at.cmp(&second.at));
+        return Attachment {
+            report: Some(report),
+            result: self.result
+        }
+    }
 }

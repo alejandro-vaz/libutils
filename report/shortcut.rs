@@ -26,6 +26,7 @@ use core::{
 //^
 
 //> TYPES -> ATTACHMENT
+#[must_use]
 pub struct Attachment<'valid, Type, Object: ToIssue> {
     pub report: Option<&'valid mut Report<Object>>,
     pub result: Option<Type>

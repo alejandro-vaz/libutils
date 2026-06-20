@@ -5,7 +5,8 @@
 //> HEAD -> API
 use libutils::report::{
     Report,
-    Act
+    Act,
+    Note
 };
 
 
@@ -33,6 +34,14 @@ fn hierarchy() -> Act<(), &'static str> {
             inferior.fail("failure")
         }
     };
-    let _ = report.attach(another())?;
+    let _ = another().attach(&mut report)?;
     report.succeed(())
+}
+
+//> TEST -> TAKE
+#[test]
+fn take() -> Act<(), &'static str> {
+    let mut report = Report::new("take");
+    let _ = Some(2).note(&mut report, "failed")?;
+    return report.succeed(());
 }
