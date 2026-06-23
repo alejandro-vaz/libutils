@@ -18,7 +18,7 @@ use libutils::report::{
 #[test]
 fn string() -> () {
     let report = Report::new("test string");
-    let act = report.fail::<()>("hello");
+    let act = report.finish::<()>(Err("hello"));
     assert_eq!(act.result, None);
 }
 
@@ -29,13 +29,13 @@ fn hierarchy() -> Act<(), &'static str> {
     let another = || {
         let inferior = Report::new("inferior");
         if true {
-            inferior.succeed(5)
+            inferior.finish(Ok(()))
         } else {
-            inferior.fail("failure")
+            inferior.finish(Err("failure"))
         }
     };
     let _ = another().attach(&mut report)?;
-    report.succeed(())
+    return report.finish(Ok(()));
 }
 
 //> TEST -> TAKE
@@ -43,5 +43,5 @@ fn hierarchy() -> Act<(), &'static str> {
 fn take() -> Act<(), &'static str> {
     let mut report = Report::new("take");
     let _ = Some(2).note(&mut report, "failed")?;
-    return report.succeed(());
+    return report.finish(Ok(()));
 }

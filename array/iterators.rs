@@ -69,14 +69,14 @@ impl<Type, const N: usize> IntoIterator for Array<Type, N> {
 impl<'valid, Type, const N: usize> IntoIterator for &'valid Array<Type, N> {
     type Item = &'valid Type;
     type IntoIter = Iter<'valid, Type>;
-    fn into_iter(self) -> Self::IntoIter {self.as_ref().iter()}
+    fn into_iter(self) -> Self::IntoIter {self.iter()}
 }
 
 //> ITERATORS -> BORROWED MUTABLY
 impl<'valid, Type, const N: usize> IntoIterator for &'valid mut Array<Type, N> {
     type Item = &'valid mut Type;
     type IntoIter = IterMut<'valid, Type>;
-    fn into_iter(self) -> Self::IntoIter {self.as_mut().iter_mut()}
+    fn into_iter(self) -> Self::IntoIter {self.iter_mut()}
 }
 
 //> ITERATORS -> METHODS

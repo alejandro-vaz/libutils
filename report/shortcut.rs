@@ -42,7 +42,10 @@ pub struct Break<'valid, Object: ToIssue>(Option<&'valid mut Report<Object>>);
 
 //> FROMRESIDUAL -> ACT
 impl<'valid, Type, Object: ToIssue> FromResidual<Break<'valid, Object>> for Act<Type, Object> {
-    fn from_residual(residual: Break<'valid, Object>) -> Self {return unsafe {replace(residual.0.unwrap(), Report {..}).abort()}}
+    fn from_residual(residual: Break<'valid, Object>) -> Self {return Act {
+        problems: replace(residual.0.unwrap(), Report {..}).problems,
+        result: None
+    }}
 }
 
 //> FROMRESIDUAL -> ATTACHMENT

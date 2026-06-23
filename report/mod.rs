@@ -64,37 +64,25 @@ impl<Object: ToIssue> Report<Object> {
         self.problems.push(problem);
     }
     #[inline]
-    pub unsafe fn abort<Type>(self) -> Act<Type, Object> {return Act {
-        problems: self.problems,
-        result: None
-    }}
-    #[inline]
-    pub fn fail<Type>(mut self, with: Object) -> Act<Type, Object> {
-        let problem = Problem {
-            chain: Vec::from([self.name]),
-            at: Instant::now(),
-            object: with
-        };
-        TERMINAL.write().error(&problem);
-        self.problems.push(problem);
-        return Act {
+    pub fn finish<Type>(mut self, with: Result<Type, Object>) -> Act<Type, Object> {return match with {
+        Ok(value) => Act {
             problems: self.problems,
-            result: None
+            result: Some(value)
+        },
+        Err(object) => {
+            let problem = Problem {
+                chain: Vec::from([self.name]),
+                at: Instant::now(),
+                object: object
+            };
+            TERMINAL.write().error(&problem);
+            self.problems.push(problem);
+            Act {
+                problems: self.problems,
+                result: None
+            }
         }
-    }
-    #[inline]
-    pub fn succeed<Type>(self, value: Type) -> Act<Type, Object> {return Act {
-        problems: self.problems,
-        result: Some(value)
     }}
-    //#[inline]
-    //pub fn take<'valid, Inferior>(&'valid mut self, option: Option<Inferior>, object: Object) -> Attachment<'valid, Inferior, Object> {
-    //    if option.is_none() {self.warn(object)}
-    //    return Attachment {
-    //        report: Some(self),
-    //        result: option
-    //    };
-    //}
 }
 
 
