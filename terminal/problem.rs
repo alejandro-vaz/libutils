@@ -24,7 +24,16 @@ use core::fmt::{
 pub struct Problem<Object: ToIssue> {
     pub chain: Vec<&'static str>,
     pub at: Instant,
-    pub object: Object
+    pub object: Object,
+    pub severity: Severity
+}
+
+//> PROBLEM -> SEVERITY
+#[derive(Clone, Copy, Debug)]
+pub enum Severity {
+    Warning,
+    Error,
+    Critical
 }
 
 //> PROBLEM -> DISPLAY
@@ -33,7 +42,8 @@ impl<Object: ToIssue> Display for Problem<Object> {
         let issue = self.object.to_issue();
         return write!(
             formatter,
-            "error ({}): {}{}", 
+            "{:?} ({}): {}{}", 
+            self.severity,
             self.chain.iter().rev().map(|node| *node).collect::<Vec<&'static str>>().join(" > "),
             issue.name,
             if let Some(description) = issue.description {format!(

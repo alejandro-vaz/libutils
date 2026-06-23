@@ -34,7 +34,10 @@ use diff::Diff;
 use layout::Layout;
 
 //> HEAD -> PROBLEM
-pub use problem::Problem;
+pub use problem::{
+    Problem,
+    Severity
+};
 
 //> HEAD -> CONSOLE
 pub use console::Console;
@@ -67,11 +70,12 @@ impl Console for Terminal {
         self.stderr = content;
     }
     #[inline]
-    fn error<Object: ToIssue>(&mut self, problem: &Problem<Object>) -> () {
+    fn issue<Object: ToIssue>(&mut self, problem: &Problem<Object>) -> () {
         self.layout.problems.push(Problem {
             chain: problem.chain.clone(),
             at: problem.at,
-            object: problem.object.to_issue()
+            object: problem.object.to_issue(),
+            severity: problem.severity
         });
         self.render();
     }

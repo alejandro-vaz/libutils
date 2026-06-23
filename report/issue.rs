@@ -2,8 +2,8 @@
 //^ HEAD
 //^
 
-//> HEAD -> STD
-use std::process::ExitCode;
+//> HEAD -> CORE
+use core::hash::Hash;
 
 
 //^
@@ -11,9 +11,8 @@ use std::process::ExitCode;
 //^
 
 //> ISSUE -> STRUCT
-#[derive(Clone)]
+#[derive(Clone, Hash)]
 pub struct Issue {
     pub name: &'static str,
-    pub code: ExitCode,
     pub description: Option<String>
 }
