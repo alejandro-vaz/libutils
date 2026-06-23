@@ -26,7 +26,8 @@ pub use issue::Issue;
 //> HEAD -> CRATE
 use crate::terminal::{
     TERMINAL,
-    Problem
+    Problem,
+    Console
 };
 
 //> HEAD -> SHORTCUT

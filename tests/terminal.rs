@@ -3,7 +3,10 @@
 //^
 
 //> HEAD -> API
-use libutils::terminal::TERMINAL;
+use libutils::terminal::{
+    TERMINAL,
+    Console
+};
 
 
 //^ 

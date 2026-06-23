@@ -29,7 +29,7 @@ impl<Type: Sized> Cage<Type> {
 //> CAGE -> IMPLEMENTATION
 impl<Type: ?Sized> Cage<Type> {
     #[inline]
-    pub fn read(&self) -> RwLockReadGuard<'_, Type> {return self.0.read().unwrap()}
+    pub fn read<'valid>(&'valid self) -> RwLockReadGuard<'valid, Type> {return self.0.read().unwrap()}
     #[inline]
-    pub fn write(&self) -> RwLockWriteGuard<'_, Type> {return self.0.write().unwrap()}
+    pub fn write<'valid>(&'valid self) -> RwLockWriteGuard<'valid, Type> {return self.0.write().unwrap()}
 }

@@ -34,7 +34,7 @@ impl<Object: ToIssue> Display for Problem<Object> {
         return write!(
             formatter,
             "error ({}): {}{}", 
-            self.chain.join(" < "),
+            self.chain.iter().rev().map(|node| *node).collect::<Vec<&'static str>>().join(" > "),
             issue.name,
             if let Some(description) = issue.description {format!(
                 "\n    {}",

@@ -3,8 +3,8 @@
 //^
 
 //> HEAD -> MODULES
+mod console;
 mod diff;
-mod handler;
 mod layout;
 mod problem;
 
@@ -14,14 +14,12 @@ use std::{
         args,
         vars
     },
-    collections::HashMap
+    collections::HashMap as Map,
+    io::{
+        stderr,
+        Write
+    }
 };
-
-//> HEAD -> HANDLER
-use handler::Handler;
-
-//> HEAD -> CORE
-use core::default::Default;
 
 //> HEAD -> CRATE
 use crate::{
@@ -38,6 +36,9 @@ use layout::Layout;
 //> HEAD -> PROBLEM
 pub use problem::Problem;
 
+//> HEAD -> CONSOLE
+pub use console::Console;
+
 
 //^
 //^ TERMINAL
@@ -45,31 +46,33 @@ pub use problem::Problem;
 
 //> TERMINAL -> INSTANCE
 pub static TERMINAL: Cage<Terminal> = Cage::new(Terminal {
-    handler: Handler,
-    layout: Layout::default(),
+    layout: Layout {..},
     stderr: String::new()
 });
 
 //> TERMINAL -> STRUCT
 pub struct Terminal {
-    handler: Handler,
     layout: Layout,
     stderr: String
 }
 
 //> TERMINAL -> IMPLEMENTATION
-impl Terminal {
-    pub fn arguments(&self) -> Vec<String> {args().collect()}
-    pub fn environment(&self) -> HashMap<String, String> {vars().collect()}
+impl Console for Terminal {
+    fn arguments(&self) -> Vec<String> {args().collect()}
+    fn environment(&self) -> Map<String, String> {vars().collect()}
     #[inline]
     fn render(&mut self) -> () {
         let content = self.layout.view();
-        self.handler.sync(Diff::new(&self.stderr, &content));
+        stderr().lock().write(<Diff as Into<Vec<u8>>>::into(Diff::new(&self.stderr, &content)).as_ref()).unwrap();
         self.stderr = content;
     }
     #[inline]
-    pub fn error<Object: ToIssue>(&mut self, problem: &Problem<Object>) -> () {
-        self.layout.logs.push(problem.to_string());
+    fn error<Object: ToIssue>(&mut self, problem: &Problem<Object>) -> () {
+        self.layout.problems.push(Problem {
+            chain: problem.chain.clone(),
+            at: problem.at,
+            object: problem.object.to_issue()
+        });
         self.render();
     }
 }

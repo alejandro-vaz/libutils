@@ -1,21 +1,25 @@
+//^
+//^ HEAD
+//^
+
+//> HEAD -> SUPER
+use super::problem::Problem;
+
+//> HEAD -> CRATE
+use crate::report::Issue;
+
+
 //^ 
 //^ LAYOUT
 //^ 
 
 //> LAYOUT -> STRUCT
 pub struct Layout {
-    pub logs: Vec<String>
-}
-
-//> LAYOUT -> DEFAULT
-impl const Default for Layout {
-    fn default() -> Self {return Layout {
-        logs: Vec::new()
-    }}
+    pub problems: Vec<Problem<Issue>> = Vec::new()
 }
 
 //> LAYOUT -> IMPLEMENTATION
 impl Layout {
     #[inline]
-    pub fn view(&self) -> String {return self.logs.join("\n\n")}
+    pub fn view(&self) -> String {return self.problems.iter().map(|problem| problem.to_string()).collect::<Vec<String>>().join("\n\n")}
 }

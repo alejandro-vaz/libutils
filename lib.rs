@@ -6,7 +6,6 @@
 #![allow(incomplete_features)]
 #![feature(generic_const_exprs)]
 #![feature(const_trait_impl)]
-#![feature(const_default)]
 #![feature(try_trait_v2)]
 #![feature(try_trait_v2_residual)]
 #![feature(default_field_values)]
