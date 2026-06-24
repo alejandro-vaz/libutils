@@ -8,7 +8,7 @@ description = "Common library types for faster development"
 license = "MIT"
 homepage = "https://github.com/alejandro-vaz/libutils"
 repository = "https://github.com/alejandro-vaz/libutils"
-keywords = ["utilities", "types", "utils", "libutils", "utility library"]
+keywords = ["utilities", "types", "utils", "libutils"]
 categories = ["development-tools", "config", "no-std"]
 resolver = "3"
 
