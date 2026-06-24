@@ -38,9 +38,13 @@ pub use act::Act;
 //^
 
 //> REPORT -> STRUCT
-#[derive(Default)]
 pub struct Report<Object: ToIssue, const NAME: &'static str> {
     problems: Vec<Problem<Object>> = Vec::new()
+}
+
+//> REPORT -> DEFAULT
+impl<Object: ToIssue, const NAME: &'static str> Default for Report<Object, NAME> {
+    fn default() -> Self {return Self {..}}
 }
 
 //> REPORT -> IMPLEMENTATION
