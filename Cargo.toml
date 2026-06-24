@@ -1,6 +1,6 @@
 [package]
 name = "libutils"
-version = "5.27.17"
+version = "5.27.18"
 edition = "2024"
 authors = ["Alejandro Vaz"]
 rust-version = "1.98"
