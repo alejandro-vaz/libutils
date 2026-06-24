@@ -1,16 +1,23 @@
 [package]
 name = "libutils"
-version = "5.27.16"
+version = "5.27.17"
 edition = "2024"
+authors = ["Alejandro Vaz"]
 rust-version = "1.98"
 description = "Common library types for faster development"
 license = "MIT"
+homepage = "https://github.com/alejandro-vaz/libutils"
+repository = "https://github.com/alejandro-vaz/libutils"
+keywords = ["utilities", "types", "utils", "libutils", "utility library"]
+categories = ["development-tools", "config", "no-std"]
+resolver = "3"
 
 [dev-dependencies]
 criterion = "0.8.2"
 
 [lib]
 path = "lib.rs"
+doctest = false
 
 [[bench]]
 name = "array"

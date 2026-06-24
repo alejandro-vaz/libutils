@@ -38,22 +38,17 @@ pub use act::Act;
 //^
 
 //> REPORT -> STRUCT
-pub struct Report<Object: ToIssue> {
-    name: &'static str = "",
+#[derive(Default)]
+pub struct Report<Object: ToIssue, const NAME: &'static str> {
     problems: Vec<Problem<Object>> = Vec::new()
 }
 
 //> REPORT -> IMPLEMENTATION
-impl<Object: ToIssue> Report<Object> {
-    #[inline]
-    pub fn new(name: &'static str) -> Self {return Self {
-        name: name,
-        ..
-    }}
+impl<Object: ToIssue, const NAME: &'static str> Report<Object, NAME> {
     #[inline]
     pub fn warn(&mut self, object: Object) -> () {
         let problem = Problem {
-            chain: Vec::from([self.name]),
+            chain: Vec::from([NAME]),
             at: Instant::now(),
             object: object,
             severity: Severity::Warning
@@ -64,7 +59,7 @@ impl<Object: ToIssue> Report<Object> {
     #[inline]
     pub fn error(&mut self, object: Object) -> () {
         let problem = Problem {
-            chain: Vec::from([self.name]),
+            chain: Vec::from([NAME]),
             at: Instant::now(),
             object: object,
             severity: Severity::Error
@@ -73,14 +68,14 @@ impl<Object: ToIssue> Report<Object> {
         self.problems.push(problem);
     }
     #[inline]
-    pub fn finish<Type>(mut self, with: Result<Type, Object>) -> Act<Type, Object> {return match with {
+    pub fn finish<Type>(mut self, with: Result<Type, Object>) -> Act<Type, Object, NAME> {return match with {
         Ok(value) => Act {
             problems: self.problems,
             result: Some(value)
         },
         Err(object) => {
             let problem = Problem {
-                chain: Vec::from([self.name]),
+                chain: Vec::from([NAME]),
                 at: Instant::now(),
                 object: object,
                 severity: Severity::Critical

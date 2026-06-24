@@ -25,7 +25,7 @@ use criterion::{
 //^
 
 //> BENCHES -> ITERATIONS
-const ITERATIONS: u64 = 2u64.pow(15);
+const ITERATIONS: u64 = 2u64.pow(14);
 
 //> BENCHES -> BENCH
 fn bench(criterion: &mut Criterion) -> () {

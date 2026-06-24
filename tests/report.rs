@@ -17,17 +17,17 @@ use libutils::report::{
 //> TEST -> STRING
 #[test]
 fn string() -> () {
-    let report = Report::new("test string");
+    let report = Report::<_, "test string">::default();
     let act = report.finish::<()>(Err("hello"));
     assert_eq!(act.result, None);
 }
 
 //> TEST -> HIERARCHY
 #[test]
-fn hierarchy() -> Act<(), &'static str> {
-    let mut report = Report::new("superior");
+fn hierarchy() -> Act<(), &'static str, "Main"> {
+    let mut report = Report::default();
     let another = || {
-        let inferior = Report::new("inferior");
+        let inferior = Report::<_, "inferior">::default();
         if true {
             inferior.finish(Ok(()))
         } else {
@@ -40,8 +40,8 @@ fn hierarchy() -> Act<(), &'static str> {
 
 //> TEST -> TAKE
 #[test]
-fn take() -> Act<(), &'static str> {
-    let mut report = Report::new("take");
+fn take() -> Act<(), &'static str, "Main"> {
+    let mut report = Report::default();
     let _ = Some(2).note(&mut report, "failed")?;
     return report.finish(Ok(()));
 }

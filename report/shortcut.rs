@@ -27,13 +27,13 @@ use core::{
 
 //> TYPES -> ATTACHMENT
 #[must_use]
-pub struct Attachment<'valid, Type, Object: ToIssue> {
-    pub report: Option<&'valid mut Report<Object>>,
+pub struct Attachment<'valid, Type, Object: ToIssue, const NAME: &'static str> {
+    pub report: Option<&'valid mut Report<Object, NAME>>,
     pub result: Option<Type>
 }
 
 //> TYPES -> BREAK
-pub struct Break<'valid, Object: ToIssue>(Option<&'valid mut Report<Object>>);
+pub struct Break<'valid, Object: ToIssue, const NAME: &'static str>(Option<&'valid mut Report<Object, NAME>>);
 
 
 //^
@@ -41,16 +41,16 @@ pub struct Break<'valid, Object: ToIssue>(Option<&'valid mut Report<Object>>);
 //^
 
 //> FROMRESIDUAL -> ACT
-impl<'valid, Type, Object: ToIssue> FromResidual<Break<'valid, Object>> for Act<Type, Object> {
-    fn from_residual(residual: Break<'valid, Object>) -> Self {return Act {
+impl<'valid, Type, Object: ToIssue, const NAME: &'static str> FromResidual<Break<'valid, Object, NAME>> for Act<Type, Object, NAME> {
+    fn from_residual(residual: Break<'valid, Object, NAME>) -> Self {return Act {
         problems: replace(residual.0.unwrap(), Report {..}).problems,
         result: None
     }}
 }
 
 //> FROMRESIDUAL -> ATTACHMENT
-impl<'valid, Type, Object: ToIssue> FromResidual<Break<'valid, Object>> for Attachment<'valid, Type, Object> {
-    fn from_residual(residual: Break<'valid, Object>) -> Self {return Attachment {
+impl<'valid, Type, Object: ToIssue, const NAME: &'static str> FromResidual<Break<'valid, Object, NAME>> for Attachment<'valid, Type, Object, NAME> {
+    fn from_residual(residual: Break<'valid, Object, NAME>) -> Self {return Attachment {
         report: residual.0,
         result: None
     }}
@@ -62,8 +62,8 @@ impl<'valid, Type, Object: ToIssue> FromResidual<Break<'valid, Object>> for Atta
 //^
 
 //> RESIDUAL -> BREAK
-impl<'valid, Type, Object: ToIssue> Residual<Type> for Break<'valid, Object> {
-    type TryType = Attachment<'valid, Type, Object>;
+impl<'valid, Type, Object: ToIssue, const NAME: &'static str> Residual<Type> for Break<'valid, Object, NAME> {
+    type TryType = Attachment<'valid, Type, Object, NAME>;
 }
 
 
@@ -72,9 +72,9 @@ impl<'valid, Type, Object: ToIssue> Residual<Type> for Break<'valid, Object> {
 //^
 
 //> TRY -> ATTACHMENT
-impl<'valid, Type, Object: ToIssue> Try for Attachment<'valid, Type, Object> {
+impl<'valid, Type, Object: ToIssue, const NAME: &'static str> Try for Attachment<'valid, Type, Object, NAME> {
     type Output = Type;
-    type Residual = Break<'valid, Object>;
+    type Residual = Break<'valid, Object, NAME>;
     fn from_output(output: Self::Output) -> Self {return Attachment {
         report: None,
         result: Some(output)
