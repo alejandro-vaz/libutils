@@ -3,7 +3,10 @@
 //^
 
 //> HEAD -> crate
-use crate::report::ToIssue;
+use crate::report::{
+    ToIssue,
+    Issue
+};
 
 //> HEAD -> STD
 use std::time::Instant;
@@ -12,7 +15,8 @@ use std::time::Instant;
 use core::fmt::{
     Display,
     Formatter,
-    Result as Format
+    Result as Format,
+    Debug
 };
 
 
@@ -37,19 +41,13 @@ pub enum Severity {
 }
 
 //> PROBLEM -> DISPLAY
-impl<Object: ToIssue> Display for Problem<Object> {
-    fn fmt(&self, formatter: &mut Formatter<'_>) -> Format {
-        let issue = self.object.to_issue();
-        return write!(
-            formatter,
-            "{:?} ({}): {}{}", 
-            self.severity,
-            self.chain.iter().rev().map(|node| *node).collect::<Vec<&'static str>>().join(" > "),
-            issue.name,
-            if let Some(description) = issue.description {format!(
-                "\n    {}",
-                description
-            )} else {String::new()}
-        )
-    }
+impl Display for Problem<Issue> {
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> Format {write!(
+        formatter,
+        "@{}\n{:?}: {}{}",
+        self.chain.iter().rev().map(|node| *node).collect::<Vec<&'static str>>().join(" > "),
+        self.severity,
+        self.object.name,
+        if let Some(description) = &self.object.description {format!("\n    {}", description)} else {String::new()}
+    )}
 }

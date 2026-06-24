@@ -53,7 +53,7 @@ impl<Object: ToIssue> Termination for Act<(), Object> {
     }}
 }
 
-//> ACT -> ATTACH
+//> ACT -> IMPLEMENTATION
 impl<Type, Object: ToIssue> Act<Type, Object> {
     #[inline]
     pub fn attach<'valid>(self, report: &'valid mut Report<Object>) -> Attachment<'valid, Type, Object> {
@@ -67,4 +67,9 @@ impl<Type, Object: ToIssue> Act<Type, Object> {
             result: self.result
         }
     }
+    #[inline]
+    pub fn map<Return, Closure: FnOnce(Type) -> Return>(self, closure: Closure) -> Act<Return, Object> {return Act {
+        problems: self.problems,
+        result: self.result.map(closure)
+    }}
 }
