@@ -20,6 +20,18 @@ pub mod array;
 #[cfg(feature = "cage")]
 pub mod cage;
 
+//> UTILS -> DIFF
+#[cfg(feature = "diff")]
+pub mod diff;
+
+//> UTILS -> ISSUE
+#[cfg(feature = "issue")]
+pub mod issue;
+
+//> UTILS -> PROBLEM
+#[cfg(feature = "problem")]
+pub mod problem;
+
 //> UTILS -> REPORT
 #[cfg(feature = "report")]
 pub mod report;

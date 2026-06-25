@@ -22,7 +22,7 @@ use criterion::{
 //^ 
 
 //> BENCHES -> ITERATIONS
-const ITERATIONS: u64 = 2u64.pow(16);
+const ITERATIONS: u64 = 2u64.pow(19);
 
 //> BENCHES -> BENCH
 fn bench(criterion: &mut Criterion) -> () {
@@ -34,9 +34,9 @@ fn bench(criterion: &mut Criterion) -> () {
 
 //> BENCHES -> ATTACH
 fn attach() -> () {
-    let mut superior = Report::<&'static str, "SUPERIOR">::default();
+    let main = Report::default();
     for _ in 0..ITERATIONS {
-        let _ = black_box(Report::<&'static str, "inferior">::default().finish(black_box(Ok(()))).attach(black_box(&mut superior)));
+        let _ = black_box(main.sub::<"inferior">().with(black_box(black_box(()))));
     }
 }
 

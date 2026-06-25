@@ -2,11 +2,11 @@
 //^ HEAD
 //^
 
-//> HEAD -> SUPER
-use super::problem::Problem;
-
 //> HEAD -> CRATE
-use crate::report::ToIssue;
+use crate::{
+    issue::Issue,
+    problem::Problem
+};
 
 //> HEAD -> STD
 use std::collections::HashMap as Map;
@@ -21,5 +21,5 @@ pub trait Console {
     fn arguments(&self) -> Vec<String>;
     fn environment(&self) -> Map<String, String>;
     fn render(&mut self) -> ();
-    fn issue<Object: ToIssue>(&mut self, problem: &Problem<Object>) -> ();
+    fn issue<Object: Into<Issue>>(&mut self, problem: Problem<Object>) -> ();
 }

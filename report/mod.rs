@@ -4,33 +4,30 @@
 
 //> HEAD -> MODULES
 mod act;
-mod issue;
-mod note;
+mod machine;
 mod shortcut;
-mod toissue;
 
 //> HEAD -> STD
 use std::time::Instant;
 
-//> HEAD -> TOISSUE
-pub use toissue::ToIssue;
-
-//> HEAD -> ISSUE
-pub use issue::Issue;
-
 //> HEAD -> CRATE
-use crate::terminal::{
-    TERMINAL,
-    Problem,
-    Console,
-    Severity
+use crate::{
+    problem::{
+        Problem,
+        Severity
+    },
+    issue::Issue
 };
-
-//> HEAD -> NOTE
-pub use note::Note;
 
 //> HEAD -> ACT
 pub use act::Act;
+
+//> HEAD -> MACHINE
+pub use machine::{
+    Main,
+    Mode,
+    Set
+};
 
 
 //^
@@ -38,58 +35,47 @@ pub use act::Act;
 //^
 
 //> REPORT -> STRUCT
-pub struct Report<Object: ToIssue, const NAME: &'static str> {
-    problems: Vec<Problem<Object>> = Vec::new()
-}
+pub struct Report<State: Mode>(State);
 
 //> REPORT -> DEFAULT
-impl<Object: ToIssue, const NAME: &'static str> Default for Report<Object, NAME> {
-    fn default() -> Self {return Self {..}}
+impl Default for Report<Main> {
+    fn default() -> Self {return Self(Main)}
 }
 
 //> REPORT -> IMPLEMENTATION
-impl<Object: ToIssue, const NAME: &'static str> Report<Object, NAME> {
+impl<State: Mode> Report<State> {
     #[inline]
-    pub fn warn(&mut self, object: Object) -> () {
-        let problem = Problem {
-            chain: Vec::from([NAME]),
+    pub fn warn<Object: Into<Issue>>(&self, object: Object) -> () {
+        self.0.send(Problem {
+            chain: Vec::new(),
             at: Instant::now(),
             object: object,
             severity: Severity::Warning
-        };
-        TERMINAL.write().issue(&problem);
-        self.problems.push(problem);
+        });
     }
     #[inline]
-    pub fn error(&mut self, object: Object) -> () {
-        let problem = Problem {
-            chain: Vec::from([NAME]),
+    pub fn error<Object: Into<Issue>>(&self, object: Object) -> () {
+        self.0.send(Problem {
+            chain: Vec::new(),
             at: Instant::now(),
             object: object,
             severity: Severity::Error
-        };
-        TERMINAL.write().issue(&problem);
-        self.problems.push(problem);
+        });
     }
     #[inline]
-    pub fn finish<Type>(mut self, with: Result<Type, Object>) -> Act<Type, Object, NAME> {return match with {
-        Ok(value) => Act {
-            problems: self.problems,
-            result: Some(value)
-        },
-        Err(object) => {
-            let problem = Problem {
-                chain: Vec::from([NAME]),
-                at: Instant::now(),
-                object: object,
-                severity: Severity::Critical
-            };
-            TERMINAL.write().issue(&problem);
-            self.problems.push(problem);
-            Act {
-                problems: self.problems,
-                result: None
-            }
-        }
-    }}
+    pub fn sub<'valid, const NAME: &'static str>(&'valid self) -> Report<Set<'valid, NAME>> {return Report(self.0.connect())}
+    #[inline]
+    pub fn with<Type>(self, value: Type) -> Act<Type, {State::NAME}> {return Act(Some(value))}
+    #[inline]
+    pub fn with_default<Type: Default>(self) -> Act<Type, {State::NAME}> {return Act(Some(Type::default()))}
+    #[inline]
+    pub fn fail<Type, Object: Into<Issue>>(self, object: Object) -> Act<Type, {State::NAME}> {
+        self.0.send(Problem {
+            chain: Vec::new(),
+            at: Instant::now(),
+            object: object,
+            severity: Severity::Critical
+        });
+        return Act(None);
+    }
 }

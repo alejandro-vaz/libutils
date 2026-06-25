@@ -2,6 +2,9 @@
 //^ HEAD
 //^
 
+//> HEAD -> MODULES
+mod conversions;
+
 //> HEAD -> CORE
 use core::hash::Hash;
 
@@ -11,7 +14,7 @@ use core::hash::Hash;
 //^
 
 //> ISSUE -> STRUCT
-#[derive(Clone, Hash)]
+#[derive(Hash)]
 pub struct Issue {
     pub name: &'static str,
     pub description: Option<String>

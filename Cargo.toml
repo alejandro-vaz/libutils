@@ -42,8 +42,11 @@ codegen-units = 1
 opt-level = 3
 
 [features]
-default = ["array", "cage", "report", "terminal"]
+default = ["array", "cage", "diff", "issue", "problem", "report", "terminal"]
 array = []
 cage = []
-report = ["terminal"]
-terminal = ["cage", "report"]
+diff = []
+issue = []
+problem = ["issue"]
+report = ["issue", "problem", "terminal"]
+terminal = ["cage", "diff", "issue", "problem"]

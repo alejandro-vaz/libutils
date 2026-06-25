@@ -2,11 +2,11 @@
 //^ HEAD
 //^
 
+//> HEAD -> MODULES
+mod severity;
+
 //> HEAD -> crate
-use crate::report::{
-    ToIssue,
-    Issue
-};
+use crate::issue::Issue;
 
 //> HEAD -> STD
 use std::time::Instant;
@@ -15,9 +15,11 @@ use std::time::Instant;
 use core::fmt::{
     Display,
     Formatter,
-    Result as Format,
-    Debug
+    Result as Format
 };
+
+//> HEAD -> SEVERITY
+pub use severity::Severity;
 
 
 //^
@@ -25,19 +27,11 @@ use core::fmt::{
 //^
 
 //> PROBLEM -> STRUCT
-pub struct Problem<Object: ToIssue> {
+pub struct Problem<Object: Into<Issue>> {
     pub chain: Vec<&'static str>,
     pub at: Instant,
     pub object: Object,
     pub severity: Severity
-}
-
-//> PROBLEM -> SEVERITY
-#[derive(Clone, Copy, Debug)]
-pub enum Severity {
-    Warning,
-    Error,
-    Critical
 }
 
 //> PROBLEM -> DISPLAY

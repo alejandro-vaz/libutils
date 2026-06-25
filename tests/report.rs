@@ -6,7 +6,7 @@
 use libutils::report::{
     Report,
     Act,
-    Note
+    Set
 };
 
 
@@ -16,32 +16,30 @@ use libutils::report::{
 
 //> TEST -> STRING
 #[test]
-fn string() -> () {
-    let report = Report::<_, "test string">::default();
-    let act = report.finish::<()>(Err("hello"));
-    assert_eq!(act.result, None);
+fn string() -> Act<(), "Main"> {
+    let main = Report::default();
+    return main.with_default();
 }
 
 //> TEST -> HIERARCHY
 #[test]
-fn hierarchy() -> Act<(), &'static str, "Main"> {
-    let mut report = Report::default();
-    let another = || {
-        let inferior = Report::<_, "inferior">::default();
+fn hierarchy() -> Act<(), "Main"> {
+    let report = Report::default();
+    let another = |inferior: Report<Set<'_, "Inferior">>| -> Act<(), "Inferior"> {
         if true {
-            inferior.finish(Ok(()))
+            inferior.with_default()
         } else {
-            inferior.finish(Err("failure"))
+            inferior.fail("error")
         }
     };
-    let _ = another().attach(&mut report)?;
-    return report.finish(Ok(()));
+    let _ = another(report.sub())?;
+    return report.with_default();
 }
 
 //> TEST -> TAKE
 #[test]
-fn take() -> Act<(), &'static str, "Main"> {
-    let mut report = Report::default();
-    let _ = Some(2).note(&mut report, "failed")?;
-    return report.finish(Ok(()));
+fn take() -> Act<(), "Main"> {
+    let report = Report::default();
+    let _ = Some(2)?;
+    return report.with_default();
 }

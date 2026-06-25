@@ -4,9 +4,7 @@
 
 //> HEAD -> MODULES
 mod console;
-mod diff;
 mod layout;
-mod problem;
 
 //> HEAD -> STD
 use std::{
@@ -24,20 +22,13 @@ use std::{
 //> HEAD -> CRATE
 use crate::{
     cage::Cage,
-    report::ToIssue
+    issue::Issue,
+    problem::Problem,
+    diff::Diff
 };
-
-//> HEAD -> DIFF
-use diff::Diff;
 
 //> HEAD -> LAYOUT
 use layout::Layout;
-
-//> HEAD -> PROBLEM
-pub use problem::{
-    Problem,
-    Severity
-};
 
 //> HEAD -> CONSOLE
 pub use console::Console;
@@ -66,15 +57,15 @@ impl Console for Terminal {
     #[inline]
     fn render(&mut self) -> () {
         let content = self.layout.view();
-        stderr().lock().write(<Diff as Into<Vec<u8>>>::into(Diff::new(&self.stderr, &content)).as_ref()).unwrap();
+        stderr().lock().write(<Diff as Into<Vec<u8>>>::into(Diff::new(self.stderr.as_bytes(), content.as_bytes())).as_ref()).unwrap();
         self.stderr = content;
     }
     #[inline]
-    fn issue<Object: ToIssue>(&mut self, problem: &Problem<Object>) -> () {
+    fn issue<Object: Into<Issue>>(&mut self, problem: Problem<Object>) -> () {
         self.layout.problems.push(Problem {
-            chain: problem.chain.clone(),
+            chain: problem.chain,
             at: problem.at,
-            object: problem.object.to_issue(),
+            object: problem.object.into(),
             severity: problem.severity
         });
         self.render();

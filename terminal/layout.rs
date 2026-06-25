@@ -2,11 +2,11 @@
 //^ HEAD
 //^
 
-//> HEAD -> SUPER
-use super::problem::Problem;
-
 //> HEAD -> CRATE
-use crate::report::Issue;
+use crate::{
+    issue::Issue,
+    problem::Problem
+};
 
 
 //^ 

@@ -3,21 +3,17 @@
 //^ 
 
 //> HEAD -> SUPER
-use super::{
-    Report,
-    toissue::ToIssue,
-    Act
-};
+use super::act::Act;
 
 //> HEAD -> CORE
 use core::{
-    mem::replace,
     ops::{
         FromResidual,
         Residual,
         Try,
         ControlFlow
-    }
+    },
+    convert::Infallible
 };
 
 
@@ -25,15 +21,8 @@ use core::{
 //^ TYPES
 //^
 
-//> TYPES -> ATTACHMENT
-#[must_use]
-pub struct Attachment<'valid, Type, Object: ToIssue, const NAME: &'static str> {
-    pub report: Option<&'valid mut Report<Object, NAME>>,
-    pub result: Option<Type>
-}
-
 //> TYPES -> BREAK
-pub struct Break<'valid, Object: ToIssue, const NAME: &'static str>(Option<&'valid mut Report<Object, NAME>>);
+pub struct Break<const NAME: &'static str>;
 
 
 //^
@@ -41,19 +30,18 @@ pub struct Break<'valid, Object: ToIssue, const NAME: &'static str>(Option<&'val
 //^
 
 //> FROMRESIDUAL -> ACT
-impl<'valid, Type, Object: ToIssue, const NAME: &'static str> FromResidual<Break<'valid, Object, NAME>> for Act<Type, Object, NAME> {
-    fn from_residual(residual: Break<'valid, Object, NAME>) -> Self {return Act {
-        problems: replace(residual.0.unwrap(), Report {..}).problems,
-        result: None
-    }}
+impl<Type, const NAME: &'static str, const OTHER: &'static str> FromResidual<Break<NAME>> for Act<Type, OTHER> {
+    fn from_residual(_residual: Break<NAME>) -> Self {return Act(None)}
 }
 
-//> FROMRESIDUAL -> ATTACHMENT
-impl<'valid, Type, Object: ToIssue, const NAME: &'static str> FromResidual<Break<'valid, Object, NAME>> for Attachment<'valid, Type, Object, NAME> {
-    fn from_residual(residual: Break<'valid, Object, NAME>) -> Self {return Attachment {
-        report: residual.0,
-        result: None
-    }}
+//> FROMRESIDUAL -> OPTION
+impl<Type, const NAME: &'static str> FromResidual<Option<Infallible>> for Act<Type, NAME> {
+    fn from_residual(_residual: Option<Infallible>) -> Self {return Act(None)}
+}
+
+//> FROMRESIDUAL -> RESULT
+impl<Type, Error, const NAME: &'static str> FromResidual<Result<Infallible, Error>> for Act<Type, NAME> {
+    fn from_residual(_residual: Result<Infallible, Error>) -> Self {return Act(None)}
 }
 
 
@@ -62,8 +50,8 @@ impl<'valid, Type, Object: ToIssue, const NAME: &'static str> FromResidual<Break
 //^
 
 //> RESIDUAL -> BREAK
-impl<'valid, Type, Object: ToIssue, const NAME: &'static str> Residual<Type> for Break<'valid, Object, NAME> {
-    type TryType = Attachment<'valid, Type, Object, NAME>;
+impl<Type, const NAME: &'static str> Residual<Type> for Break<NAME> {
+    type TryType = Act<Type, NAME>;
 }
 
 
@@ -72,15 +60,12 @@ impl<'valid, Type, Object: ToIssue, const NAME: &'static str> Residual<Type> for
 //^
 
 //> TRY -> ATTACHMENT
-impl<'valid, Type, Object: ToIssue, const NAME: &'static str> Try for Attachment<'valid, Type, Object, NAME> {
+impl<Type, const NAME: &'static str> Try for Act<Type, NAME> {
     type Output = Type;
-    type Residual = Break<'valid, Object, NAME>;
-    fn from_output(output: Self::Output) -> Self {return Attachment {
-        report: None,
-        result: Some(output)
-    }}
-    fn branch(self) -> ControlFlow<Self::Residual, Self::Output> {return match self.result {
-        Some(value) => ControlFlow::Continue(value),
-        None => ControlFlow::Break(Break(self.report))
+    type Residual = Break<NAME>;
+    fn from_output(output: Self::Output) -> Self {return Act(Some(output))}
+    fn branch(self) -> ControlFlow<Self::Residual, Self::Output> {return match self.0 {
+        None => ControlFlow::Break(Break),
+        Some(value) => ControlFlow::Continue(value)
     }}
 }
