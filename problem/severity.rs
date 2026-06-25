@@ -3,7 +3,7 @@
 //^
 
 //> SEVERITY -> ENUM
-#[derive(Clone, Copy, Debug)]
+#[derive(Debug)]
 pub enum Severity {
     Warning,
     Error,
