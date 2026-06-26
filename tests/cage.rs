@@ -19,6 +19,7 @@ fn integer() -> () {
     static CAGE: Cage<usize> = Cage::new(0);
     CAGE.write().add_assign(1);
     assert_eq!(CAGE.read().clone(), 1);
+    let _copy = CAGE.get();
 }
 
 //> TESTS -> STRING
@@ -28,4 +29,5 @@ fn string() -> () {
     cage.write().push_str(", world!");
     let _ = cage.read().len();
     assert_eq!(cage.read().as_str(), "hello, world!");
+    let _clone = cage.cloned();
 }

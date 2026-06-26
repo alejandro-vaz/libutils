@@ -13,7 +13,8 @@ use core::{
         Try,
         ControlFlow
     },
-    convert::Infallible
+    convert::Infallible,
+    mem::transmute_neo as transmute
 };
 
 
@@ -22,7 +23,7 @@ use core::{
 //^
 
 //> TYPES -> BREAK
-pub struct Break<const NAME: &'static str>;
+pub struct Break;
 
 
 //^
@@ -30,18 +31,13 @@ pub struct Break<const NAME: &'static str>;
 //^
 
 //> FROMRESIDUAL -> ACT
-impl<Type, const NAME: &'static str, const OTHER: &'static str> FromResidual<Break<NAME>> for Act<Type, OTHER> {
-    fn from_residual(_residual: Break<NAME>) -> Self {return Act(None)}
+impl<Type> FromResidual<Break> for Act<Type> {
+    fn from_residual(_residual: Break) -> Self {return unsafe {transmute(None::<Type>)}}
 }
 
 //> FROMRESIDUAL -> OPTION
-impl<Type, const NAME: &'static str> FromResidual<Option<Infallible>> for Act<Type, NAME> {
-    fn from_residual(_residual: Option<Infallible>) -> Self {return Act(None)}
-}
-
-//> FROMRESIDUAL -> RESULT
-impl<Type, Error, const NAME: &'static str> FromResidual<Result<Infallible, Error>> for Act<Type, NAME> {
-    fn from_residual(_residual: Result<Infallible, Error>) -> Self {return Act(None)}
+impl<Type> FromResidual<Option<Infallible>> for Act<Type> {
+    fn from_residual(_residual: Option<Infallible>) -> Self {return unsafe {transmute(None::<Type>)}}
 }
 
 
@@ -50,8 +46,8 @@ impl<Type, Error, const NAME: &'static str> FromResidual<Result<Infallible, Erro
 //^
 
 //> RESIDUAL -> BREAK
-impl<Type, const NAME: &'static str> Residual<Type> for Break<NAME> {
-    type TryType = Act<Type, NAME>;
+impl<Type> Residual<Type> for Break {
+    type TryType = Act<Type>;
 }
 
 
@@ -60,11 +56,11 @@ impl<Type, const NAME: &'static str> Residual<Type> for Break<NAME> {
 //^
 
 //> TRY -> ATTACHMENT
-impl<Type, const NAME: &'static str> Try for Act<Type, NAME> {
+impl<Type> Try for Act<Type> {
     type Output = Type;
-    type Residual = Break<NAME>;
-    fn from_output(output: Self::Output) -> Self {return Act(Some(output))}
-    fn branch(self) -> ControlFlow<Self::Residual, Self::Output> {return match self.0 {
+    type Residual = Break;
+    fn from_output(output: Self::Output) -> Self {return unsafe {transmute(Some(output))}}
+    fn branch(self) -> ControlFlow<Self::Residual, Self::Output> {return match self.into() {
         None => ControlFlow::Break(Break),
         Some(value) => ControlFlow::Continue(value)
     }}

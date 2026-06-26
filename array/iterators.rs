@@ -27,16 +27,18 @@ pub struct Iterable<Type, const N: usize> {
     index: usize,
     length: usize,
     data: MaybeUninit<[Type; N]>
+} impl<Type, const N: usize> Drop for Iterable<Type, N> {
+    fn drop(&mut self) {while let Some(value) = self.next() {drop(value)}}
 }
 
 //> ITERATORS -> ITERATIONS
-impl<Type, const N: usize> Iterator for Iterable<Type, N> {
+impl<Type, const N: usize> const Iterator for Iterable<Type, N> {
     type Item = Type;
     fn next(&mut self) -> Option<Self::Item> {
         return if self.index >= self.length {None} else {
             let value = unsafe {(self.data.as_ptr() as *const Type).add(self.index).read()};
             self.index += 1;
-            return Some(value);
+            Some(value)
         }
     }
 }
@@ -51,7 +53,7 @@ impl<Type, const N: usize> FromIterator<Type> for Array<Type, N> {
 }
 
 //> ITERATORS -> INTO ITERATOR
-impl<Type, const N: usize> IntoIterator for Array<Type, N> {
+impl<Type, const N: usize> const IntoIterator for Array<Type, N> {
     type Item = Type;
     type IntoIter = Iterable<Type, N>;
     fn into_iter(self) -> Self::IntoIter {

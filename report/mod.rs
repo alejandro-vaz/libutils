@@ -4,7 +4,6 @@
 
 //> HEAD -> MODULES
 mod act;
-mod machine;
 mod shortcut;
 
 //> HEAD -> STD
@@ -16,18 +15,19 @@ use crate::{
         Problem,
         Severity
     },
-    issue::Issue
+    issue::Issue,
+    terminal::{
+        TERMINAL,
+        Console
+    },
+    array::Array
 };
 
 //> HEAD -> ACT
 pub use act::Act;
 
-//> HEAD -> MACHINE
-pub use machine::{
-    Main,
-    Mode,
-    Set
-};
+//> HEAD -> CORE
+use core::mem::transmute_neo as transmute;
 
 
 //^
@@ -35,47 +35,62 @@ pub use machine::{
 //^
 
 //> REPORT -> STRUCT
-pub struct Report<State: Mode>(State);
+pub struct Report<const NAME: &'static str, const N: usize> {
+    chain: Array<&'static str, N>
+}
 
 //> REPORT -> DEFAULT
-impl Default for Report<Main> {
-    fn default() -> Self {return Self(Main)}
+impl const Default for Report<"Main", 1> {
+    fn default() -> Self {
+        let mut chain = Array::default();
+        chain.push("Main");
+        return Self {
+            chain: chain
+        }
+    }
 }
 
 //> REPORT -> IMPLEMENTATION
-impl<State: Mode> Report<State> {
+impl<const NAME: &'static str, const N: usize> Report<NAME, N> {
     #[inline]
-    pub fn warn<Object: Into<Issue>>(&self, object: Object) -> () {
-        self.0.send(Problem {
-            chain: Vec::new(),
-            at: Instant::now(),
-            object: object,
-            severity: Severity::Warning
-        });
+    fn send<Object: Into<Issue>>(&self, mut problem: Problem<Object>) -> () {
+        problem.chain = self.chain.clone().into_iter().collect();
+        TERMINAL.write().issue(problem);
     }
     #[inline]
-    pub fn error<Object: Into<Issue>>(&self, object: Object) -> () {
-        self.0.send(Problem {
-            chain: Vec::new(),
-            at: Instant::now(),
-            object: object,
-            severity: Severity::Error
-        });
+    pub fn warn<Object: Into<Issue>>(&self, object: Object) -> () {self.send(Problem {
+        chain: Vec::new(),
+        at: Instant::now(),
+        object: object,
+        severity: Severity::Warning
+    })}
+    #[inline]
+    pub fn error<Object: Into<Issue>>(&self, object: Object) -> () {self.send(Problem {
+        chain: Vec::new(),
+        at: Instant::now(),
+        object: object,
+        severity: Severity::Error
+    })}
+    #[inline]
+    pub fn sub<'valid, const OTHER: &'static str>(&'valid self) -> Report<OTHER, {N + 1}> {
+        let mut chain = Array::from_iter(self.chain.clone().into_iter());
+        chain.push(OTHER);
+        return Report {
+            chain: chain
+        }
     }
     #[inline]
-    pub fn sub<'valid, const NAME: &'static str>(&'valid self) -> Report<Set<'valid, NAME>> {return Report(self.0.connect())}
+    pub fn with<Type>(self, value: Type) -> Act<Type> {return unsafe {transmute(Some(value))}}
     #[inline]
-    pub fn with<Type>(self, value: Type) -> Act<Type, {State::NAME}> {return Act(Some(value))}
+    pub fn with_default<Type: Default>(self) -> Act<Type> {return unsafe {transmute(Some(Type::default()))}}
     #[inline]
-    pub fn with_default<Type: Default>(self) -> Act<Type, {State::NAME}> {return Act(Some(Type::default()))}
-    #[inline]
-    pub fn fail<Type, Object: Into<Issue>>(self, object: Object) -> Act<Type, {State::NAME}> {
-        self.0.send(Problem {
+    pub fn fail<Type, Object: Into<Issue>>(self, object: Object) -> Act<Type> {
+        self.send(Problem {
             chain: Vec::new(),
             at: Instant::now(),
             object: object,
             severity: Severity::Critical
         });
-        return Act(None);
+        return unsafe {transmute(None::<Type>)};
     }
 }

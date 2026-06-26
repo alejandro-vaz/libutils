@@ -6,27 +6,15 @@
 use super::Cage;
 
 //> HEAD -> CORE
-use core::{
-    fmt::{
-        Debug,
-        Formatter,
-        Result as Format
-    },
-    hash::{
-        Hash,
-        Hasher
-    }
+use core::hash::{
+    Hash,
+    Hasher
 };
 
 
 //^
 //^ DERIVATIONS
 //^
-
-//> DERIVATIONS -> DEBUG
-impl<Type: Debug + ?Sized> Debug for Cage<Type> {
-    fn fmt(&self, formatter: &mut Formatter<'_>) -> Format {write!(formatter, "Cage({:?})", &self.0)}
-}
 
 //> DERIVATIONS -> CLONE
 impl<Type: Clone + ?Sized> Clone for Cage<Type> {

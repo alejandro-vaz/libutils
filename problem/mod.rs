@@ -38,9 +38,9 @@ pub struct Problem<Object: Into<Issue>> {
 impl Display for Problem<Issue> {
     fn fmt(&self, formatter: &mut Formatter<'_>) -> Format {write!(
         formatter,
-        "@{}\n{:?}: {}{}",
+        "@ {}\n{:?}: {}{}",
         self.chain.iter().rev().map(|node| *node).collect::<Vec<&'static str>>().join(" > "),
-        self.severity,
+        <&Severity as Into<&'static str>>::into(&self.severity),
         self.object.name,
         if let Some(description) = &self.object.description {format!("\n    {}", description)} else {String::new()}
     )}

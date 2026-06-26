@@ -18,18 +18,35 @@ use std::sync::{
 //^
 
 //> CAGE -> DEFINITION
-pub struct Cage<Type: ?Sized>(RwLock<Type>);
+#[derive(Debug)]
+pub struct Cage<Type: ?Sized> {
+    being: RwLock<Type>
+}
 
-//> CAGE -> NEW
+//> CAGE -> SIZED IMPLEMENTATION
 impl<Type: Sized> Cage<Type> {
-    pub const fn new(value: Type) -> Cage<Type> {return Self(RwLock::new(value))}
-    pub fn release(self) -> Type {return self.0.into_inner().unwrap()}
+    pub const fn new(value: Type) -> Cage<Type> {return Self {
+        being: RwLock::new(value)
+    }}
+    pub fn release(self) -> Type {return self.being.into_inner().unwrap()}
 }
 
 //> CAGE -> IMPLEMENTATION
 impl<Type: ?Sized> Cage<Type> {
     #[inline]
-    pub fn read<'valid>(&'valid self) -> RwLockReadGuard<'valid, Type> {return self.0.read().unwrap()}
+    pub fn read<'valid>(&'valid self) -> RwLockReadGuard<'valid, Type> {return self.being.read().unwrap()}
     #[inline]
-    pub fn write<'valid>(&'valid self) -> RwLockWriteGuard<'valid, Type> {return self.0.write().unwrap()}
+    pub fn write<'valid>(&'valid self) -> RwLockWriteGuard<'valid, Type> {return self.being.write().unwrap()}
+}
+
+//> CAGE -> COPY IMPLEMENTATION
+impl<Type: Copy> Cage<Type> {
+    #[inline]
+    pub fn get(&self) -> Type {*self.read()}
+}
+
+//> CAGE -> CLONE IMPLEMENTATION
+impl<Type: Clone> Cage<Type> {
+    #[inline]
+    pub fn cloned(&self) -> Type {self.read().clone()}
 }

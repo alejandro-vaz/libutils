@@ -5,8 +5,7 @@
 //> HEAD -> API
 use libutils::report::{
     Report,
-    Act,
-    Set
+    Act
 };
 
 
@@ -16,16 +15,16 @@ use libutils::report::{
 
 //> TEST -> STRING
 #[test]
-fn string() -> Act<(), "Main"> {
+fn string() -> Act<()> {
     let main = Report::default();
     return main.with_default();
 }
 
 //> TEST -> HIERARCHY
 #[test]
-fn hierarchy() -> Act<(), "Main"> {
+fn hierarchy() -> Act<()> {
     let report = Report::default();
-    let another = |inferior: Report<Set<'_, "Inferior">>| -> Act<(), "Inferior"> {
+    let another = |inferior: Report<"Inferior", _>| -> Act<()> {
         if true {
             inferior.with_default()
         } else {
@@ -38,7 +37,7 @@ fn hierarchy() -> Act<(), "Main"> {
 
 //> TEST -> TAKE
 #[test]
-fn take() -> Act<(), "Main"> {
+fn take() -> Act<()> {
     let report = Report::default();
     let _ = Some(2)?;
     return report.with_default();

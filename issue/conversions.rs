@@ -11,7 +11,7 @@ use super::Issue;
 //^
 
 //> IMPLEMENTATIONS -> &'STATIC STR
-impl Into<Issue> for &'static str {
+impl const Into<Issue> for &'static str {
     fn into(self) -> Issue {return Issue {
         name: self,
         description: None

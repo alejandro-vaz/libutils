@@ -196,3 +196,23 @@ fn index() -> () {
     let x = Array::<usize, 5>::from([0]);
     let _ = x[0];
 }
+
+//> TESTS -> BORROWED ITERATOR
+#[test]
+fn biter() -> () {
+    let mut array = Array::<u8, 7>::from([1, 2, 3]);
+    for element in &array {
+        let _ = *element;
+    }
+    for element in &mut array {
+        *element = *element + 1;
+    }
+}
+
+//> TESTS -> INTOVEC
+#[test]
+fn intovec() -> () {
+    let array = Array::<u8, 7>::from([1, 2, 3]);
+    let vector: Vec<_> = array.into();
+    assert_eq!(vector, [1, 2, 3]);
+}

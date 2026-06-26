@@ -11,6 +11,12 @@
 #![feature(default_field_values)]
 #![feature(adt_const_params)]
 #![feature(unsized_const_params)]
+#![feature(transmute_neo)]
+#![feature(const_default)]
+#![feature(const_convert)]
+#![feature(const_iter)]
+#![feature(const_index)]
+#![feature(const_slice_make_iter)]
 
 //> UTILS -> ARRAY
 #[cfg(feature = "array")]
@@ -27,6 +33,10 @@ pub mod diff;
 //> UTILS -> ISSUE
 #[cfg(feature = "issue")]
 pub mod issue;
+
+//> UTILS -> LOG
+#[cfg(feature = "log")]
+pub mod log;
 
 //> UTILS -> PROBLEM
 #[cfg(feature = "problem")]
