@@ -12,11 +12,16 @@
 #![feature(adt_const_params)]
 #![feature(unsized_const_params)]
 #![feature(transmute_neo)]
+#![feature(phantom_variance_markers)]
 #![feature(const_default)]
 #![feature(const_convert)]
 #![feature(const_iter)]
 #![feature(const_index)]
 #![feature(const_slice_make_iter)]
+#![feature(const_try)]
+#![feature(allocator_api)]
+#![feature(const_closures)]
+#![feature(const_option_ops)]
 
 //> UTILS -> ARRAY
 #[cfg(feature = "array")]
@@ -37,6 +42,10 @@ pub mod issue;
 //> UTILS -> LOG
 #[cfg(feature = "log")]
 pub mod log;
+
+//> UTILS -> POINTER
+#[cfg(feature = "pointer")]
+pub mod pointer;
 
 //> UTILS -> PROBLEM
 #[cfg(feature = "problem")]

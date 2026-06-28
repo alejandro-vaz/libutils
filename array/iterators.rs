@@ -34,6 +34,7 @@ pub struct Iterable<Type, const N: usize> {
 //> ITERATORS -> ITERATIONS
 impl<Type, const N: usize> const Iterator for Iterable<Type, N> {
     type Item = Type;
+    #[inline]
     fn next(&mut self) -> Option<Self::Item> {
         return if self.index >= self.length {None} else {
             let value = unsafe {(self.data.as_ptr() as *const Type).add(self.index).read()};
@@ -68,14 +69,14 @@ impl<Type, const N: usize> const IntoIterator for Array<Type, N> {
 }
 
 //> ITERATORS -> BORROWED
-impl<'valid, Type, const N: usize> IntoIterator for &'valid Array<Type, N> {
+impl<'valid, Type, const N: usize> const IntoIterator for &'valid Array<Type, N> {
     type Item = &'valid Type;
     type IntoIter = Iter<'valid, Type>;
     fn into_iter(self) -> Self::IntoIter {self.iter()}
 }
 
 //> ITERATORS -> BORROWED MUTABLY
-impl<'valid, Type, const N: usize> IntoIterator for &'valid mut Array<Type, N> {
+impl<'valid, Type, const N: usize> const IntoIterator for &'valid mut Array<Type, N> {
     type Item = &'valid mut Type;
     type IntoIter = IterMut<'valid, Type>;
     fn into_iter(self) -> Self::IntoIter {self.iter_mut()}
@@ -83,8 +84,6 @@ impl<'valid, Type, const N: usize> IntoIterator for &'valid mut Array<Type, N> {
 
 //> ITERATORS -> METHODS
 impl<Type, const N: usize> Array<Type, N> {
-    #[inline]
-    pub fn iter<'valid>(&'valid self) -> Iter<'valid, Type> {return self.as_ref().into_iter()}
-    #[inline]
-    pub fn iter_mut<'valid>(&'valid mut self) -> IterMut<'valid, Type> {return self.as_mut().into_iter()}
+    pub const fn iter<'valid>(&'valid self) -> Iter<'valid, Type> {return self.as_ref().iter()}
+    pub const fn iter_mut<'valid>(&'valid mut self) -> IterMut<'valid, Type> {return self.as_mut().iter_mut()}
 }

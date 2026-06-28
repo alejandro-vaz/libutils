@@ -216,3 +216,13 @@ fn intovec() -> () {
     let vector: Vec<_> = array.into();
     assert_eq!(vector, [1, 2, 3]);
 }
+
+//> TESTS -> ZST
+#[test]
+fn zst() -> () {
+    let mut array = Array::<(), 4>::from([(), (), ()]);
+    array.pop();
+    assert_eq!(array.len(), 2);
+    array.extend([()].repeat(2));
+    assert_eq!(array.len(), 4);
+}

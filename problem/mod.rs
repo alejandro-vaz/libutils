@@ -5,7 +5,7 @@
 //> HEAD -> MODULES
 mod severity;
 
-//> HEAD -> crate
+//> HEAD -> CRATE
 use crate::issue::Issue;
 
 //> HEAD -> STD

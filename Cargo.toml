@@ -1,6 +1,6 @@
 [package]
 name = "libutils"
-version = "8.34.20"
+version = "9.38.21"
 # number of features - number of files - incremental number
 edition = "2024"
 authors = ["Alejandro Vaz"]
@@ -43,12 +43,13 @@ codegen-units = 1
 opt-level = 3
 
 [features]
-default = ["array", "cage", "diff", "issue", "log", "problem", "report", "terminal"]
+default = ["array", "cage", "diff", "issue", "log", "pointer", "problem", "report", "terminal"]
 array = []
 cage = []
 diff = []
 issue = []
-log = []
+log = ["pointer"]
+pointer = []
 problem = ["issue"]
 report = ["array", "issue", "problem", "terminal"]
 terminal = ["cage", "diff", "issue", "log", "problem"]

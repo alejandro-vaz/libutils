@@ -13,9 +13,9 @@ use libutils::log::Log;
 //> LOG -> BASIC
 #[test]
 fn basic() -> () {
-    let mut log = Log::from(&[1, 2, 3]);
+    let mut log = Log::from([1, 2, 3]);
     assert_eq!(log.len(), 3);
-    log.push(&4);
+    log.push(4);
     assert_eq!(log.len(), 4);
 }
 
@@ -35,4 +35,34 @@ fn references() -> () {
     let array = [1, 2, 3];
     let log = Log::from(array);
     assert_eq!(log.as_ref(), &array);
+}
+
+//> LOG > BITER
+#[test]
+fn biter() -> () {
+    let log = &Log::from([1, 2, 3]);
+    for (index, value) in log.iter().enumerate() {
+        assert_eq!(index + 1, *value)
+    }
+}
+
+//> LOG -> DROP
+#[test]
+#[should_panic]
+fn drop() -> () {
+    struct Guard;
+    impl Drop for Guard {
+        fn drop(&mut self) {
+            panic!()
+        }
+    }
+    let _ = Log::from([Guard]);
+}
+
+//> LOG -> ZST
+#[test]
+fn zst() -> () {
+    let mut log = Log::from([(), (), ()]);
+    log.push(());
+    assert_eq!(log.len(), 4);
 }

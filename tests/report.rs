@@ -39,6 +39,5 @@ fn hierarchy() -> Act<()> {
 #[test]
 fn take() -> Act<()> {
     let report = Report::default();
-    let _ = Some(2)?;
     return report.with_default();
 }

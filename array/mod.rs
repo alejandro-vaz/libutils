@@ -12,7 +12,10 @@ mod references;
 //> HEAD -> CORE
 use core::{
     mem::MaybeUninit,
-    ptr::copy,
+    ptr::{
+        copy,
+        NonNull
+    },
     ops::Drop,
     fmt::{
         Debug,
@@ -35,11 +38,13 @@ pub struct Array<Type, const N: usize> {
 //> ARRAY -> INTERNALS
 impl<Type, const N: usize> Array<Type, N> {
     #[inline]
-    const fn pointer(&mut self) -> *mut Type {return self.data.as_mut_ptr() as *mut Type}
+    const fn pointer(&mut self) -> NonNull<Type> {return NonNull::new(self.data.as_mut_ptr()).unwrap().cast()}
 }
 
 //> ARRAY -> IMPLEMENTATION
 impl<Type, const N: usize> Array<Type, N> {
+    #[inline]
+    pub const fn is_empty(&self) -> bool {return self.length == 0}
     #[inline]
     pub const fn new() -> Self {return Self::default()}
     #[inline]
@@ -66,14 +71,14 @@ impl<Type, const N: usize> Array<Type, N> {
     }
     #[inline]
     pub const fn get_mut<'valid>(&'valid mut self, index: usize) -> Option<&'valid mut Type> {
-        return if self.length <= index {None} else {unsafe {self.pointer().add(index).as_mut()}}
+        return if self.length <= index {None} else {Some(unsafe {self.pointer().add(index).as_mut()})}
     }
     #[inline]
     pub const fn insert(&mut self, index: usize, value: Type) -> () {
         if index > self.length {panic!("tried to insert out of bounds")}
         if self.length == N {panic!("array capacity exceeded")}
         let pointer = unsafe {self.pointer().add(index)};
-        unsafe {copy(pointer, pointer.add(1), self.length - index)}
+        unsafe {copy(pointer.as_ptr(), pointer.add(1).as_ptr(), self.length - index)}
         unsafe {pointer.write(value)}
         self.length += 1;
     }
@@ -82,7 +87,7 @@ impl<Type, const N: usize> Array<Type, N> {
         if index >= self.length {panic!("access out of bounds")}
         let pointer = unsafe {self.pointer().add(index)};
         let value = unsafe {pointer.read()};
-        unsafe {copy(pointer.add(1), pointer, self.length - 1 - index)};
+        unsafe {copy(pointer.add(1).as_ptr(), pointer.as_ptr(), self.length - 1 - index)};
         self.length -= 1;
         return value;
     }

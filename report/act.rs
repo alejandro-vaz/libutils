@@ -8,9 +8,6 @@ use std::process::{
     Termination
 };
 
-//> HEAD -> CORE
-use core::mem::transmute_neo as transmute;
-
 
 //^
 //^ ACT
@@ -23,7 +20,10 @@ pub struct Act<Type> {
 
 //> ACT -> TERMINATION
 impl Termination for Act<()> {
-    fn report(self) -> ExitCode {return ExitCode::SUCCESS}
+    fn report(self) -> ExitCode {return match self.option {
+        None => ExitCode::FAILURE,
+        Some(()) => ExitCode::SUCCESS
+    }}
 }
 
 //> ACT -> IMPLEMENTATION
@@ -32,9 +32,6 @@ impl<Type> Act<Type> {
     pub fn map<Return, Closure: FnOnce(Type) -> Return>(self, closure: Closure) -> Act<Return> {return Act {
         option: self.option.map(closure)
     }}
-}
-
-//> ACT -> INTO
-impl<Type> const Into<Option<Type>> for Act<Type> {
-    fn into(self) -> Option<Type> {return unsafe {transmute(self)}}
+    #[inline]
+    pub fn value(self) -> Option<Type> {return self.option}
 }

@@ -7,12 +7,24 @@ mod conversions;
 mod iterators;
 mod references;
 
-//> HEAD -> STD
-use core::fmt::{
-    Debug,
-    Formatter,
-    Result as Format
+//> HEAD -> CORE
+use core::{
+    fmt::{
+        Debug,
+        Formatter,
+        Result as Format
+    },
+    alloc::{
+        Allocator,
+        Layout
+    }
 };
+
+//> HEAD -> STD
+use std::alloc::Global;
+
+//> HEAD -> CRATE
+use crate::pointer::Pointer;
 
 
 //^
@@ -22,33 +34,65 @@ use core::fmt::{
 //> LOG -> STRUCT
 #[derive(Clone)]
 pub struct Log<Type> {
-    data: Vec<Type>
+    pointer: Pointer<'static, Type>,
+    length: usize,
+    capacity: usize
+}
+
+//> LOG -> INTERNALS
+impl<Type> Log<Type> {
+    #[inline]
+    fn grow(&mut self) -> () {
+        self.pointer = match self.pointer.take() {
+            None => Global.allocate(Layout::from_size_align(size_of::<Type>(), align_of::<Type>()).unwrap()),
+            Some(pointer) => unsafe {Global.grow(
+                pointer.cast(), 
+                Layout::from_size_align(self.capacity * size_of::<Type>(), align_of::<Type>()).unwrap(), 
+                Layout::from_size_align(self.capacity * 2 * size_of::<Type>(), align_of::<Type>()).unwrap()
+            )}
+        }.unwrap().cast().into();
+        self.capacity = (self.capacity * 2).max(1);
+    }
 }
 
 //> LOG -> IMPLEMENTATION
 impl<Type> Log<Type> {
-    #[inline]
     pub const fn new() -> Self {return Self::default()}
     #[inline]
-    pub const fn len(&self) -> usize {return self.data.len()}
+    pub const fn len(&self) -> usize {return self.length}
+    pub const fn is_empty(&self) -> bool {return self.length == 0}
     #[inline]
-    pub fn push(&mut self, value: Type) -> () {self.data.push(value)}
+    pub fn push(&mut self, value: Type) -> () {
+        if self.length == self.capacity || self.pointer.is_null() {self.grow()}
+        unsafe {self.pointer.add(self.length).write(value)};
+        self.length += 1;
+    }
 }
 
 //> LOG -> DEFAULT
 impl<Type> const Default for Log<Type> {
-    #[inline]
     fn default() -> Self {return Self {
-        data: Vec::new()
+        pointer: Pointer::default(),
+        length: 0,
+        capacity: 0
     }}
 }
 
 //> LOG -> EXTEND
 impl<Type> Extend<Type> for Log<Type> {
-    fn extend<T: IntoIterator<Item = Type>>(&mut self, iter: T) {self.data.extend(iter)}
+    #[inline]
+    fn extend<T: IntoIterator<Item = Type>>(&mut self, iter: T) {iter.into_iter().for_each(|item| self.push(item))}
 }
 
 //> LOG -> DEBUG
 impl<Type: Debug> Debug for Log<Type> {
     fn fmt(&self, formatter: &mut Formatter<'_>) -> Format {Debug::fmt(self.as_ref(), formatter)}
+}
+
+//> LOG -> DROP
+impl<Type> Drop for Log<Type> {
+    fn drop(&mut self) {if let Some(pointer) = self.pointer.take() {
+        for index in 0..self.length {drop(unsafe {pointer.add(index).read()})}
+        unsafe {Global.deallocate(pointer.cast(), Layout::from_size_align(self.capacity * size_of::<Type>(), align_of::<Type>()).unwrap());}
+    }}
 }

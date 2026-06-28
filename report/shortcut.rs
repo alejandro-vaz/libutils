@@ -13,7 +13,6 @@ use core::{
         Try,
         ControlFlow
     },
-    convert::Infallible,
     mem::transmute_neo as transmute
 };
 
@@ -31,13 +30,8 @@ pub struct Break;
 //^
 
 //> FROMRESIDUAL -> ACT
-impl<Type> FromResidual<Break> for Act<Type> {
+impl<Type> const FromResidual<Break> for Act<Type> {
     fn from_residual(_residual: Break) -> Self {return unsafe {transmute(None::<Type>)}}
-}
-
-//> FROMRESIDUAL -> OPTION
-impl<Type> FromResidual<Option<Infallible>> for Act<Type> {
-    fn from_residual(_residual: Option<Infallible>) -> Self {return unsafe {transmute(None::<Type>)}}
 }
 
 
@@ -60,8 +54,7 @@ impl<Type> Try for Act<Type> {
     type Output = Type;
     type Residual = Break;
     fn from_output(output: Self::Output) -> Self {return unsafe {transmute(Some(output))}}
-    fn branch(self) -> ControlFlow<Self::Residual, Self::Output> {return match self.into() {
-        None => ControlFlow::Break(Break),
-        Some(value) => ControlFlow::Continue(value)
-    }}
+    fn branch(self) -> ControlFlow<Self::Residual, Self::Output> {return if let Some(value) = self.value() {
+        ControlFlow::Continue(value)
+    } else {ControlFlow::Break(Break)}}
 }
