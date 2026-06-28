@@ -30,7 +30,7 @@ pub struct Break;
 //^
 
 //> FROMRESIDUAL -> ACT
-impl<Type> const FromResidual<Break> for Act<Type> {
+const impl<Type> FromResidual<Break> for Act<Type> {
     fn from_residual(_residual: Break) -> Self {return unsafe {transmute(None::<Type>)}}
 }
 

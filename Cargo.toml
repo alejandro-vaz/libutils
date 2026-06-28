@@ -1,6 +1,6 @@
 [package]
 name = "libutils"
-version = "9.40.23"
+version = "9.40.24"
 # number of features - number of files - incremental number
 edition = "2024"
 authors = ["Alejandro Vaz"]

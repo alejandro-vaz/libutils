@@ -76,7 +76,7 @@ impl<Type> IntoIterator for Log<Type> {
 }
 
 //> ITERATORS -> BORROWED
-impl<'valid, Type> const IntoIterator for &'valid Log<Type> {
+const impl<'valid, Type> IntoIterator for &'valid Log<Type> {
     type Item = &'valid Type;
     type IntoIter = Iter<'valid, Type>;
     fn into_iter(self) -> Self::IntoIter {self.iter()}

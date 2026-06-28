@@ -32,7 +32,7 @@ pub struct Iterable<Type, const N: usize> {
 }
 
 //> ITERATORS -> ITERATIONS
-impl<Type, const N: usize> const Iterator for Iterable<Type, N> {
+const impl<Type, const N: usize> Iterator for Iterable<Type, N> {
     type Item = Type;
     #[inline]
     fn next(&mut self) -> Option<Self::Item> {
@@ -54,7 +54,7 @@ impl<Type, const N: usize> FromIterator<Type> for Array<Type, N> {
 }
 
 //> ITERATORS -> INTO ITERATOR
-impl<Type, const N: usize> const IntoIterator for Array<Type, N> {
+const impl<Type, const N: usize> IntoIterator for Array<Type, N> {
     type Item = Type;
     type IntoIter = Iterable<Type, N>;
     fn into_iter(self) -> Self::IntoIter {
@@ -69,14 +69,14 @@ impl<Type, const N: usize> const IntoIterator for Array<Type, N> {
 }
 
 //> ITERATORS -> BORROWED
-impl<'valid, Type, const N: usize> const IntoIterator for &'valid Array<Type, N> {
+const impl<'valid, Type, const N: usize> IntoIterator for &'valid Array<Type, N> {
     type Item = &'valid Type;
     type IntoIter = Iter<'valid, Type>;
     fn into_iter(self) -> Self::IntoIter {self.iter()}
 }
 
 //> ITERATORS -> BORROWED MUTABLY
-impl<'valid, Type, const N: usize> const IntoIterator for &'valid mut Array<Type, N> {
+const impl<'valid, Type, const N: usize> IntoIterator for &'valid mut Array<Type, N> {
     type Item = &'valid mut Type;
     type IntoIter = IterMut<'valid, Type>;
     fn into_iter(self) -> Self::IntoIter {self.iter_mut()}

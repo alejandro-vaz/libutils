@@ -102,7 +102,7 @@ impl<'valid, Type: Debug> Debug for Pointer<'valid, Type> {
 }
 
 //> POINTER -> DEFAULT
-impl<Type> const Default for Pointer<'static, Type> {
+const impl<Type> Default for Pointer<'static, Type> {
     fn default() -> Self {return Self {
         to: None,
         lifetime: PhantomCovariantLifetime::new()

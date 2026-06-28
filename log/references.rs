@@ -17,7 +17,7 @@ use core::{
 //^
 
 //> REFERENCES -> SLICE
-impl<Type> const AsRef<[Type]> for Log<Type> {
+const impl<Type> AsRef<[Type]> for Log<Type> {
     #[inline]
     fn as_ref(&self) -> &[Type] {return match self.pointer.take() {
         None => &[],
@@ -31,7 +31,7 @@ impl<Type> const AsRef<[Type]> for Log<Type> {
 //^
 
 //> BORROW -> CONSTANT
-impl<Type> const Borrow<[Type]> for Log<Type> {
+const impl<Type> Borrow<[Type]> for Log<Type> {
     #[inline]
     fn borrow(&self) -> &[Type] {self.as_ref()}
 }

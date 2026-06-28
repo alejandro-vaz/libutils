@@ -17,7 +17,7 @@ use core::{
 //^
 
 //> CONVERSIONS -> FROM NONNULL
-impl<Type> const From<NonNull<Type>> for Pointer<'static, Type> {
+const impl<Type> From<NonNull<Type>> for Pointer<'static, Type> {
     fn from(value: NonNull<Type>) -> Self {return Self {
         to: Some(value),
         lifetime: PhantomCovariantLifetime::new()
@@ -25,7 +25,7 @@ impl<Type> const From<NonNull<Type>> for Pointer<'static, Type> {
 }
 
 //> CONVERSIONS -> FROM OPTION NONNULL
-impl<Type> const From<Option<NonNull<Type>>> for Pointer<'static, Type> {
+const impl<Type> From<Option<NonNull<Type>>> for Pointer<'static, Type> {
     fn from(value: Option<NonNull<Type>>) -> Self {return Self {
         to: value,
         lifetime: PhantomCovariantLifetime::new()

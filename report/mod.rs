@@ -37,7 +37,7 @@ pub struct Report<const NAME: &'static str, const N: usize> {
 }
 
 //> REPORT -> DEFAULT
-impl const Default for Report<"Main", 1> {
+const impl Default for Report<"Main", 1> {
     fn default() -> Self {
         let mut chain = Array::default();
         chain.push("Main");

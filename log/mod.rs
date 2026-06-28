@@ -70,7 +70,7 @@ impl<Type> Log<Type> {
 }
 
 //> LOG -> DEFAULT
-impl<Type> const Default for Log<Type> {
+const impl<Type> Default for Log<Type> {
     fn default() -> Self {return Self {
         pointer: Pointer::default(),
         length: 0,

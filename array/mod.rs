@@ -117,7 +117,7 @@ impl<Type: Clone, const N: usize> Clone for Array<Type, N> {
 }
 
 //> ARRAY -> DEFAULT
-impl<Type, const N: usize> const Default for Array<Type, N> {
+const impl<Type, const N: usize> Default for Array<Type, N> {
     #[inline]
     fn default() -> Self {return Self {
         data: MaybeUninit::uninit(),
