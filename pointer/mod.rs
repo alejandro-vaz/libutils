@@ -19,7 +19,10 @@ use core::{
         Result as Format
     },
     any::type_name,
-    marker::PhantomCovariantLifetime
+    marker::{
+        PhantomCovariantLifetime,
+        Destruct
+    }
 };
 
 
@@ -57,10 +60,6 @@ impl<'valid, Type> Pointer<'valid, Type> {
     #[inline]
     pub const unsafe fn read(self) -> Option<Type> {return Some(unsafe {self.to?.read()})}
     #[inline]
-    pub unsafe fn write(self, value: Type) -> () {if let Some(pointer) = self.to {unsafe {pointer.write(value)}}}
-    #[inline]
-    pub unsafe fn replace(self, with: Type) -> Option<Type> {return Some(unsafe {self.to?.replace(with)})}
-    #[inline]
     pub const fn as_ptr(self) -> *const Type {return match self.to {
         None => null(),
         Some(pointer) => pointer.as_ptr()
@@ -83,6 +82,14 @@ impl<'valid, Type> Pointer<'valid, Type> {
         to: self.to.map(const |pointer| pointer.cast()),
         lifetime: PhantomCovariantLifetime::new()
     }}
+}
+
+//> POINTER -> IMPLEMENTATION WITH DESTRUCT
+const impl<'valid, Type: [const] Destruct> Pointer<'valid, Type> {
+    #[inline]
+    pub unsafe fn write(self, value: Type) -> () {if let Some(pointer) = self.to {unsafe {pointer.write(value)}}}
+    #[inline]
+    pub unsafe fn replace(self, with: Type) -> Option<Type> {return Some(unsafe {self.to?.replace(with)})}
 }
 
 //> POINTER -> CLONE

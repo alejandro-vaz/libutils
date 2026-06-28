@@ -3,10 +3,10 @@
 //^
 
 //> HEAD -> STD
-use std::process::{
+use std::{marker::Destruct, process::{
     ExitCode,
     Termination
-};
+}};
 
 
 //^
@@ -27,9 +27,9 @@ impl Termination for Act<()> {
 }
 
 //> ACT -> IMPLEMENTATION
-impl<Type> Act<Type> {
+const impl<Type: [const] Destruct> Act<Type> {
     #[inline]
-    pub fn map<Return, Closure: FnOnce(Type) -> Return>(self, closure: Closure) -> Act<Return> {return Act {
+    pub fn map<Return, Closure: [const] FnOnce(Type) -> Return + [const] Destruct>(self, closure: Closure) -> Act<Return> {return Act {
         option: self.option.map(closure)
     }}
     #[inline]

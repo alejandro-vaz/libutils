@@ -11,8 +11,8 @@ use crate::{
     issue::Issue
 };
 
-//> HEAD -> STD
-use std::collections::HashMap as Map;
+//> HEAD -> HASHBROWN
+use hashbrown::HashMap as Map;
 
 
 //^

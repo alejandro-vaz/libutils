@@ -1,6 +1,6 @@
 [package]
 name = "libutils"
-version = "9.40.24"
+version = "9.40.25"
 # number of features - number of files - incremental number
 edition = "2024"
 authors = ["Alejandro Vaz"]
@@ -12,6 +12,9 @@ repository = "https://github.com/alejandro-vaz/libutils"
 keywords = ["utilities", "types", "utils", "libutils"]
 categories = ["development-tools", "config", "no-std"]
 resolver = "3"
+
+[dependencies]
+hashbrown = "0.17.1"
 
 [dev-dependencies]
 criterion = "0.8.2"

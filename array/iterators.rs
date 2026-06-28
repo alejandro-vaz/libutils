@@ -81,9 +81,3 @@ const impl<'valid, Type, const N: usize> IntoIterator for &'valid mut Array<Type
     type IntoIter = IterMut<'valid, Type>;
     fn into_iter(self) -> Self::IntoIter {self.iter_mut()}
 }
-
-//> ITERATORS -> METHODS
-impl<Type, const N: usize> Array<Type, N> {
-    pub const fn iter<'valid>(&'valid self) -> Iter<'valid, Type> {return self.as_ref().iter()}
-    pub const fn iter_mut<'valid>(&'valid mut self) -> IterMut<'valid, Type> {return self.as_mut().iter_mut()}
-}

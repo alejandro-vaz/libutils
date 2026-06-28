@@ -21,6 +21,10 @@ use core::{
         Debug,
         Formatter,
         Result as Format
+    },
+    slice::{
+        Iter,
+        IterMut
     }
 };
 
@@ -91,6 +95,10 @@ impl<Type, const N: usize> Array<Type, N> {
         self.length -= 1;
         return value;
     }
+    #[inline]
+    pub const fn iter<'valid>(&'valid self) -> Iter<'valid, Type> {return self.as_ref().iter()}
+    #[inline]
+    pub const fn iter_mut<'valid>(&'valid mut self) -> IterMut<'valid, Type> {return self.as_mut().iter_mut()}
 }
 
 //> ARRAY -> DROP

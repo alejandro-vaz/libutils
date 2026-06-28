@@ -13,7 +13,8 @@ use core::{
         Try,
         ControlFlow
     },
-    mem::transmute_neo as transmute
+    mem::transmute_neo as transmute,
+    marker::Destruct
 };
 
 
@@ -40,7 +41,7 @@ const impl<Type> FromResidual<Break> for Act<Type> {
 //^
 
 //> RESIDUAL -> BREAK
-impl<Type> Residual<Type> for Break {
+const impl<Type: [const] Destruct> Residual<Type> for Break {
     type TryType = Act<Type>;
 }
 
@@ -50,7 +51,7 @@ impl<Type> Residual<Type> for Break {
 //^
 
 //> TRY -> ATTACHMENT
-impl<Type> Try for Act<Type> {
+const impl<Type: [const] Destruct> Try for Act<Type> {
     type Output = Type;
     type Residual = Break;
     fn from_output(output: Self::Output) -> Self {return unsafe {transmute(Some(output))}}

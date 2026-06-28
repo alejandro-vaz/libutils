@@ -19,9 +19,16 @@
 #![feature(const_index)]
 #![feature(const_slice_make_iter)]
 #![feature(const_try)]
+#![feature(const_try_residual)]
 #![feature(allocator_api)]
 #![feature(const_closures)]
+#![feature(const_destruct)]
 #![feature(const_option_ops)]
+#![feature(const_result_unwrap_unchecked)]
+#![feature(const_cmp)]
+
+//> UTILS -> ALLOC
+extern crate alloc;
 
 //> UTILS -> ARRAY
 #[cfg(feature = "array")]

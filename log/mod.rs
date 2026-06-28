@@ -17,11 +17,12 @@ use core::{
     alloc::{
         Allocator,
         Layout
-    }
+    },
+    slice::Iter
 };
 
-//> HEAD -> STD
-use std::alloc::Global;
+//> HEAD -> ALLOC
+use alloc::alloc::Global;
 
 //> HEAD -> CRATE
 use crate::pointer::Pointer;
@@ -39,7 +40,7 @@ pub struct Log<Type> {
     capacity: usize
 }
 
-//> LOG -> INTERNALS
+//> LOG -> IMPLEMENTATION
 impl<Type> Log<Type> {
     #[inline]
     fn grow(&mut self) -> () {
@@ -53,10 +54,6 @@ impl<Type> Log<Type> {
         }.unwrap().cast().into();
         self.capacity = (self.capacity * 2).max(1);
     }
-}
-
-//> LOG -> IMPLEMENTATION
-impl<Type> Log<Type> {
     pub const fn new() -> Self {return Self::default()}
     #[inline]
     pub const fn len(&self) -> usize {return self.length}
@@ -67,6 +64,8 @@ impl<Type> Log<Type> {
         unsafe {self.pointer.add(self.length).write(value)};
         self.length += 1;
     }
+    #[inline]
+    pub const fn iter<'valid>(&'valid self) -> Iter<'valid, Type> {return self.as_ref().iter()}
 }
 
 //> LOG -> DEFAULT

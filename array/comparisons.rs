@@ -17,13 +17,13 @@ use core::hash::{
 //^
 
 //> COMPARISONS -> EQ
-impl<Type: PartialEq, const N: usize> PartialEq for Array<Type, N> {
+const impl<Type: [const] PartialEq, const N: usize> PartialEq for Array<Type, N> {
     #[inline]
     fn eq(&self, other: &Self) -> bool {self.as_ref() == other.as_ref()}
 }
 
 //> COMPARISONS -> ORD
-impl<Type: PartialOrd, const N: usize> PartialOrd for Array<Type, N> {
+const impl<Type: [const] PartialOrd, const N: usize> PartialOrd for Array<Type, N> {
     #[inline]
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {self.as_ref().partial_cmp(other.as_ref())}
 }
@@ -35,10 +35,10 @@ impl<Type: Hash, const N: usize> Hash for Array<Type, N> {
 }
 
 //> COMPARISONS -> TOTAL EQ
-impl<Type: Eq, const N: usize> Eq for Array<Type, N> {}
+const impl<Type: [const] Eq, const N: usize> Eq for Array<Type, N> {}
 
 //> COMPARISONS -> TOTAL ORD
-impl<Type: Ord, const N: usize> Ord for Array<Type, N> {
+const impl<Type: [const] Ord, const N: usize> Ord for Array<Type, N> {
     #[inline]
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
         self.as_ref().cmp(other.as_ref())

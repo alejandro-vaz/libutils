@@ -18,8 +18,8 @@ use core::{
 //> HEAD -> CRATE
 use crate::pointer::Pointer;
 
-//> HEAD -> STD
-use std::alloc::Global;
+//> HEAD -> ALLOC
+use alloc::alloc::Global;
 
 
 //^
@@ -61,7 +61,7 @@ impl<Type> FromIterator<Type> for Log<Type> {
 }
 
 //> ITERATORS -> INTO ITERATOR
-impl<Type> IntoIterator for Log<Type> {
+const impl<Type> IntoIterator for Log<Type> {
     type Item = Type;
     type IntoIter = Iterable<Type>;
     fn into_iter(self) -> Self::IntoIter {
@@ -70,7 +70,7 @@ impl<Type> IntoIterator for Log<Type> {
             pointer: instance.pointer,
             length: instance.length,
             index: 0,
-            layout: Layout::from_size_align(instance.capacity * size_of::<Type>(), align_of::<Type>()).unwrap()
+            layout: unsafe {Layout::from_size_align(instance.capacity * size_of::<Type>(), align_of::<Type>()).unwrap_unchecked()}
         }
     }
 }
@@ -80,10 +80,4 @@ const impl<'valid, Type> IntoIterator for &'valid Log<Type> {
     type Item = &'valid Type;
     type IntoIter = Iter<'valid, Type>;
     fn into_iter(self) -> Self::IntoIter {self.iter()}
-}
-
-//> ITERATORS -> METHODS
-impl<Type> Log<Type> {
-    #[inline]
-    pub const fn iter<'valid>(&'valid self) -> Iter<'valid, Type> {return self.as_ref().iter()}
 }

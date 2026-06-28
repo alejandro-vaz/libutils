@@ -12,13 +12,15 @@ use std::{
         args,
         vars
     },
-    collections::HashMap as Map,
     io::{
         stderr,
         Write
     },
     time::Instant
 };
+
+//> HEAD -> HASHBROWN
+use hashbrown::HashMap as Map;
 
 //> HEAD -> CRATE
 use crate::{
