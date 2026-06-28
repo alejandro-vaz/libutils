@@ -4,8 +4,11 @@
 
 //> HEAD -> CRATE
 use crate::{
-    issue::Issue,
-    problem::Problem
+    problem::{
+        Threaten,
+        Threat
+    },
+    issue::Issue
 };
 
 //> HEAD -> STD
@@ -17,9 +20,9 @@ use std::collections::HashMap as Map;
 //^
 
 //> CONSOLE -> TRAIT
-pub trait Console {
+pub trait Console: Threaten {
     fn arguments(&self) -> Vec<String>;
     fn environment(&self) -> Map<String, String>;
-    fn render(&mut self) -> ();
-    fn issue<Object: Into<Issue>>(&mut self, problem: Problem<Object>) -> ();
+    fn sync(&mut self) -> ();
+    fn problem<Object: Into<Issue>, const N: usize>(&mut self, threat: Threat<Object, N>) -> ();
 }

@@ -4,7 +4,6 @@
 
 //> HEAD -> CRATE
 use crate::{
-    issue::Issue,
     problem::Problem,
     log::Log
 };
@@ -16,7 +15,7 @@ use crate::{
 
 //> LAYOUT -> STRUCT
 pub struct Layout {
-    pub problems: Log<Problem<Issue>> = Log::new()
+    pub problems: Log<Problem> = Log::new()
 }
 
 //> LAYOUT -> IMPLEMENTATION

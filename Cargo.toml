@@ -1,6 +1,6 @@
 [package]
 name = "libutils"
-version = "9.38.21"
+version = "9.40.22"
 # number of features - number of files - incremental number
 edition = "2024"
 authors = ["Alejandro Vaz"]
@@ -50,6 +50,6 @@ diff = []
 issue = []
 log = ["pointer"]
 pointer = []
-problem = ["issue"]
+problem = ["array", "issue"]
 report = ["array", "issue", "problem", "terminal"]
 terminal = ["cage", "diff", "issue", "log", "problem"]

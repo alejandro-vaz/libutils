@@ -16,15 +16,20 @@ use std::{
     io::{
         stderr,
         Write
-    }
+    },
+    time::Instant
 };
 
 //> HEAD -> CRATE
 use crate::{
     cage::Cage,
-    issue::Issue,
-    problem::Problem,
-    diff::Diff
+    problem::{
+        Problem,
+        Threaten,
+        Threat
+    },
+    diff::Diff,
+    issue::Issue
 };
 
 //> HEAD -> LAYOUT
@@ -50,24 +55,33 @@ pub struct Terminal {
     stderr: String
 }
 
+//> TERMINAL -> THREATEN
+impl Threaten for Terminal {
+    #[inline]
+    fn convert<Object: Into<Issue>, const N: usize>(&mut self, threat: Threat<Object, N>) -> Problem {return Problem {
+        chain: threat.chain.into(),
+        at: Instant::now(),
+        issue: threat.object.into(),
+        severity: threat.severity
+    }}
+}
+
 //> TERMINAL -> IMPLEMENTATION
 impl Console for Terminal {
+    #[inline]
     fn arguments(&self) -> Vec<String> {args().collect()}
+    #[inline]
     fn environment(&self) -> Map<String, String> {vars().collect()}
     #[inline]
-    fn render(&mut self) -> () {
+    fn sync(&mut self) -> () {
         let content = self.layout.view();
         stderr().lock().write(<Diff as Into<Vec<u8>>>::into(Diff::new(self.stderr.as_bytes(), content.as_bytes())).as_ref()).unwrap();
         self.stderr = content;
     }
     #[inline]
-    fn issue<Object: Into<Issue>>(&mut self, problem: Problem<Object>) -> () {
-        self.layout.problems.push(Problem {
-            chain: problem.chain,
-            at: problem.at,
-            object: problem.object.into(),
-            severity: problem.severity
-        });
-        self.render();
+    fn problem<Object: Into<Issue>, const N: usize>(&mut self, threat: Threat<Object, N>) -> () {
+        let problem = self.convert(threat);
+        self.layout.problems.push(problem);
+        self.sync();
     }
 }

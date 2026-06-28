@@ -6,13 +6,10 @@
 mod act;
 mod shortcut;
 
-//> HEAD -> STD
-use std::time::Instant;
-
 //> HEAD -> CRATE
 use crate::{
     problem::{
-        Problem,
+        Threat,
         Severity
     },
     issue::Issue,
@@ -53,21 +50,14 @@ impl const Default for Report<"Main", 1> {
 //> REPORT -> IMPLEMENTATION
 impl<const NAME: &'static str, const N: usize> Report<NAME, N> {
     #[inline]
-    fn send<Object: Into<Issue>>(&self, mut problem: Problem<Object>) -> () {
-        problem.chain = self.chain.clone().into_iter().collect();
-        TERMINAL.write().issue(problem);
-    }
-    #[inline]
-    pub fn warn<Object: Into<Issue>>(&self, object: Object) -> () {self.send(Problem {
-        chain: Vec::new(),
-        at: Instant::now(),
+    pub fn warn<Object: Into<Issue>>(&self, object: Object) -> () {TERMINAL.write().problem(Threat {
+        chain: self.chain.clone(),
         object: object,
         severity: Severity::Warning
     })}
     #[inline]
-    pub fn error<Object: Into<Issue>>(&self, object: Object) -> () {self.send(Problem {
-        chain: Vec::new(),
-        at: Instant::now(),
+    pub fn error<Object: Into<Issue>>(&self, object: Object) -> () {TERMINAL.write().problem(Threat {
+        chain: self.chain.clone(),
         object: object,
         severity: Severity::Error
     })}
@@ -85,9 +75,8 @@ impl<const NAME: &'static str, const N: usize> Report<NAME, N> {
     pub fn with_default<Type: Default>(self) -> Act<Type> {return unsafe {transmute(Some(Type::default()))}}
     #[inline]
     pub fn fail<Type, Object: Into<Issue>>(self, object: Object) -> Act<Type> {
-        self.send(Problem {
-            chain: Vec::new(),
-            at: Instant::now(),
+        TERMINAL.write().problem(Threat {
+            chain: self.chain.clone(),
             object: object,
             severity: Severity::Critical
         });
