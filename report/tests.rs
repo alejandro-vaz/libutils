@@ -2,8 +2,8 @@
 //^ HEAD
 //^
 
-//> HEAD -> API
-use libutils::report::{
+//> HEAD -> SUPER
+use super::{
     Report,
     Act
 };

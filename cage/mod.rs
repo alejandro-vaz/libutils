@@ -4,6 +4,8 @@
 
 //> HEAD -> MODULES
 mod derivations;
+#[cfg(test)]
+mod tests;
 
 //> HEAD -> STD
 use std::sync::{

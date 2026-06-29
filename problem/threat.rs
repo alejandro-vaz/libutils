@@ -2,17 +2,17 @@
 //^ HEAD
 //^
 
-//> HEAD -> CRATE
-use crate::{
-    issue::Issue,
-    array::Array
-};
-
 //> HEAD -> SUPER
 use super::{
     Problem,
     severity::Severity
 };
+
+//> HEAD -> ISSUE
+use issue::Issue;
+
+//> HEAD -> ARRAY
+use array::Array;
 
 
 //^

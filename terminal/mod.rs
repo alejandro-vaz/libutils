@@ -2,9 +2,14 @@
 //^ HEAD
 //^
 
+//> HEAD -> FEATURES
+#![feature(default_field_values)]
+
 //> HEAD -> MODULES
 mod console;
 mod layout;
+#[cfg(test)]
+mod tests;
 
 //> HEAD -> STD
 use std::{
@@ -22,17 +27,21 @@ use std::{
 //> HEAD -> HASHBROWN
 use hashbrown::HashMap as Map;
 
-//> HEAD -> CRATE
-use crate::{
-    cage::Cage,
-    problem::{
-        Problem,
-        Threaten,
-        Threat
-    },
-    diff::Diff,
-    issue::Issue
+//> HEAD -> CAGE
+use cage::Cage;
+
+//> HEAD -> PROBLEM
+use problem::{
+    Problem,
+    Threat,
+    Threaten
 };
+
+//> HEAD -> DIFF
+use diff::Diff;
+
+//> HEAD -> ISSUE
+use issue::Issue;
 
 //> HEAD -> LAYOUT
 use layout::Layout;

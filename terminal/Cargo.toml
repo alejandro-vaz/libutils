@@ -1,0 +1,25 @@
+[package]
+name = "terminal"
+description = "A custom embedded terminal handler"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+categories.workspace = true
+keywords.workspace = true
+homepage.workspace = true
+repository.workspace = true
+license.workspace = true
+authors.workspace = true
+
+[lib]
+path = "./mod.rs"
+doctest = false
+
+[dependencies]
+hashbrown = "0.17.1"
+cage = {path = "../cage"}
+diff = {path = "../diff"}
+issue = {path = "../issue"}
+log = {path = "../log"}
+problem = {path = "../problem"}

@@ -2,8 +2,8 @@
 //^ HEAD
 //^
 
-//> HEAD -> API
-use libutils::pointer::Pointer;
+//> HEAD -> SUPER
+use super::Pointer;
 
 
 //^

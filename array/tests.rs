@@ -2,17 +2,11 @@
 //^ HEAD
 //^
 
-//> HEAD -> API
-use libutils::array::Array;
+//> HEAD -> SUPER
+use super::Array;
 
-//> HEAD -> CORE
-use core::hash::{
-    Hash,
-    Hasher
-};
-
-//> HEAD -> STD
-use std::hash::DefaultHasher;
+//> HEAD -> ALLOC
+use alloc::vec::Vec;
 
 
 //^
@@ -91,17 +85,6 @@ fn get() -> () {
     assert_eq!(Some(&1), array.get(0));
     assert_eq!(Some(&mut 2), array.get_mut(1));
     assert_eq!(None, array.get(4));
-}
-
-//> TESTS -> HASH
-#[test]
-fn hash() -> () {
-    let array = Array::<u8, 3>::from([1, 2, 3]);
-    let mut hasher = DefaultHasher::new();
-    let mut comparison = DefaultHasher::new();
-    array.hash(&mut hasher);
-    array.as_ref().hash(&mut comparison);
-    assert_eq!(hasher.finish(), comparison.finish());
 }
 
 //> TESTS -> INTOITER

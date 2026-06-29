@@ -1,0 +1,21 @@
+[package]
+name = "problem"
+description = "A problem wrapper with additional metadata"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+publish.workspace = true
+categories.workspace = true
+keywords.workspace = true
+homepage.workspace = true
+repository.workspace = true
+license.workspace = true
+authors.workspace = true
+
+[lib]
+path = "./mod.rs"
+doctest = false
+
+[dependencies]
+array = {path = "../array"}
+issue = {path = "../issue"}

@@ -2,8 +2,11 @@
 //^ HEAD
 //^
 
-//> HEAD -> API
-use libutils::diff::Diff;
+//> HEAD -> SUPER
+use super::Diff;
+
+//> HEAD -> ALLOC
+use alloc::vec::Vec;
 
 
 //^

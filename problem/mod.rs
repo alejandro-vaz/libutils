@@ -2,12 +2,15 @@
 //^ HEAD
 //^
 
+//> HEAD -> FEATURES
+#![feature(const_trait_impl)]
+#![feature(const_convert)]
+
 //> HEAD -> MODULES
 mod severity;
+#[cfg(test)]
+mod tests;
 mod threat;
-
-//> HEAD -> CRATE
-use crate::issue::Issue;
 
 //> HEAD -> STD
 use std::time::Instant;
@@ -27,6 +30,9 @@ pub use threat::{
     Threat,
     Threaten
 };
+
+//> HEAD -> ISSUE
+use issue::Issue;
 
 
 //^

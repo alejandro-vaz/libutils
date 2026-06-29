@@ -2,8 +2,8 @@
 //^ HEAD
 //^
 
-//> HEAD -> API
-use libutils::log::Log;
+//> HEAD -> SUPER
+use super::Log;
 
 
 //^

@@ -11,5 +11,5 @@ This library is meant to have types that may be useful for coding executables an
 | `log` | A write-only vec-like buffer | Logs, no removals | No |
 | `pointer` | A typed custom pointer to data | Pointers, typed behavior | No |
 | `problem` | A problem wrapper with additional metadata | Error handling, logs | Yes |
-| `report` | Comprehensive error wrappers for detailed logs | Compilers, error chains | Yes |
+| `report` | A custom error wrapper for detailed logs | Compilers, error chains | Yes |
 | `terminal` | A custom embedded terminal handler | Pretty-printing, typed behavior | Yes |

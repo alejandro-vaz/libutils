@@ -2,11 +2,14 @@
 //^ HEAD
 //^
 
+//> HEAD -> CORE
+use core::marker::Destruct;
+
 //> HEAD -> STD
-use std::{marker::Destruct, process::{
+use std::process::{
     ExitCode,
     Termination
-}};
+};
 
 
 //^

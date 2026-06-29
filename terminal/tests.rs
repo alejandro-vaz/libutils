@@ -2,8 +2,8 @@
 //^ HEAD
 //^
 
-//> HEAD -> API
-use libutils::terminal::{
+//> HEAD -> SUPER
+use super::{
     TERMINAL,
     Console
 };

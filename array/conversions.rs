@@ -5,6 +5,9 @@
 //> HEAD -> SUPER
 use super::Array;
 
+//> HEAD -> ALLOC
+use alloc::vec::Vec;
+
 
 //^
 //^ CONVERSIONS

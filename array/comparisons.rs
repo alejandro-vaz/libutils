@@ -6,9 +6,12 @@
 use super::Array;
 
 //> HEAD -> CORE
-use core::hash::{
-    Hash,
-    Hasher
+use core::{
+    hash::{
+        Hash,
+        Hasher
+    },
+    cmp::Ordering
 };
 
 
@@ -25,7 +28,7 @@ const impl<Type: [const] PartialEq, const N: usize> PartialEq for Array<Type, N>
 //> COMPARISONS -> ORD
 const impl<Type: [const] PartialOrd, const N: usize> PartialOrd for Array<Type, N> {
     #[inline]
-    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {self.as_ref().partial_cmp(other.as_ref())}
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {self.as_ref().partial_cmp(other.as_ref())}
 }
 
 //> COMPARISONS -> HASH
@@ -40,7 +43,7 @@ const impl<Type: [const] Eq, const N: usize> Eq for Array<Type, N> {}
 //> COMPARISONS -> TOTAL ORD
 const impl<Type: [const] Ord, const N: usize> Ord for Array<Type, N> {
     #[inline]
-    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+    fn cmp(&self, other: &Self) -> Ordering {
         self.as_ref().cmp(other.as_ref())
     }
 }

@@ -1,3 +1,21 @@
+//^
+//^ HEAD
+//^
+
+//> HEAD -> NO_STD
+#![no_std]
+
+//> HEAD -> CRATES
+extern crate alloc;
+
+//> HEAD -> MODULES
+#[cfg(test)]
+mod tests;
+
+//> HEAD -> ALLOC
+use alloc::vec::Vec;
+
+
 //^ 
 //^ DIFF
 //^ 

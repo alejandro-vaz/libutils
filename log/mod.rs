@@ -2,10 +2,27 @@
 //^ HEAD
 //^
 
+//> HEAD -> NO_STD
+#![no_std]
+
+//> HEAD -> FEATURES
+#![feature(allocator_api)]
+#![feature(const_trait_impl)]
+#![feature(const_default)]
+#![feature(const_convert)]
+#![feature(const_slice_make_iter)]
+#![feature(const_iter)]
+#![feature(const_result_unwrap_unchecked)]
+
+//> HEAD -> CRATES
+extern crate alloc;
+
 //> HEAD -> MODULES
 mod conversions;
 mod iterators;
 mod references;
+#[cfg(test)]
+mod tests;
 
 //> HEAD -> CORE
 use core::{
@@ -24,8 +41,8 @@ use core::{
 //> HEAD -> ALLOC
 use alloc::alloc::Global;
 
-//> HEAD -> CRATE
-use crate::pointer::Pointer;
+//> HEAD -> POINTER
+use pointer::Pointer;
 
 
 //^

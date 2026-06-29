@@ -2,17 +2,17 @@
 //^ HEAD
 //^
 
-//> HEAD -> CRATE
-use crate::{
-    problem::{
-        Threaten,
-        Threat
-    },
-    issue::Issue
-};
-
 //> HEAD -> HASHBROWN
 use hashbrown::HashMap as Map;
+
+//> HEAD -> PROBLEM
+use problem::{
+    Threat,
+    Threaten
+};
+
+//> HEAD -> ISSUE
+use issue::Issue;
 
 
 //^

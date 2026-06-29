@@ -2,9 +2,23 @@
 //^ HEAD
 //^
 
+//> HEAD -> NO_STD
+#![no_std]
+
+//> HEAD -> FEATURES
+#![feature(const_destruct)]
+#![feature(const_option_ops)]
+#![feature(const_trait_impl)]
+#![feature(const_closures)]
+#![feature(const_try)]
+#![feature(const_default)]
+#![feature(const_convert)]
+
 //> HEAD -> MODULES
 mod comparisons;
 mod conversions;
+#[cfg(test)]
+mod tests;
 
 //> HEAD -> CORE
 use core::{

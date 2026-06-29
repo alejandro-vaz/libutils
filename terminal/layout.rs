@@ -2,11 +2,11 @@
 //^ HEAD
 //^
 
-//> HEAD -> CRATE
-use crate::{
-    problem::Problem,
-    log::Log
-};
+//> HEAD -> PROBLEM
+use problem::Problem;
+
+//> HEAD -> LOG
+use log::Log;
 
 
 //^ 

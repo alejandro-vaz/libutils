@@ -15,8 +15,8 @@ use core::{
     }
 };
 
-//> HEAD -> CRATE
-use crate::pointer::Pointer;
+//> HEAD -> POINTER
+use pointer::Pointer;
 
 //> HEAD -> ALLOC
 use alloc::alloc::Global;

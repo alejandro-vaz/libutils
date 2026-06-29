@@ -2,22 +2,43 @@
 //^ HEAD
 //^
 
+//> HEAD -> FEATURES
+#![allow(incomplete_features)]
+#![feature(transmute_neo)]
+#![feature(const_destruct)]
+#![feature(try_trait_v2)]
+#![feature(try_trait_v2_residual)]
+#![feature(const_try)]
+#![feature(const_default)]
+#![feature(const_trait_impl)]
+#![feature(unsized_const_params)]
+#![feature(adt_const_params)]
+#![feature(generic_const_exprs)]
+#![feature(const_try_residual)]
+#![feature(const_option_ops)]
+
 //> HEAD -> MODULES
 mod act;
 mod shortcut;
+#[cfg(test)]
+mod tests;
 
-//> HEAD -> CRATE
-use crate::{
-    problem::{
-        Threat,
-        Severity
-    },
-    issue::Issue,
-    terminal::{
-        TERMINAL,
-        Console
-    },
-    array::Array
+//> HEAD -> ARRAY
+use array::Array;
+
+//> HEAD -> TERMINAL
+use terminal::{
+    TERMINAL,
+    Console
+};
+
+//> HEAD -> ISSUE
+use issue::Issue;
+
+//> HEAD -> PROBLEM
+use problem::{
+    Threat,
+    Severity
 };
 
 //> HEAD -> ACT

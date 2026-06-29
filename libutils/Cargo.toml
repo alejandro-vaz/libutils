@@ -1,0 +1,50 @@
+[package]
+name = "libutils"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+rust-version.workspace = true
+categories.workspace = true
+keywords.workspace = true
+license.workspace = true
+homepage.workspace = true
+repository.workspace = true
+description = "Common library types for faster development"
+publish = true
+
+[lib]
+path = "./lib.rs"
+doctest = false
+
+[profile.bench]
+lto = "fat"
+opt-level = 3
+strip = true
+debug = false
+codegen-units = 1
+
+[profile.release]
+opt-level = 3
+
+[dependencies]
+array = {path = "../array", optional = true}
+cage = {path = "../cage", optional = true}
+diff = {path = "../diff", optional = true}
+issue = {path = "../issue", optional = true}
+log = {path = "../log", optional = true}
+pointer = {path = "../pointer", optional = true}
+problem = {path = "../problem", optional = true}
+report = {path = "../report", optional = true}
+terminal = {path = "../terminal", optional = true}
+
+[features]
+default = ["array", "cage", "diff", "issue", "log", "pointer", "problem", "report", "terminal"]
+array = ["dep:array"]
+cage = ["dep:cage"]
+diff = ["dep:diff"]
+issue = ["dep:issue"]
+log = ["dep:log", "pointer"]
+pointer = ["dep:pointer"]
+problem = ["array", "issue", "dep:problem"]
+report = ["array", "issue", "problem", "dep:report", "terminal"]
+terminal = ["cage", "diff", "issue", "log", "problem", "dep:terminal"]

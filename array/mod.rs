@@ -2,12 +2,29 @@
 //^ HEAD
 //^
 
+//> HEAD -> NO_STD
+#![no_std]
+
+//> HEAD -> FEATURES
+#![feature(const_cmp)]
+#![feature(const_trait_impl)]
+#![feature(const_slice_make_iter)]
+#![feature(const_index)]
+#![feature(const_iter)]
+#![feature(const_convert)]
+#![feature(const_default)]
+
+//> HEAD -> CRATES
+extern crate alloc;
+
 //> HEAD -> MODULES
 mod comparisons;
 mod conversions;
 mod index;
 mod iterators;
 mod references;
+#[cfg(test)]
+mod tests;
 
 //> HEAD -> CORE
 use core::{

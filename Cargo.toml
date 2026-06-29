@@ -1,58 +1,17 @@
-[package]
-name = "libutils"
-version = "9.40.25"
-# number of features - number of files - incremental number
+[workspace]
+resolver = "3"
+members = ["libutils", "array", "cage", "diff", "issue", "log", "pointer", "problem", "report", "terminal"]
+default-members = ["libutils"]
+
+[workspace.package]
 edition = "2024"
-authors = ["Alejandro Vaz"]
+version = "9.36.26"
+# number of features - number of .rs files exc. ./libutils/lib.rs - incremental nubmer
 rust-version = "1.98"
-description = "Common library types for faster development"
-license = "MIT"
+publish = false
+categories = ["development-tools", "config", "no-std"]
+keywords = ["utilities", "types", "utils", "libutils"]
 homepage = "https://github.com/alejandro-vaz/libutils"
 repository = "https://github.com/alejandro-vaz/libutils"
-keywords = ["utilities", "types", "utils", "libutils"]
-categories = ["development-tools", "config", "no-std"]
-resolver = "3"
-
-[dependencies]
-hashbrown = "0.17.1"
-
-[dev-dependencies]
-criterion = "0.8.2"
-
-[lib]
-path = "lib.rs"
-doctest = false
-
-[[bench]]
-name = "array"
-harness = false
-
-[[bench]]
-name = "cage"
-harness = false
-
-[[bench]]
-name = "report"
-harness = false
-
-[profile.bench]
-lto = "fat"
-opt-level = 3
-strip = true
-debug = false
-codegen-units = 1
-
-[profile.release]
-opt-level = 3
-
-[features]
-default = ["array", "cage", "diff", "issue", "log", "pointer", "problem", "report", "terminal"]
-array = []
-cage = []
-diff = []
-issue = []
-log = ["pointer"]
-pointer = []
-problem = ["array", "issue"]
-report = ["array", "issue", "problem", "terminal"]
-terminal = ["cage", "diff", "issue", "log", "problem"]
+license = "MIT"
+authors = ["Alejandro Vaz"]

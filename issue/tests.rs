@@ -2,11 +2,18 @@
 //^ HEAD
 //^
 
-//> HEAD -> API
-use libutils::issue::Issue;
+//> HEAD -> SUPER
+use super::Issue;
+
+//> HEAD -> ALLOC
+use alloc::string::ToString;
 
 
-//> HEAD -> CREATE
+//^
+//^ TESTS
+//^
+
+//> TESTS -> CREATE
 #[test]
 fn create() -> () {
     let _issue = Issue {

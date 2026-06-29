@@ -2,8 +2,8 @@
 //^ HEAD
 //^ 
 
-//> HEAD -> API
-use libutils::problem::{
+//> HEAD -> SUPER
+use super::{
     Problem,
     Severity
 };
