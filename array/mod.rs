@@ -48,6 +48,8 @@ impl<Type, const N: usize> Array<Type, N> {
 //> ARRAY -> IMPLEMENTATION
 impl<Type, const N: usize> Array<Type, N> {
     #[inline]
+    pub const fn capacity(&self) -> usize {return N}
+    #[inline]
     pub const fn is_empty(&self) -> bool {return self.length == 0}
     #[inline]
     pub const fn new() -> Self {return Self::default()}
@@ -55,7 +57,7 @@ impl<Type, const N: usize> Array<Type, N> {
     pub const fn len(&self) -> usize {return self.length}
     #[inline]
     pub const fn push(&mut self, value: Type) -> () {
-        if self.length == N {panic!("array capacity exceeded")}
+        assert!(self.length != N, "array capacity exceeded");
         unsafe {self.pointer().add(self.length).write(value)};
         self.length += 1;
     }
@@ -79,8 +81,8 @@ impl<Type, const N: usize> Array<Type, N> {
     }
     #[inline]
     pub const fn insert(&mut self, index: usize, value: Type) -> () {
-        if index > self.length {panic!("tried to insert out of bounds")}
-        if self.length == N {panic!("array capacity exceeded")}
+        assert!(index <= self.length, "tried to insert out of bounds");
+        assert!(self.length != N, "array capacity exceeded");
         let pointer = unsafe {self.pointer().add(index)};
         unsafe {copy(pointer.as_ptr(), pointer.add(1).as_ptr(), self.length - index)}
         unsafe {pointer.write(value)}
@@ -88,7 +90,7 @@ impl<Type, const N: usize> Array<Type, N> {
     }
     #[inline]
     pub const fn remove(&mut self, index: usize) -> Type {
-        if index >= self.length {panic!("access out of bounds")}
+        assert!(index <= self.length, "tried to insert out of bounds");
         let pointer = unsafe {self.pointer().add(index)};
         let value = unsafe {pointer.read()};
         unsafe {copy(pointer.add(1).as_ptr(), pointer.as_ptr(), self.length - 1 - index)};

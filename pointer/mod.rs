@@ -19,10 +19,7 @@ use core::{
         Result as Format
     },
     any::type_name,
-    marker::{
-        PhantomCovariantLifetime,
-        Destruct
-    }
+    marker::Destruct
 };
 
 
@@ -31,31 +28,27 @@ use core::{
 //^
 
 //> POINTER -> STRUCT
-pub struct Pointer<'valid, Type> {
-    to: Option<NonNull<Type>>,
-    lifetime: PhantomCovariantLifetime<'valid>
+pub struct Pointer<Type> {
+    to: Option<NonNull<Type>>
 }
 
 //> POINTER -> IMPLEMENTATION
-impl<'valid, Type> Pointer<'valid, Type> {
+impl<Type> Pointer<Type> {
     #[inline]
     pub const fn is_null(self) -> bool {return self.to.is_none()}
     #[inline]
     pub fn address(self) -> usize {return self.to.map(|pointer| pointer.addr().into()).unwrap_or_default()}
     #[inline]
-    pub const fn add(self, count: usize) -> Pointer<'valid, Type> {return Self {
-        to: self.to.map(const |pointer| unsafe {pointer.add(count)}),
-        lifetime: PhantomCovariantLifetime::new()
+    pub const fn add(self, count: usize) -> Pointer<Type> {return Self {
+        to: self.to.map(const |pointer| unsafe {pointer.add(count)})
     }}
     #[inline]
-    pub const fn sub(self, count: usize) -> Pointer<'valid, Type> {return Self {
-        to: self.to.map(const |pointer| unsafe {pointer.sub(count)}),
-        lifetime: PhantomCovariantLifetime::new()
+    pub const fn sub(self, count: usize) -> Pointer<Type> {return Self {
+        to: self.to.map(const |pointer| unsafe {pointer.sub(count)})
     }}
     #[inline]
-    pub const fn of(value: &'valid mut Type) -> Self {return Self {
-        to: NonNull::new(value as *mut Type),
-        lifetime: PhantomCovariantLifetime::new()
+    pub const fn of(value: &mut Type) -> Self {return Self {
+        to: NonNull::new(value as *mut Type)
     }}
     #[inline]
     pub const unsafe fn read(self) -> Option<Type> {return Some(unsafe {self.to?.read()})}
@@ -78,14 +71,13 @@ impl<'valid, Type> Pointer<'valid, Type> {
     #[inline]
     pub fn is_aligned(self) -> bool {return self.address() % align_of::<Type>() == 0}
     #[inline]
-    pub const fn cast<Other>(self) -> Pointer<'valid, Other> {return Pointer {
-        to: self.to.map(const |pointer| pointer.cast()),
-        lifetime: PhantomCovariantLifetime::new()
+    pub const fn cast<Other>(self) -> Pointer<Other> {return Pointer {
+        to: self.to.map(const |pointer| pointer.cast())
     }}
 }
 
 //> POINTER -> IMPLEMENTATION WITH DESTRUCT
-const impl<'valid, Type: [const] Destruct> Pointer<'valid, Type> {
+const impl<Type: [const] Destruct> Pointer<Type> {
     #[inline]
     pub unsafe fn write(self, value: Type) -> () {if let Some(pointer) = self.to {unsafe {pointer.write(value)}}}
     #[inline]
@@ -93,31 +85,29 @@ const impl<'valid, Type: [const] Destruct> Pointer<'valid, Type> {
 }
 
 //> POINTER -> CLONE
-impl<'valid, Type> Clone for Pointer<'valid, Type> {
+impl<Type> Clone for Pointer<Type> {
     fn clone(&self) -> Self {return Self {
-        to: self.to.clone(),
-        lifetime: self.lifetime
+        to: self.to.clone()
     }}
 }
 
 //> POINTER -> COPY
-impl<'valid, Type> Copy for Pointer<'valid, Type> {}
+impl<Type> Copy for Pointer<Type> {}
 
 //> POINTER -> DEBUG
-impl<'valid, Type: Debug> Debug for Pointer<'valid, Type> {
+impl<Type: Debug> Debug for Pointer<Type> {
     fn fmt(&self, formatter: &mut Formatter<'_>) -> Format {write!(formatter, "Pointer({})", type_name::<Type>())}
 }
 
 //> POINTER -> DEFAULT
-const impl<Type> Default for Pointer<'static, Type> {
+const impl<Type> Default for Pointer<Type> {
     fn default() -> Self {return Self {
-        to: None,
-        lifetime: PhantomCovariantLifetime::new()
+        to: None
     }}
 }
 
 //> POINTER -> SEND
-unsafe impl<'valid, Type> Send for Pointer<'valid, Type> {}
+unsafe impl<Type> Send for Pointer<Type> {}
 
 //> POINTER -> SYNC
-unsafe impl<'valid, Type> Sync for Pointer<'valid, Type> {}
+unsafe impl<Type> Sync for Pointer<Type> {}

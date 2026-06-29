@@ -35,7 +35,7 @@ use crate::pointer::Pointer;
 //> LOG -> STRUCT
 #[derive(Clone)]
 pub struct Log<Type> {
-    pointer: Pointer<'static, Type>,
+    pointer: Pointer<Type>,
     length: usize,
     capacity: usize
 }

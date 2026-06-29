@@ -2,8 +2,10 @@
 //^ UTILS
 //^
 
-//> UTILS -> ATTRIBUTES
+//> UTILS -> INCOMPLETE FEATURES
 #![allow(incomplete_features)]
+
+//> UTILS -> FEATURES
 #![feature(generic_const_exprs)]
 #![feature(const_trait_impl)]
 #![feature(try_trait_v2)]
@@ -12,7 +14,6 @@
 #![feature(adt_const_params)]
 #![feature(unsized_const_params)]
 #![feature(transmute_neo)]
-#![feature(phantom_variance_markers)]
 #![feature(const_default)]
 #![feature(const_convert)]
 #![feature(const_iter)]
@@ -27,7 +28,7 @@
 #![feature(const_result_unwrap_unchecked)]
 #![feature(const_cmp)]
 
-//> UTILS -> ALLOC
+//> UTILS -> CRATES
 extern crate alloc;
 
 //> UTILS -> ARRAY

@@ -28,7 +28,7 @@ use alloc::alloc::Global;
 
 //> ITERABLE
 pub struct Iterable<Type> {
-    pointer: Pointer<'static, Type>,
+    pointer: Pointer<Type>,
     length: usize,
     index: usize,
     layout: Layout
