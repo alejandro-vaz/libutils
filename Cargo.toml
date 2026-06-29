@@ -8,10 +8,31 @@ edition = "2024"
 version = "9.36.26"
 # number of features - number of .rs files exc. ./libutils/lib.rs - incremental nubmer
 rust-version = "1.98"
-publish = false
+publish = true
 categories = ["development-tools", "config", "no-std"]
 keywords = ["utilities", "types", "utils", "libutils"]
 homepage = "https://github.com/alejandro-vaz/libutils"
 repository = "https://github.com/alejandro-vaz/libutils"
 license = "MIT"
 authors = ["Alejandro Vaz"]
+
+[workspace.dependencies]
+libutils-array = {version = "9.36.26", path = "array"}
+libutils-cage = {version = "9.36.26", path = "cage"}
+libutils-diff = {version = "9.36.26", path = "diff"}
+libutils-issue = {version = "9.36.26", path = "issue"}
+libutils-log = {version = "9.36.26", path = "log"}
+libutils-pointer = {version = "9.36.26", path = "pointer"}
+libutils-problem = {version = "9.36.26", path = "problem"}
+libutils-report = {version = "9.36.26", path = "report"}
+libutils-terminal = {version = "9.36.26", path = "terminal"}
+
+[profile.bench]
+lto = "fat"
+opt-level = 3
+strip = true
+debug = false
+codegen-units = 1
+
+[profile.release]
+opt-level = 3

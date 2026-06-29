@@ -1,5 +1,5 @@
 [package]
-name = "diff"
+name = "libutils-diff"
 description = "A bytearray diff"
 version.workspace = true
 edition.workspace = true

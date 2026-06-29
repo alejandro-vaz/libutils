@@ -6,13 +6,13 @@
 use hashbrown::HashMap as Map;
 
 //> HEAD -> PROBLEM
-use problem::{
+use libutils_problem::{
     Threat,
     Threaten
 };
 
 //> HEAD -> ISSUE
-use issue::Issue;
+use libutils_issue::Issue;
 
 
 //^

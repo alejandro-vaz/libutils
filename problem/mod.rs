@@ -32,7 +32,7 @@ pub use threat::{
 };
 
 //> HEAD -> ISSUE
-use issue::Issue;
+use libutils_issue::Issue;
 
 
 //^

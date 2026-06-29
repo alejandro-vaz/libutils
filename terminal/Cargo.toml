@@ -1,5 +1,5 @@
 [package]
-name = "terminal"
+name = "libutils-terminal"
 description = "A custom embedded terminal handler"
 version.workspace = true
 edition.workspace = true
@@ -18,8 +18,8 @@ doctest = false
 
 [dependencies]
 hashbrown = "0.17.1"
-cage = {path = "../cage"}
-diff = {path = "../diff"}
-issue = {path = "../issue"}
-log = {path = "../log"}
-problem = {path = "../problem"}
+libutils-cage = {workspace = true}
+libutils-diff = {workspace = true}
+libutils-issue = {workspace = true}
+libutils-log = {workspace = true}
+libutils-problem = {workspace = true}

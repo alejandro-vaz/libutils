@@ -28,20 +28,20 @@ use std::{
 use hashbrown::HashMap as Map;
 
 //> HEAD -> CAGE
-use cage::Cage;
+use libutils_cage::Cage;
 
 //> HEAD -> PROBLEM
-use problem::{
+use libutils_problem::{
     Problem,
     Threat,
     Threaten
 };
 
 //> HEAD -> DIFF
-use diff::Diff;
+use libutils_diff::Diff;
 
 //> HEAD -> ISSUE
-use issue::Issue;
+use libutils_issue::Issue;
 
 //> HEAD -> LAYOUT
 use layout::Layout;

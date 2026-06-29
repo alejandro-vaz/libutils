@@ -9,18 +9,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "683d7910e743518b0e34f1186f92494becacb047c7b6bf616c96772180fef923"
 
 [[package]]
-name = "array"
-version = "9.36.26"
-
-[[package]]
-name = "cage"
-version = "9.36.26"
-
-[[package]]
-name = "diff"
-version = "9.36.26"
-
-[[package]]
 name = "equivalent"
 version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -44,61 +32,73 @@ dependencies = [
 ]
 
 [[package]]
-name = "issue"
-version = "9.36.26"
-
-[[package]]
 name = "libutils"
 version = "9.36.26"
 dependencies = [
- "array",
- "cage",
- "diff",
- "issue",
- "log",
- "pointer",
- "problem",
- "report",
- "terminal",
+ "libutils-array",
+ "libutils-cage",
+ "libutils-diff",
+ "libutils-issue",
+ "libutils-log",
+ "libutils-pointer",
+ "libutils-problem",
+ "libutils-report",
+ "libutils-terminal",
 ]
 
 [[package]]
-name = "log"
+name = "libutils-array"
+version = "9.36.26"
+
+[[package]]
+name = "libutils-cage"
+version = "9.36.26"
+
+[[package]]
+name = "libutils-diff"
+version = "9.36.26"
+
+[[package]]
+name = "libutils-issue"
+version = "9.36.26"
+
+[[package]]
+name = "libutils-log"
 version = "9.36.26"
 dependencies = [
- "pointer",
+ "libutils-pointer",
 ]
 
 [[package]]
-name = "pointer"
+name = "libutils-pointer"
 version = "9.36.26"
 
 [[package]]
-name = "problem"
+name = "libutils-problem"
 version = "9.36.26"
 dependencies = [
- "array",
- "issue",
+ "libutils-array",
+ "libutils-issue",
 ]
 
 [[package]]
-name = "report"
+name = "libutils-report"
 version = "9.36.26"
 dependencies = [
- "array",
- "issue",
- "problem",
- "terminal",
+ "libutils-array",
+ "libutils-issue",
+ "libutils-problem",
+ "libutils-terminal",
 ]
 
 [[package]]
-name = "terminal"
+name = "libutils-terminal"
 version = "9.36.26"
 dependencies = [
- "cage",
- "diff",
  "hashbrown",
- "issue",
- "log",
- "problem",
+ "libutils-cage",
+ "libutils-diff",
+ "libutils-issue",
+ "libutils-log",
+ "libutils-problem",
 ]

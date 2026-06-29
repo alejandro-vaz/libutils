@@ -1,5 +1,5 @@
 [package]
-name = "log"
+name = "libutils-log"
 description = "A write-only vec-like buffer"
 version.workspace = true
 edition.workspace = true
@@ -17,4 +17,4 @@ path = "./mod.rs"
 doctest = false
 
 [dependencies]
-pointer = {path = "../pointer"}
+libutils-pointer = {workspace = true}

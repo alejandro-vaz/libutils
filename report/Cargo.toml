@@ -1,5 +1,5 @@
 [package]
-name = "report"
+name = "libutils-report"
 description = "A custom error wrapper for detailed logs"
 version.workspace = true
 edition.workspace = true
@@ -17,7 +17,7 @@ path = "./mod.rs"
 doctest = false
 
 [dependencies]
-array = {path = "../array"}
-issue = {path = "../issue"}
-problem = {path = "../problem"}
-terminal = {path = "../terminal"}
+libutils-array = {workspace = true}
+libutils-issue = {workspace = true}
+libutils-problem = {workspace = true}
+libutils-terminal = {workspace = true}

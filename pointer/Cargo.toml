@@ -1,5 +1,5 @@
 [package]
-name = "pointer"
+name = "libutils-pointer"
 description = "A typed custom pointer to data"
 version.workspace = true
 edition.workspace = true

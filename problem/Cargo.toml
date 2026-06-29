@@ -1,5 +1,5 @@
 [package]
-name = "problem"
+name = "libutils-problem"
 description = "A problem wrapper with additional metadata"
 version.workspace = true
 edition.workspace = true
@@ -17,5 +17,5 @@ path = "./mod.rs"
 doctest = false
 
 [dependencies]
-array = {path = "../array"}
-issue = {path = "../issue"}
+libutils-array = {workspace = true}
+libutils-issue = {workspace = true}

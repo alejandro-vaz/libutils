@@ -1,5 +1,5 @@
 [package]
-name = "issue"
+name = "libutils-issue"
 description = "A easy-to-use customizable error type"
 version.workspace = true
 edition.workspace = true

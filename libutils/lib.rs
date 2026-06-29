@@ -4,36 +4,36 @@
 
 //> LIBUTILS -> ARRAY
 #[cfg(feature = "array")]
-pub use array;
+pub use libutils_array as array;
 
 //> LIBUTILS -> CAGE
 #[cfg(feature = "cage")]
-pub use cage;
+pub use libutils_cage as cage;
 
 //> LIBUTILS -> DIFF
 #[cfg(feature = "diff")]
-pub use diff;
+pub use libutils_diff as diff;
 
 //> LIBUTILS -> ISSUE
 #[cfg(feature = "issue")]
-pub use issue;
+pub use libutils_issue as issue;
 
 //> LIBUTILS -> LOG
 #[cfg(feature = "log")]
-pub use log;
+pub use libutils_log as log;
 
 //> LIBUTILS -> POINTER
 #[cfg(feature = "pointer")]
-pub use pointer;
+pub use libutils_pointer as pointer;
 
 //> LIBUTILS -> PROBLEM
 #[cfg(feature = "problem")]
-pub use problem;
+pub use libutils_problem as problem;
 
 //> LIBUTILS -> REPORT
 #[cfg(feature = "report")]
-pub use report;
+pub use libutils_report as report;
 
 //> LIBUTILS -> TERMINAL
 #[cfg(feature = "terminal")]
-pub use terminal;
+pub use libutils_terminal as terminal;

@@ -16,7 +16,7 @@ use core::{
 };
 
 //> HEAD -> POINTER
-use pointer::Pointer;
+use libutils_pointer::Pointer;
 
 //> HEAD -> ALLOC
 use alloc::alloc::Global;

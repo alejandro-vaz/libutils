@@ -1,5 +1,5 @@
 [package]
-name = "array"
+name = "libutils-array"
 description = "A maximum-sized array stored on the stack"
 version.workspace = true
 edition.workspace = true

@@ -9,10 +9,10 @@ use super::{
 };
 
 //> HEAD -> ISSUE
-use issue::Issue;
+use libutils_issue::Issue;
 
 //> HEAD -> ARRAY
-use array::Array;
+use libutils_array::Array;
 
 
 //^

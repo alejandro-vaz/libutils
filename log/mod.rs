@@ -42,7 +42,7 @@ use core::{
 use alloc::alloc::Global;
 
 //> HEAD -> POINTER
-use pointer::Pointer;
+use libutils_pointer::Pointer;
 
 
 //^

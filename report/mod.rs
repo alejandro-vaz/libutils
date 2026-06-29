@@ -24,19 +24,19 @@ mod shortcut;
 mod tests;
 
 //> HEAD -> ARRAY
-use array::Array;
+use libutils_array::Array;
 
 //> HEAD -> TERMINAL
-use terminal::{
+use libutils_terminal::{
     TERMINAL,
     Console
 };
 
 //> HEAD -> ISSUE
-use issue::Issue;
+use libutils_issue::Issue;
 
 //> HEAD -> PROBLEM
-use problem::{
+use libutils_problem::{
     Threat,
     Severity
 };
