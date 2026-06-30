@@ -5,7 +5,7 @@ default-members = [".main"]
 
 [workspace.package]
 edition = "2024"
-version = "9.40.27"
+version = "9.38.28"
 # number of features - number of .rs files exc. .main/lib.rs - incremental nubmer
 rust-version = "1.98"
 categories = ["development-tools", "config", "no-std"]
@@ -16,15 +16,15 @@ license = "MIT"
 authors = ["Alejandro Vaz"]
 
 [workspace.dependencies]
-libutils-array = {version = "9.40.27", path = "array"}
-libutils-cage = {version = "9.40.27", path = "cage"}
-libutils-diff = {version = "9.40.27", path = "diff"}
-libutils-issue = {version = "9.40.27", path = "issue"}
-libutils-log = {version = "9.40.27", path = "log"}
-libutils-pointer = {version = "9.40.27", path = "pointer"}
-libutils-report = {version = "9.40.27", path = "report"}
-libutils-terminal = {version = "9.40.27", path = "terminal"}
-libutils-threat = {version = "9.40.27", path = "threat"}
+libutils-array = {version = "9.38.28", path = "array"}
+libutils-cage = {version = "9.38.28", path = "cage"}
+libutils-diff = {version = "9.38.28", path = "diff"}
+libutils-issue = {version = "9.38.28", path = "issue"}
+libutils-log = {version = "9.38.28", path = "log"}
+libutils-pointer = {version = "9.38.28", path = "pointer"}
+libutils-report = {version = "9.38.28", path = "report"}
+libutils-terminal = {version = "9.38.28", path = "terminal"}
+libutils-threat = {version = "9.38.28", path = "threat"}
 
 [profile.bench]
 lto = "fat"
