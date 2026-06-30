@@ -22,18 +22,18 @@ libutils-diff = {workspace = true, optional = true}
 libutils-issue = {workspace = true, optional = true}
 libutils-log = {workspace = true, optional = true}
 libutils-pointer = {workspace = true, optional = true}
-libutils-problem = {workspace = true, optional = true}
 libutils-report = {workspace = true, optional = true}
 libutils-terminal = {workspace = true, optional = true}
+libutils-threat = {workspace = true, optional = true}
 
 [features]
-default = ["array", "cage", "diff", "issue", "log", "pointer", "problem", "report", "terminal"]
+default = ["array", "cage", "diff", "issue", "log", "pointer", "report", "terminal", "threat"]
 array = ["dep:libutils-array"]
 cage = ["dep:libutils-cage"]
 diff = ["dep:libutils-diff"]
 issue = ["dep:libutils-issue"]
-log = ["dep:libutils-log", "pointer"]
+log = ["dep:libutils-log"]
 pointer = ["dep:libutils-pointer"]
-problem = ["array", "issue", "dep:libutils-problem"]
-report = ["array", "issue", "problem", "dep:libutils-report", "terminal"]
-terminal = ["cage", "diff", "issue", "log", "problem", "dep:libutils-terminal"]
+report = ["dep:libutils-report"]
+terminal = ["dep:libutils-terminal"]
+threat = ["dep:libutils-threat"]

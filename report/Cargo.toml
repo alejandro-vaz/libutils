@@ -18,5 +18,5 @@ doctest = false
 [dependencies]
 libutils-array = {workspace = true}
 libutils-issue = {workspace = true}
-libutils-problem = {workspace = true}
 libutils-terminal = {workspace = true}
+libutils-threat = {workspace = true}

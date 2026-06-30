@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = [".main", "array", "cage", "diff", "issue", "log", "pointer", "problem", "report", "terminal"]
+members = [".main", "array", "cage", "diff", "issue", "log", "pointer", "report", "terminal", "threat"]
 default-members = [".main"]
 
 [workspace.package]
@@ -22,9 +22,9 @@ libutils-diff = {version = "9.40.27", path = "diff"}
 libutils-issue = {version = "9.40.27", path = "issue"}
 libutils-log = {version = "9.40.27", path = "log"}
 libutils-pointer = {version = "9.40.27", path = "pointer"}
-libutils-problem = {version = "9.40.27", path = "problem"}
 libutils-report = {version = "9.40.27", path = "report"}
 libutils-terminal = {version = "9.40.27", path = "terminal"}
+libutils-threat = {version = "9.40.27", path = "threat"}
 
 [profile.bench]
 lto = "fat"

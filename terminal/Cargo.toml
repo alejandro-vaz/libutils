@@ -21,4 +21,4 @@ libutils-cage = {workspace = true}
 libutils-diff = {workspace = true}
 libutils-issue = {workspace = true}
 libutils-log = {workspace = true}
-libutils-problem = {workspace = true}
+libutils-threat = {workspace = true}

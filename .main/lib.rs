@@ -26,10 +26,6 @@ pub use libutils_log as log;
 #[cfg(feature = "pointer")]
 pub use libutils_pointer as pointer;
 
-//> LIBUTILS -> PROBLEM
-#[cfg(feature = "problem")]
-pub use libutils_problem as problem;
-
 //> LIBUTILS -> REPORT
 #[cfg(feature = "report")]
 pub use libutils_report as report;
@@ -37,3 +33,7 @@ pub use libutils_report as report;
 //> LIBUTILS -> TERMINAL
 #[cfg(feature = "terminal")]
 pub use libutils_terminal as terminal;
+
+//> LIBUTILS -> THREAT
+#[cfg(feature = "threat")]
+pub use libutils_threat as threat;

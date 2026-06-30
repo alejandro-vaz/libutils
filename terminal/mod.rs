@@ -8,6 +8,7 @@
 //> HEAD -> MODULES
 mod console;
 mod layout;
+mod problem;
 #[cfg(test)]
 mod tests;
 
@@ -20,8 +21,7 @@ use std::{
     io::{
         stderr,
         Write
-    },
-    time::Instant
+    }
 };
 
 //> HEAD -> HASHBROWN
@@ -31,11 +31,7 @@ use hashbrown::HashMap as Map;
 use libutils_cage::Cage;
 
 //> HEAD -> PROBLEM
-use libutils_problem::{
-    Problem,
-    Threat,
-    Threaten
-};
+use libutils_threat::Threat;
 
 //> HEAD -> DIFF
 use libutils_diff::Diff;
@@ -62,19 +58,8 @@ pub static TERMINAL: Cage<Terminal> = Cage::new(Terminal {
 
 //> TERMINAL -> STRUCT
 pub struct Terminal {
-    layout: Layout,
+    pub layout: Layout,
     stderr: String
-}
-
-//> TERMINAL -> THREATEN
-impl Threaten for Terminal {
-    #[inline]
-    fn convert<Object: Into<Issue>, const N: usize>(&mut self, threat: Threat<Object, N>) -> Problem {return Problem {
-        chain: threat.chain.into(),
-        at: Instant::now(),
-        issue: threat.object.into(),
-        severity: threat.severity
-    }}
 }
 
 //> TERMINAL -> IMPLEMENTATION
@@ -90,9 +75,8 @@ impl Console for Terminal {
         self.stderr = content;
     }
     #[inline]
-    fn problem<Object: Into<Issue>, const N: usize>(&mut self, threat: Threat<Object, N>) -> () {
-        let problem = self.convert(threat);
-        self.layout.problems.push(problem);
+    fn problem<Object: Into<Issue>>(&mut self, threat: Threat<Object>) -> () {
+        self.layout.problems.push(threat.into());
         self.sync();
     }
 }

@@ -5,7 +5,8 @@
 //> HEAD -> SUPER
 use super::{
     Report,
-    Act
+    Stay,
+    Add
 };
 
 
@@ -13,32 +14,17 @@ use super::{
 //^ TESTS
 //^
 
-//> TEST -> STRING
+//> TESTS -> USAGE
 #[test]
-fn string() -> Act<()> {
-    let main = Report::default();
-    return main.with_default();
-}
-
-//> TEST -> HIERARCHY
-#[test]
-fn hierarchy() -> Act<()> {
-    let report = Report::default();
-    let another = |inferior: Report<"Inferior", _>| -> Act<()> {
-        if true {
-            inferior.with_default()
-        } else {
-            inferior.fail("error")
-        }
+fn usage() -> () {
+    let mut report = Report::new("Main");
+    let passing = |report: Report<Stay<'_>>| {
+        report.critical("hello");
     };
-    let _ = another(report.sub())?;
-    return report.with_default();
-}
-
-//> TEST -> TAKE
-#[test]
-fn take() -> Act<()> {
-    let report = Report::default();
-    report.warn("die");
-    return report.with_default();
+    passing(report.to());
+    let upgrading = |report: Report<Add<'_, "Category">>| {
+        let chain = report.warn("hello");
+    };
+    upgrading(report.to());
+    report.warn("outside");
 }

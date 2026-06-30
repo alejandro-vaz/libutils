@@ -2,11 +2,11 @@
 //^ HEAD
 //^
 
-//> HEAD -> PROBLEM
-use libutils_problem::Problem;
-
 //> HEAD -> LOG
 use libutils_log::Log;
+
+//> HEAD -> SUPER
+use super::problem::Problem;
 
 
 //^ 

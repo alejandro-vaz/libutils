@@ -6,10 +6,7 @@
 use hashbrown::HashMap as Map;
 
 //> HEAD -> PROBLEM
-use libutils_problem::{
-    Threat,
-    Threaten
-};
+use libutils_threat::Threat;
 
 //> HEAD -> ISSUE
 use libutils_issue::Issue;
@@ -20,9 +17,9 @@ use libutils_issue::Issue;
 //^
 
 //> CONSOLE -> TRAIT
-pub trait Console: Threaten {
+pub trait Console {
     fn arguments(&self) -> Vec<String>;
     fn environment(&self) -> Map<String, String>;
     fn sync(&mut self) -> ();
-    fn problem<Object: Into<Issue>, const N: usize>(&mut self, threat: Threat<Object, N>) -> ();
+    fn problem<Object: Into<Issue>>(&mut self, threat: Threat<Object>) -> ();
 }

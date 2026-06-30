@@ -41,9 +41,9 @@ dependencies = [
  "libutils-issue",
  "libutils-log",
  "libutils-pointer",
- "libutils-problem",
  "libutils-report",
  "libutils-terminal",
+ "libutils-threat",
 ]
 
 [[package]]
@@ -74,21 +74,13 @@ name = "libutils-pointer"
 version = "9.40.27"
 
 [[package]]
-name = "libutils-problem"
-version = "9.40.27"
-dependencies = [
- "libutils-array",
- "libutils-issue",
-]
-
-[[package]]
 name = "libutils-report"
 version = "9.40.27"
 dependencies = [
  "libutils-array",
  "libutils-issue",
- "libutils-problem",
  "libutils-terminal",
+ "libutils-threat",
 ]
 
 [[package]]
@@ -100,5 +92,13 @@ dependencies = [
  "libutils-diff",
  "libutils-issue",
  "libutils-log",
- "libutils-problem",
+ "libutils-threat",
+]
+
+[[package]]
+name = "libutils-threat"
+version = "9.40.27"
+dependencies = [
+ "libutils-array",
+ "libutils-issue",
 ]

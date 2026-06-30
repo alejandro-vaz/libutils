@@ -5,11 +5,15 @@
 //> HEAD -> NO_STD
 #![no_std]
 
+//> HEAD -> LINTS
+#![allow(incomplete_features)]
+
 //> HEAD -> FEATURES
 #![feature(const_cmp)]
 #![feature(const_trait_impl)]
 #![feature(const_slice_make_iter)]
 #![feature(test)]
+#![feature(generic_const_exprs)]
 #![feature(const_index)]
 #![feature(const_iter)]
 #![feature(const_convert)]

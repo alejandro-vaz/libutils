@@ -1,6 +1,6 @@
 [package]
-name = "libutils-problem"
-description = "A problem wrapper with additional metadata"
+name = "libutils-threat"
+description = "An error wrapper with additional metadata"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
