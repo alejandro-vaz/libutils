@@ -2,7 +2,15 @@
 //^ HEAD
 //^
 
+//> HEAD -> FEATURES
+#![feature(test)]
+
+//> HEAD -> CRATES
+extern crate test;
+
 //> HEAD -> MODULES
+#[cfg(test)]
+mod benches;
 mod derivations;
 #[cfg(test)]
 mod tests;

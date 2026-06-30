@@ -5,10 +5,16 @@
 //> HEAD -> NO_STD
 #![no_std]
 
+//> HEAD -> FEATURES
+#![feature(test)]
+
 //> HEAD -> CRATES
 extern crate alloc;
+extern crate test;
 
 //> HEAD -> MODULES
+#[cfg(test)]
+mod benches;
 #[cfg(test)]
 mod tests;
 

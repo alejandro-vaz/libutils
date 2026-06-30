@@ -10,7 +10,6 @@ license.workspace = true
 homepage.workspace = true
 repository.workspace = true
 description = "Common library types for faster development"
-publish = true
 
 [lib]
 path = "./lib.rs"

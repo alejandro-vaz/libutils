@@ -1,14 +1,13 @@
 [workspace]
 resolver = "3"
-members = ["libutils", "array", "cage", "diff", "issue", "log", "pointer", "problem", "report", "terminal"]
-default-members = ["libutils"]
+members = [".main", "array", "cage", "diff", "issue", "log", "pointer", "problem", "report", "terminal"]
+default-members = [".main"]
 
 [workspace.package]
 edition = "2024"
-version = "9.36.26"
-# number of features - number of .rs files exc. ./libutils/lib.rs - incremental nubmer
+version = "9.40.27"
+# number of features - number of .rs files exc. .main/lib.rs - incremental nubmer
 rust-version = "1.98"
-publish = true
 categories = ["development-tools", "config", "no-std"]
 keywords = ["utilities", "types", "utils", "libutils"]
 homepage = "https://github.com/alejandro-vaz/libutils"
@@ -17,15 +16,15 @@ license = "MIT"
 authors = ["Alejandro Vaz"]
 
 [workspace.dependencies]
-libutils-array = {version = "9.36.26", path = "array"}
-libutils-cage = {version = "9.36.26", path = "cage"}
-libutils-diff = {version = "9.36.26", path = "diff"}
-libutils-issue = {version = "9.36.26", path = "issue"}
-libutils-log = {version = "9.36.26", path = "log"}
-libutils-pointer = {version = "9.36.26", path = "pointer"}
-libutils-problem = {version = "9.36.26", path = "problem"}
-libutils-report = {version = "9.36.26", path = "report"}
-libutils-terminal = {version = "9.36.26", path = "terminal"}
+libutils-array = {version = "9.40.27", path = "array"}
+libutils-cage = {version = "9.40.27", path = "cage"}
+libutils-diff = {version = "9.40.27", path = "diff"}
+libutils-issue = {version = "9.40.27", path = "issue"}
+libutils-log = {version = "9.40.27", path = "log"}
+libutils-pointer = {version = "9.40.27", path = "pointer"}
+libutils-problem = {version = "9.40.27", path = "problem"}
+libutils-report = {version = "9.40.27", path = "report"}
+libutils-terminal = {version = "9.40.27", path = "terminal"}
 
 [profile.bench]
 lto = "fat"

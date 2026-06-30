@@ -209,3 +209,13 @@ fn zst() -> () {
     array.extend([()].repeat(2));
     assert_eq!(array.len(), 4);
 }
+
+//> TESTS -> MUTABLES
+#[test]
+fn mutables() -> () {
+    let mut array = Array::<u8, 7>::from([1, 2, 3]);
+    let x = array.push_mut(6);
+    assert_eq!(x, &mut 6);
+    array.insert_mut(2, 3);
+    assert_eq!(array.get(2), Some(&3));
+}

@@ -9,6 +9,7 @@
 #![feature(const_cmp)]
 #![feature(const_trait_impl)]
 #![feature(const_slice_make_iter)]
+#![feature(test)]
 #![feature(const_index)]
 #![feature(const_iter)]
 #![feature(const_convert)]
@@ -16,8 +17,11 @@
 
 //> HEAD -> CRATES
 extern crate alloc;
+extern crate test;
 
 //> HEAD -> MODULES
+#[cfg(test)]
+mod benches;
 mod comparisons;
 mod conversions;
 mod index;
@@ -28,20 +32,16 @@ mod tests;
 
 //> HEAD -> CORE
 use core::{
-    mem::MaybeUninit,
-    ptr::{
-        copy,
-        NonNull
-    },
-    ops::Drop,
     fmt::{
         Debug,
         Formatter,
         Result as Format
-    },
-    slice::{
-        Iter,
-        IterMut
+    }, 
+    mem::MaybeUninit, 
+    ops::Drop, 
+    ptr::{
+        NonNull, 
+        copy
     }
 };
 
@@ -67,11 +67,7 @@ impl<Type, const N: usize> Array<Type, N> {
     #[inline]
     pub const fn capacity(&self) -> usize {return N}
     #[inline]
-    pub const fn is_empty(&self) -> bool {return self.length == 0}
-    #[inline]
     pub const fn new() -> Self {return Self::default()}
-    #[inline]
-    pub const fn len(&self) -> usize {return self.length}
     #[inline]
     pub const fn push(&mut self, value: Type) -> () {
         assert!(self.length != N, "array capacity exceeded");
@@ -79,22 +75,22 @@ impl<Type, const N: usize> Array<Type, N> {
         self.length += 1;
     }
     #[inline]
+    pub const fn push_mut<'valid>(&'valid mut self, value: Type) -> &'valid mut Type {
+        self.push(value);
+        let length = self.length - 1;
+        return self.get_mut(length).unwrap();
+    }
+    #[inline]
     pub const fn pop(&mut self) -> Option<Type> {return if self.length == 0 {None} else {
         self.length -= 1;
         Some(unsafe {self.pointer().add(self.length).read()})
     }}
     #[inline]
-    pub fn clear(&mut self) -> () {
-        for index in 0..self.length {unsafe {drop(self.pointer().add(index).read())}}
-        self.length = 0;
-    }
+    pub fn clear(&mut self) -> () {return self.truncate(0)}
     #[inline]
-    pub const fn get<'valid>(&'valid self, index: usize) -> Option<&'valid Type> {
-        return if self.length <= index {None} else {unsafe {(self.data.as_ptr() as *const Type).add(index).as_ref()}}
-    }
-    #[inline]
-    pub const fn get_mut<'valid>(&'valid mut self, index: usize) -> Option<&'valid mut Type> {
-        return if self.length <= index {None} else {Some(unsafe {self.pointer().add(index).as_mut()})}
+    pub fn truncate(&mut self, length: usize) -> () {
+        for index in length..self.length {unsafe {drop(self.pointer().add(index).read())}}
+        self.length = length
     }
     #[inline]
     pub const fn insert(&mut self, index: usize, value: Type) -> () {
@@ -106,18 +102,19 @@ impl<Type, const N: usize> Array<Type, N> {
         self.length += 1;
     }
     #[inline]
+    pub const fn insert_mut<'valid>(&'valid mut self, index: usize, value: Type) -> &'valid mut Type {
+        self.insert(index, value);
+        return self.get_mut(index).unwrap();
+    }
+    #[inline]
     pub const fn remove(&mut self, index: usize) -> Type {
-        assert!(index <= self.length, "tried to insert out of bounds");
+        assert!(index < self.length, "tried to remove out of bounds");
         let pointer = unsafe {self.pointer().add(index)};
         let value = unsafe {pointer.read()};
         unsafe {copy(pointer.add(1).as_ptr(), pointer.as_ptr(), self.length - 1 - index)};
         self.length -= 1;
         return value;
     }
-    #[inline]
-    pub const fn iter<'valid>(&'valid self) -> Iter<'valid, Type> {return self.as_ref().iter()}
-    #[inline]
-    pub const fn iter_mut<'valid>(&'valid mut self) -> IterMut<'valid, Type> {return self.as_mut().iter_mut()}
 }
 
 //> ARRAY -> DROP
