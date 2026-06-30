@@ -8,6 +8,7 @@
 #![feature(unsized_const_params)]
 #![feature(adt_const_params)]
 #![feature(default_field_values)]
+#![feature(const_heap)]
 #![feature(generic_const_exprs)]
 
 //> HEAD -> MODULES
@@ -55,11 +56,15 @@ pub struct Report<Current: State> {
 
 //> REPORT -> IMPLEMENTATION
 impl Report<Main> {
-    pub fn new(name: &'static str) -> Self {Self {
-        data: Main {
-            chain: Vec::from([name])
+    pub const fn new(name: &'static str) -> Self {
+        let mut chain = Vec::new();
+        chain.push(name);
+        Self {
+            data: Main {
+                chain: chain
+            }
         }
-    }}
+    }
 }
 
 //> REPORT -> GIVE
@@ -69,21 +74,30 @@ impl<Current: State> Report<Current> {
         data: Following::from(&mut self.data)
     }}
     #[inline]
-    pub fn warn<Object: Into<Issue>>(&self, object: Object) -> () {TERMINAL.write().problem(Threat {
-        object: object,
-        chain: self.data.chain(),
-        severity: Severity::Warning
-    })}
+    pub fn warn<Object: Into<Issue>, Wants: Default>(&self, object: Object) -> Wants {
+        TERMINAL.write().problem(Threat {
+            object: object,
+            chain: self.data.chain(),
+            severity: Severity::Warning
+        });
+        return Wants::default();
+    }
     #[inline]
-    pub fn error<Object: Into<Issue>>(&self, object: Object) -> () {TERMINAL.write().problem(Threat {
-        object: object,
-        chain: self.data.chain(),
-        severity: Severity::Error
-    })}
+    pub fn error<Object: Into<Issue>, Wants: Default>(&self, object: Object) -> Wants {
+        TERMINAL.write().problem(Threat {
+            object: object,
+            chain: self.data.chain(),
+            severity: Severity::Error
+        });
+        return Wants::default();
+    }
     #[inline]
-    pub fn critical<Object: Into<Issue>>(&self, object: Object) -> () {TERMINAL.write().problem(Threat {
-        object: object,
-        chain: self.data.chain(),
-        severity: Severity::Critical
-    })}
+    pub fn critical<Object: Into<Issue>, Wants: Default>(&self, object: Object) -> Wants {
+        TERMINAL.write().problem(Threat {
+            object: object,
+            chain: self.data.chain(),
+            severity: Severity::Critical
+        });
+        return Wants::default();
+    }
 }

@@ -33,7 +33,7 @@ dependencies = [
 
 [[package]]
 name = "libutils"
-version = "9.38.28"
+version = "9.38.29"
 dependencies = [
  "libutils-array",
  "libutils-cage",
@@ -48,34 +48,34 @@ dependencies = [
 
 [[package]]
 name = "libutils-array"
-version = "9.38.28"
+version = "9.38.29"
 
 [[package]]
 name = "libutils-cage"
-version = "9.38.28"
+version = "9.38.29"
 
 [[package]]
 name = "libutils-diff"
-version = "9.38.28"
+version = "9.38.29"
 
 [[package]]
 name = "libutils-issue"
-version = "9.38.28"
+version = "9.38.29"
 
 [[package]]
 name = "libutils-log"
-version = "9.38.28"
+version = "9.38.29"
 dependencies = [
  "libutils-pointer",
 ]
 
 [[package]]
 name = "libutils-pointer"
-version = "9.38.28"
+version = "9.38.29"
 
 [[package]]
 name = "libutils-report"
-version = "9.38.28"
+version = "9.38.29"
 dependencies = [
  "libutils-array",
  "libutils-issue",
@@ -85,7 +85,7 @@ dependencies = [
 
 [[package]]
 name = "libutils-terminal"
-version = "9.38.28"
+version = "9.38.29"
 dependencies = [
  "hashbrown",
  "libutils-cage",
@@ -97,7 +97,7 @@ dependencies = [
 
 [[package]]
 name = "libutils-threat"
-version = "9.38.28"
+version = "9.38.29"
 dependencies = [
  "libutils-array",
  "libutils-issue",
