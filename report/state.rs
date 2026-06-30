@@ -9,7 +9,7 @@ pub trait State {
 }
 
 //> STATE -> DERIVED
-pub trait DerivedState<'valid>: State + for<'all> From<&'valid mut dyn State> {}
+pub trait DerivedState<'valid>: State + From<&'valid mut dyn State> {}
 
 
 //^

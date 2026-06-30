@@ -3,6 +3,7 @@
 //^
 
 //> SEVERITY -> ENUM
+#[derive(Hash)]
 pub enum Severity {
     Warning,
     Error,

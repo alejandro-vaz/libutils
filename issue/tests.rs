@@ -3,7 +3,10 @@
 //^
 
 //> HEAD -> SUPER
-use super::Issue;
+use super::{
+    Issue,
+    Severity
+};
 
 //> HEAD -> ALLOC
 use alloc::string::ToString;
@@ -18,6 +21,7 @@ use alloc::string::ToString;
 fn create() -> () {
     let _issue = Issue {
         name: "die",
-        description: Some("please".to_string())
+        description: Some("please".to_string()),
+        severity: Severity::Critical
     };
 }

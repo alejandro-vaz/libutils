@@ -4,8 +4,10 @@
 
 //> HEAD -> FEATURES
 #![feature(default_field_values)]
+#![feature(const_trait_impl)]
 
 //> HEAD -> MODULES
+mod argument;
 mod console;
 mod layout;
 mod problem;
@@ -14,18 +16,17 @@ mod tests;
 
 //> HEAD -> STD
 use std::{
+    collections::HashMap as Map, 
     env::{
         args,
         vars
-    },
+    }, 
     io::{
-        stderr,
-        Write
-    }
+        Write, 
+        stderr
+    }, 
+    sync::LazyLock
 };
-
-//> HEAD -> HASHBROWN
-use hashbrown::HashMap as Map;
 
 //> HEAD -> CAGE
 use libutils_cage::Cage;
@@ -36,14 +37,14 @@ use libutils_threat::Threat;
 //> HEAD -> DIFF
 use libutils_diff::Diff;
 
-//> HEAD -> ISSUE
-use libutils_issue::Issue;
-
 //> HEAD -> LAYOUT
 use layout::Layout;
 
 //> HEAD -> CONSOLE
 pub use console::Console;
+
+//> HEAD -> ARGUMENT
+pub use argument::Argument;
 
 
 //^
@@ -51,23 +52,20 @@ pub use console::Console;
 //^
 
 //> TERMINAL -> INSTANCE
-pub static TERMINAL: Cage<Terminal> = Cage::new(Terminal {
-    layout: Layout {..},
-    stderr: String::new()
-});
+pub static TERMINAL: Cage<Terminal> = Cage::new(Terminal {..});
 
 //> TERMINAL -> STRUCT
 pub struct Terminal {
-    pub layout: Layout,
-    stderr: String
+    layout: Layout = Layout {..},
+    arguments: LazyLock<Vec<Argument>> = LazyLock::new(|| args().map(Argument::from).collect()),
+    pub environment: LazyLock<Map<String, String>> = LazyLock::new(|| vars().collect()),
+    stderr: String = String::new()
 }
 
 //> TERMINAL -> IMPLEMENTATION
 impl Console for Terminal {
     #[inline]
-    fn arguments(&self) -> Vec<String> {args().collect()}
-    #[inline]
-    fn environment(&self) -> Map<String, String> {vars().collect()}
+    fn arguments(&self) -> &[Argument] {return self.arguments.as_slice()}
     #[inline]
     fn sync(&mut self) -> () {
         let content = self.layout.view();
@@ -75,8 +73,5 @@ impl Console for Terminal {
         self.stderr = content;
     }
     #[inline]
-    fn problem<Object: Into<Issue>>(&mut self, threat: Threat<Object>) -> () {
-        self.layout.problems.push(threat.into());
-        self.sync();
-    }
+    fn problem(&mut self, threat: Threat) -> () {self.layout.problems.push(threat.into())}
 }

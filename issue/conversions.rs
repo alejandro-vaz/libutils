@@ -3,7 +3,10 @@
 //^
 
 //> HEAD -> SUPER
-use super::Issue;
+use super::{
+    Issue,
+    severity::Severity
+};
 
 
 //^
@@ -14,6 +17,7 @@ use super::Issue;
 const impl Into<Issue> for &'static str {
     fn into(self) -> Issue {return Issue {
         name: self,
-        description: None
+        description: None,
+        severity: Severity::Critical
     }}
 }

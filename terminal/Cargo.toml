@@ -16,7 +16,6 @@ path = "./mod.rs"
 doctest = false
 
 [dependencies]
-hashbrown = "0.17.1"
 libutils-cage = {workspace = true}
 libutils-diff = {workspace = true}
 libutils-issue = {workspace = true}

@@ -3,16 +3,13 @@
 //^
 
 //> HEAD -> THREAT
-use libutils_threat::{
-    Severity,
-    Threat
-};
-
-//> HEAD -> STD
-use std::time::Instant;
+use libutils_threat::Threat;
 
 //> HEAD -> ISSUE
-use libutils_issue::Issue;
+use libutils_issue::{
+    Issue,
+    Severity
+};
 
 //> HEAD -> CORE
 use core::fmt::{
@@ -20,6 +17,9 @@ use core::fmt::{
     Formatter,
     Display
 };
+
+//> HEAD -> STD
+use std::time::Instant;
 
 
 //^
@@ -29,9 +29,8 @@ use core::fmt::{
 //> PROBLEM -> STRUCT
 pub struct Problem {
     pub chain: Vec<&'static str>,
-    pub at: Instant,
     pub issue: Issue,
-    pub severity: Severity
+    pub _at: Instant
 }
 
 //> PROBLEM -> DISPLAY
@@ -40,18 +39,17 @@ impl Display for Problem {
         formatter,
         "@ {}\n{}: {}{}",
         self.chain.join(" > "),
-        <&Severity as Into<&'static str>>::into(&self.severity),
+        <&Severity as Into<&'static str>>::into(&self.issue.severity),
         self.issue.name,
         if let Some(description) = &self.issue.description {format!("\n    {}", description)} else {String::new()}
     )}
 }
 
 //> PROBLEM -> FROM THREAT
-impl<Object: Into<Issue>> From<Threat<Object>> for Problem {
-    fn from(value: Threat<Object>) -> Self {return Self {
+impl From<Threat> for Problem {
+    fn from(value: Threat) -> Self {return Self {
         chain: value.chain,
-        at: Instant::now(),
-        issue: value.object.into(),
-        severity: value.severity
+        issue: value.issue,
+        _at: Instant::now()
     }}
 }
