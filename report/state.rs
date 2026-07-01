@@ -29,25 +29,25 @@ impl State for Main {
 
 
 //^
-//^ STAY
+//^ SAME
 //^
 
-//> STAY -> STRUCT
-pub struct Stay<'this> {
+//> SAME -> STRUCT
+pub struct Same<'this> {
     link: &'this mut Vec<&'static str>
 } 
 
-//> STAY -> STATE
-impl<'this> State for Stay<'this> {
+//> SAME -> STATE
+impl<'this> State for Same<'this> {
     fn chain(&self) -> Vec<&'static str> {return self.link.clone()}
     fn link<'valid>(&'valid mut self) -> &'valid mut Vec<&'static str> {return self.link}
 }
 
-//> STAY -> DERIVED STATE
-impl<'valid> DerivedState<'valid> for Stay<'valid> {}
+//> SAME -> DERIVED STATE
+impl<'valid> DerivedState<'valid> for Same<'valid> {}
 
-//> STAY -> FROM
-impl<'valid> From<&'valid mut (dyn State + 'valid)> for Stay<'valid> {
+//> SAME -> FROM
+impl<'valid> From<&'valid mut (dyn State + 'valid)> for Same<'valid> {
     fn from(value: &'valid mut (dyn State + 'valid)) -> Self {return Self {
         link: value.link()
     }}
@@ -55,30 +55,30 @@ impl<'valid> From<&'valid mut (dyn State + 'valid)> for Stay<'valid> {
 
 
 //^
-//^ ADD
+//^ NAME
 //^
 
-//> ADD -> STRUCT
-pub struct Add<'valid, const NAME: &'static str> {
+//> NAME -> STRUCT
+pub struct Name<'valid, const NAME: &'static str> {
     link: &'valid mut Vec<&'static str>
 } 
 
-//> ADD -> STATE
-impl<'this, const NAME: &'static str> State for Add<'this, NAME> {
+//> NAME -> STATE
+impl<'this, const NAME: &'static str> State for Name<'this, NAME> {
     fn chain(&self) -> Vec<&'static str> {return self.link.clone()}
     fn link<'valid>(&'valid mut self) -> &'valid mut Vec<&'static str> {return self.link}
 } 
 
-//> ADD -> DROP
-impl<'valid, const NAME: &'static str> Drop for Add<'valid, NAME> {
+//> NAME -> DROP
+impl<'valid, const NAME: &'static str> Drop for Name<'valid, NAME> {
     fn drop(&mut self) {self.link.pop();}
 }
 
-//> ADD -> DERIVED STATE
-impl<'valid, const NAME: &'static str> DerivedState<'valid> for Add<'valid, NAME> {}
+//> NAME -> DERIVED STATE
+impl<'valid, const NAME: &'static str> DerivedState<'valid> for Name<'valid, NAME> {}
 
-//> ADD -> FROM
-impl<'valid, const NAME: &'static str> From<&'valid mut (dyn State + 'valid)> for Add<'valid, NAME> {
+//> NAME -> FROM
+impl<'valid, const NAME: &'static str> From<&'valid mut (dyn State + 'valid)> for Name<'valid, NAME> {
     fn from(value: &'valid mut (dyn State + 'valid)) -> Self {
         value.link().push(NAME);
         return Self {

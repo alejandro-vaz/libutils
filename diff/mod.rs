@@ -27,6 +27,7 @@ use alloc::vec::Vec;
 //^ 
 
 //> DIFF -> STRUCT
+#[derive(Debug, Clone, Copy)]
 pub struct Diff<'valid> {
     remove: usize,
     write: &'valid [u8]

@@ -19,8 +19,8 @@ mod tests;
 
 //> HEAD -> PUBLIC STATE
 pub use state::{
-    Add,
-    Stay
+    Same,
+    Name
 };
 
 //> HEAD -> STATE

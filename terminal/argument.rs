@@ -3,6 +3,7 @@
 //^
 
 //> ARGUMENT -> ENUM
+#[derive(Debug, Clone)]
 pub enum Argument {
     File(String),
     Alias(Vec<char>),

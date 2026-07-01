@@ -14,7 +14,7 @@ use super::Pointer;
 #[test]
 fn new() -> () {
     let mut mytype = 5;
-    let pointer = Pointer::of(&mut mytype);
+    let pointer = Pointer::from(&mut mytype);
     let other = Pointer::<()>::default();
     assert!(!pointer.is_null());
     assert!(other.is_null());
@@ -26,7 +26,7 @@ fn address() -> () {
     let mut mytype = 5;
     let mutable = &mut mytype;
     let raw = mutable as *mut i32;
-    let pointer = Pointer::of(mutable);
+    let pointer = Pointer::from(mutable);
     assert_eq!(pointer.address(), raw.addr());
 }
 
@@ -34,7 +34,7 @@ fn address() -> () {
 #[test]
 fn operations() -> () {
     let mut mytype = 5;
-    let pointer = Pointer::of(&mut mytype);
+    let pointer = Pointer::from(&mut mytype);
     let operated = pointer.add(3).sub(3);
     assert_eq!(pointer.address(), operated.address());
 }
@@ -43,7 +43,7 @@ fn operations() -> () {
 #[test]
 fn rw() -> () {
     let mut mytype = 5;
-    let pointer = Pointer::of(&mut mytype);
+    let pointer = Pointer::from(&mut mytype);
     let read = unsafe {pointer.read()};
     assert_eq!(read, Some(5));
     unsafe {pointer.write(7)};
@@ -54,7 +54,7 @@ fn rw() -> () {
 #[test]
 fn replace() -> () {
     let mut mytype = 5;
-    let pointer = Pointer::of(&mut mytype);
+    let pointer = Pointer::from(&mut mytype);
     let old = unsafe {pointer.replace(6)};
     assert_eq!(old, Some(5));
     assert_eq!(unsafe {pointer.read()}, Some(6));
@@ -64,6 +64,6 @@ fn replace() -> () {
 #[test]
 fn asptr() -> () {
     let mut mytype = 5;
-    let pointer = Pointer::of(&mut mytype);
+    let pointer = Pointer::from(&mut mytype);
     assert_eq!(pointer.as_ptr_mut(), &raw mut mytype);
 }

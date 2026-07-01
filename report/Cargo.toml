@@ -16,7 +16,6 @@ path = "./mod.rs"
 doctest = false
 
 [dependencies]
-libutils-array = {workspace = true}
 libutils-cage = {workspace = true}
 libutils-issue = {workspace = true}
 libutils-terminal = {workspace = true}

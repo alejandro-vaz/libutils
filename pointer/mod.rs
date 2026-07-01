@@ -61,10 +61,6 @@ impl<Type> Pointer<Type> {
         to: self.to.map(const |pointer| unsafe {pointer.sub(count)})
     }}
     #[inline]
-    pub const fn of(value: &mut Type) -> Self {return Self {
-        to: NonNull::new(value as *mut Type)
-    }}
-    #[inline]
     pub const unsafe fn read(self) -> Option<Type> {return Some(unsafe {self.to?.read()})}
     #[inline]
     pub const fn as_ptr(self) -> *const Type {return match self.to {
@@ -110,7 +106,7 @@ impl<Type> Copy for Pointer<Type> {}
 
 //> POINTER -> DEBUG
 impl<Type: Debug> Debug for Pointer<Type> {
-    fn fmt(&self, formatter: &mut Formatter<'_>) -> Format {write!(formatter, "Pointer({})", type_name::<Type>())}
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> Format {write!(formatter, "*{}", type_name::<Type>())}
 }
 
 //> POINTER -> DEFAULT
