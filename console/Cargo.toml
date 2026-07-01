@@ -1,6 +1,6 @@
 [package]
-name = "libutils-log"
-description = "A write-only vec-like buffer"
+name = "libutils-console"
+description = "A thread-safe static mutable wrapper"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -16,4 +16,5 @@ path = "./mod.rs"
 doctest = false
 
 [dependencies]
-libutils-pointer = {workspace = true}
+libutils-issue = {workspace = true}
+libutils-threat = {workspace = true}

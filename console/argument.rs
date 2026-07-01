@@ -1,11 +1,25 @@
 //^
+//^ HEAD
+//^
+
+//> HEAD -> ALLOC
+use alloc::{
+    vec::Vec,
+    string::{
+        String,
+        ToString
+    }
+};
+
+
+//^
 //^ ARGUMENT
 //^
 
 //> ARGUMENT -> ENUM
 #[derive(Debug, Clone)]
 pub enum Argument {
-    File(String),
+    Path(String),
     Alias(Vec<char>),
     Flag(String),
     Setting(String, String),
@@ -17,16 +31,16 @@ pub enum Argument {
         ref flag if let Some(flag) = flag.strip_prefix("--") => Argument::Flag(flag.to_string()),
         ref alias if let Some(alias) = alias.strip_prefix('-') => Argument::Alias(alias.chars().collect()),
         other => {
-            let mut file = Some(false);
-            for character in other.chars() {file = match character {
+            let mut path = Some(false);
+            for character in other.chars() {path = match character {
                 num if num.is_numeric() => Some(true),
-                '/' | '\\' | '.' => Some(true),
-                letter if letter.is_alphabetic() => file,
+                '/' | '\\' | '.' | ':' => Some(true),
+                letter if letter.is_alphabetic() => path,
                 _ => None
             }};
-            match file {
+            match path {
                 None => Argument::Unknown(other),
-                Some(true) => Argument::File(other),
+                Some(true) => Argument::Path(other),
                 Some(false) => Argument::Target(other)
             }
         }

@@ -24,15 +24,26 @@ use alloc::string::String;
 //> HEAD -> SEVERITY
 pub use severity::Severity;
 
+//> HEAD -> CORE
+use core::hash::{
+    Hash,
+    Hasher
+};
+
 
 //^
 //^ ISSUE
 //^
 
 //> ISSUE -> STRUCT
-#[derive(Hash)]
 pub struct Issue {
     pub name: &'static str,
     pub description: Option<String>,
     pub severity: Severity
+}
+
+//> ISSUE -> HASH
+impl Hash for Issue {
+    #[inline]
+    fn hash<H: Hasher>(&self, state: &mut H) {Hash::hash(self.name, state)}
 }

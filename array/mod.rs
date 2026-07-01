@@ -10,7 +10,9 @@
 
 //> HEAD -> FEATURES
 #![feature(const_cmp)]
+#![feature(deref_pure_trait)]
 #![feature(const_trait_impl)]
+#![feature(trusted_len)]
 #![feature(const_slice_make_iter)]
 #![feature(test)]
 #![feature(generic_const_exprs)]
@@ -80,9 +82,9 @@ impl<Type, const N: usize> Array<Type, N> {
     }
     #[inline]
     pub const fn push_mut<'valid>(&'valid mut self, value: Type) -> &'valid mut Type {
+        let index = self.length;
         self.push(value);
-        let length = self.length - 1;
-        return self.get_mut(length).unwrap();
+        return &mut self[index];
     }
     #[inline]
     pub const fn pop(&mut self) -> Option<Type> {return if self.length == 0 {None} else {
@@ -108,7 +110,7 @@ impl<Type, const N: usize> Array<Type, N> {
     #[inline]
     pub const fn insert_mut<'valid>(&'valid mut self, index: usize, value: Type) -> &'valid mut Type {
         self.insert(index, value);
-        return self.get_mut(index).unwrap();
+        return &mut self[index];
     }
     #[inline]
     pub const fn remove(&mut self, index: usize) -> Type {

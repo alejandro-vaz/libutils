@@ -14,35 +14,73 @@ use core::{
     slice::{
         Iter,
         IterMut
+    },
+    iter::{
+        ExactSizeIterator,
+        DoubleEndedIterator,
+        FusedIterator,
+        TrustedLen
     }
 };
 
 
 //^
-//^ ITERATORS
+//^ ITERABLE
 //^
 
-//> ITERATORS -> ITERABLE
+//> ITERABLE -> STRUCT
 pub struct Iterable<Type, const N: usize> {
     index: usize,
+    reduced: usize,
     length: usize,
     data: MaybeUninit<[Type; N]>
-} impl<Type, const N: usize> Drop for Iterable<Type, N> {
+} 
+
+//> ITERABLE -> DROP
+impl<Type, const N: usize> Drop for Iterable<Type, N> {
     fn drop(&mut self) {while let Some(value) = self.next() {drop(value)}}
 }
 
-//> ITERATORS -> ITERATIONS
+//> ITERABLE -> ITERATOR
 const impl<Type, const N: usize> Iterator for Iterable<Type, N> {
     type Item = Type;
     #[inline]
     fn next(&mut self) -> Option<Self::Item> {
-        return if self.index >= self.length {None} else {
+        return if self.length - self.reduced - self.index == 0 {None} else {
             let value = unsafe {(self.data.as_ptr() as *const Type).add(self.index).read()};
             self.index += 1;
             Some(value)
         }
     }
+    #[inline]
+    fn size_hint(&self) -> (usize, Option<usize>) {return (self.length - self.index, Some(self.length - self.index))}
 }
+
+//> ITERABLE -> EXACT SIZE
+impl<Type, const N: usize> ExactSizeIterator for Iterable<Type, N> {}
+
+//> ITERABLE -> DOUBLE ENDED
+const impl<Type, const N: usize> DoubleEndedIterator for Iterable<Type, N> {
+    #[inline]
+    fn next_back(&mut self) -> Option<Self::Item> {
+        return if self.length - self.reduced - self.index == 0 {None} else {
+            let value = unsafe {(self.data.as_ptr() as *const Type).add(self.length - 1 - self.reduced).read()};
+            self.reduced += 1;
+            Some(value)
+        }
+    }
+}
+
+//> ITERABLE -> FUSED
+impl<Type, const N: usize> FusedIterator for Iterable<Type, N> {}
+
+//> ITERABLE -> TRUSTED LEN
+unsafe impl<Type, const N: usize> TrustedLen for Iterable<Type, N> {}
+
+
+//^
+//^ ITERATORS
+//^
 
 //> ITERATORS -> FROM
 impl<Type, const N: usize> FromIterator<Type> for Array<Type, N> {
@@ -53,13 +91,14 @@ impl<Type, const N: usize> FromIterator<Type> for Array<Type, N> {
     }
 }
 
-//> ITERATORS -> INTO ITERATOR
+//> ITERATORS -> INTO
 const impl<Type, const N: usize> IntoIterator for Array<Type, N> {
     type Item = Type;
     type IntoIter = Iterable<Type, N>;
     fn into_iter(self) -> Self::IntoIter {
         let iterator = Self::IntoIter {
             index: 0,
+            reduced: 0,
             length: self.length,
             data: unsafe {MaybeUninit::new(self.data.as_ptr().read())}
         };

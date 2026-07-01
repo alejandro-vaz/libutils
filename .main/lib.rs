@@ -10,6 +10,10 @@ pub use libutils_array as array;
 #[cfg(feature = "cage")]
 pub use libutils_cage as cage;
 
+//> LIBUTILS -> CONSOLE
+#[cfg(feature = "console")]
+pub use libutils_console as console;
+
 //> LIBUTILS -> DIFF
 #[cfg(feature = "diff")]
 pub use libutils_diff as diff;
@@ -17,10 +21,6 @@ pub use libutils_diff as diff;
 //> LIBUTILS -> ISSUE
 #[cfg(feature = "issue")]
 pub use libutils_issue as issue;
-
-//> LIBUTILS -> LOG
-#[cfg(feature = "log")]
-pub use libutils_log as log;
 
 //> LIBUTILS -> POINTER
 #[cfg(feature = "pointer")]

@@ -17,27 +17,36 @@ use core::{
     },
     ops::{
         Deref,
-        DerefMut
+        DerefMut,
+        DerefPure
     }
 };
 
 
 //^
-//^ REFERENCES
+//^ DEREF
 //^
 
-//> REFERENCES -> DEREF
+//> DEREF -> SLICE
 const impl<Type, const N: usize> Deref for Array<Type, N> {
     type Target = [Type];
     #[inline]
     fn deref(&self) -> &Self::Target {return unsafe {fat(self.data.as_ptr() as *const Type, self.length)}}
 }
 
-//> REFERENCES -> DEREFMUT
+//> DEREF -> MUTABLE SLICE
 const impl<Type, const N: usize> DerefMut for Array<Type, N> {
     #[inline]
     fn deref_mut(&mut self) -> &mut Self::Target {return unsafe {mutfat(self.pointer().as_ptr(), self.length)}}
 }
+
+//> DEREF -> PURE
+unsafe impl<Type, const N: usize> DerefPure for Array<Type, N> {}
+
+
+//^
+//^ REFERENCES
+//^
 
 //> REFERENCES -> SLICE
 const impl<Type, const N: usize> AsRef<[Type]> for Array<Type, N> {

@@ -2,9 +2,6 @@
 //^ HEAD
 //^
 
-//> HEAD -> LOG
-use libutils_log::Log;
-
 //> HEAD -> SUPER
 use super::problem::Problem;
 
@@ -15,7 +12,7 @@ use super::problem::Problem;
 
 //> LAYOUT -> STRUCT
 pub struct Layout {
-    pub problems: Log<Problem> = Log::new()
+    pub problems: Vec<Problem> = Vec::new()
 }
 
 //> LAYOUT -> IMPLEMENTATION

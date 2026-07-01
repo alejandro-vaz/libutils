@@ -14,9 +14,10 @@ use super::{
 //^
 
 //> IMPLEMENTATIONS -> &'STATIC STR
-const impl Into<Issue> for &'static str {
-    fn into(self) -> Issue {return Issue {
-        name: self,
+const impl From<&'static str> for Issue {
+    #[inline]
+    fn from(value: &'static str) -> Self {return Self {
+        name: value,
         description: None,
         severity: Severity::Critical
     }}

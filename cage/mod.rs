@@ -4,6 +4,7 @@
 
 //> HEAD -> FEATURES
 #![feature(test)]
+#![feature(lock_value_accessors)]
 
 //> HEAD -> CRATES
 extern crate test;
@@ -35,10 +36,14 @@ pub struct Cage<Type: ?Sized> {
 
 //> CAGE -> SIZED IMPLEMENTATION
 impl<Type: Sized> Cage<Type> {
+    #[inline]
     pub const fn new(value: Type) -> Cage<Type> {return Self {
         being: RwLock::new(value)
     }}
+    #[inline]
     pub fn release(self) -> Type {return self.being.into_inner().unwrap()}
+    #[inline]
+    pub fn replace(&self, value: Type) -> () {self.being.replace(value).unwrap();}
 }
 
 //> CAGE -> IMPLEMENTATION

@@ -3,10 +3,10 @@
 //^
 
 //> HEAD -> SUPER
-use super::{
-    TERMINAL,
-    Console
-};
+use super::TERMINAL;
+
+//> HEAD -> CONSOLE
+use libutils_console::Console;
 
 
 //^ 

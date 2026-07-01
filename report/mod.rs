@@ -34,16 +34,16 @@ use state::{
 use libutils_issue::Issue;
 
 //> HEAD -> TERMINAL
-use libutils_terminal::{
-    Console,
-    TERMINAL
-};
+use libutils_terminal::TERMINAL;
 
 //> HEAD -> THREAT
 use libutils_threat::Threat;
 
 //> HEAD -> CAGE
 use libutils_cage::Cage;
+
+//> HEAD -> CONSOLE
+use libutils_console::Console;
 
 
 //^ 

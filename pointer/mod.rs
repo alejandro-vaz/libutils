@@ -13,6 +13,7 @@
 #![feature(const_try)]
 #![feature(const_default)]
 #![feature(const_convert)]
+#![feature(ptr_mask)]
 
 //> HEAD -> MODULES
 mod comparisons;
@@ -84,6 +85,8 @@ impl<Type> Pointer<Type> {
     pub const fn cast<Other>(self) -> Pointer<Other> {return Pointer {
         to: self.to.map(const |pointer| pointer.cast())
     }}
+    #[inline]
+    pub fn mask(self, mask: usize) -> Pointer<Type> {Pointer::from(self.to.map(|pointer| pointer.as_ptr()).unwrap_or(null_mut()).mask(mask))}
 }
 
 //> POINTER -> IMPLEMENTATION WITH DESTRUCT
