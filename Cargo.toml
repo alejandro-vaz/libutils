@@ -5,7 +5,7 @@ default-members = [".main"]
 
 [workspace.package]
 edition = "2024"
-version = "9.23.32"
+version = "9.23.33"
 # number of features - number of lines in cargo tree with grep . --count - incremental number
 rust-version = "1.98"
 categories = ["development-tools", "config", "no-std"]
@@ -16,15 +16,15 @@ license = "MIT"
 authors = ["Alejandro Vaz"]
 
 [workspace.dependencies]
-libutils-array = {version = "=9.23.32", path = "array"}
-libutils-cage = {version = "=9.23.32", path = "cage"}
-libutils-console = {version = "=9.23.32", path = "console"}
-libutils-diff = {version = "=9.23.32", path = "diff"}
-libutils-issue = {version = "=9.23.32", path = "issue"}
-libutils-pointer = {version = "=9.23.32", path = "pointer"}
-libutils-report = {version = "=9.23.32", path = "report"}
-libutils-terminal = {version = "=9.23.32", path = "terminal"}
-libutils-threat = {version = "=9.23.32", path = "threat"}
+libutils-array = {version = "=9.23.33", path = "array"}
+libutils-cage = {version = "=9.23.33", path = "cage"}
+libutils-console = {version = "=9.23.33", path = "console"}
+libutils-diff = {version = "=9.23.33", path = "diff"}
+libutils-issue = {version = "=9.23.33", path = "issue"}
+libutils-pointer = {version = "=9.23.33", path = "pointer"}
+libutils-report = {version = "=9.23.33", path = "report"}
+libutils-terminal = {version = "=9.23.33", path = "terminal"}
+libutils-threat = {version = "=9.23.33", path = "threat"}
 
 [profile.bench]
 lto = "fat"

@@ -17,11 +17,11 @@ mod derivations;
 mod tests;
 
 //> HEAD -> STD
-use std::sync::{
+use std::{ops::{Deref, DerefMut}, sync::{
     RwLock,
     RwLockReadGuard,
     RwLockWriteGuard
-};
+}};
 
 
 //^
@@ -52,6 +52,10 @@ impl<Type: ?Sized> Cage<Type> {
     pub fn read<'valid>(&'valid self) -> RwLockReadGuard<'valid, Type> {return self.being.read().unwrap()}
     #[inline]
     pub fn write<'valid>(&'valid self) -> RwLockWriteGuard<'valid, Type> {return self.being.write().unwrap()}
+    #[inline]
+    pub fn with<Returns>(&self, closure: impl FnOnce(&Type) -> Returns) -> Returns {return closure(self.read().deref())}
+    #[inline]
+    pub fn with_mut<Returns>(&self, closure: impl FnOnce(&mut Type) -> Returns) -> Returns {return closure(self.write().deref_mut())}
 }
 
 //> CAGE -> COPY IMPLEMENTATION
