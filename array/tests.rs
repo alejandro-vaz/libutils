@@ -219,3 +219,11 @@ fn mutables() -> () {
     array.insert_mut(2, 3);
     assert_eq!(array.get(2), Some(&3));
 }
+
+//> TESTS -> RETAIN
+#[test]
+fn retain() -> () {
+    let mut array = Array::<u8, 7>::from([1, 2, 3, 4, 5, 6]);
+    array.retain(|value| value.is_power_of_two());
+    assert_eq!(array.as_ref(), &[1, 2, 4]);
+}

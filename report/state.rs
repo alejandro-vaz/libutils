@@ -9,7 +9,12 @@ pub trait State {
 }
 
 //> STATE -> DERIVED
-pub trait DerivedState<'valid>: State + From<&'valid mut dyn State> {}
+pub trait DerivedState<'valid>: State + Convert<'valid> {}
+
+//> STATE -> CONVERT
+pub trait Convert<'valid> {
+    fn convert<Current: State>(value: &'valid mut Current) -> Self;
+}
 
 
 //^
@@ -46,11 +51,13 @@ impl<'this> State for Same<'this> {
 //> SAME -> DERIVED STATE
 impl<'valid> DerivedState<'valid> for Same<'valid> {}
 
-//> SAME -> FROM
-impl<'valid> From<&'valid mut (dyn State + 'valid)> for Same<'valid> {
-    fn from(value: &'valid mut (dyn State + 'valid)) -> Self {return Self {
-        link: value.link()
-    }}
+//> SAME -> CONVERT
+impl<'valid> Convert<'valid> for Same<'valid> {
+    fn convert<Current: State>(value: &'valid mut Current) -> Self {
+        return Self {
+            link: value.link()
+        }
+    }
 }
 
 
@@ -77,9 +84,9 @@ impl<'valid, const NAME: &'static str> Drop for Name<'valid, NAME> {
 //> NAME -> DERIVED STATE
 impl<'valid, const NAME: &'static str> DerivedState<'valid> for Name<'valid, NAME> {}
 
-//> NAME -> FROM
-impl<'valid, const NAME: &'static str> From<&'valid mut (dyn State + 'valid)> for Name<'valid, NAME> {
-    fn from(value: &'valid mut (dyn State + 'valid)) -> Self {
+//> NAME -> CONVERT
+impl<'valid, const NAME: &'static str> Convert<'valid> for Name<'valid, NAME> {
+    fn convert<Current: State>(value: &'valid mut Current) -> Self {
         value.link().push(NAME);
         return Self {
             link: value.link()

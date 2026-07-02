@@ -11,7 +11,7 @@ extern crate alloc;
 //> HEAD -> MODULES
 mod argument;
 
-//> HEAD -> PROBLEM
+//> HEAD -> THREAT
 use libutils_threat::Threat;
 
 //> HEAD -> ARGUMENT
@@ -30,8 +30,8 @@ use alloc::string::String;
 
 //> CONSOLE -> TRAIT
 pub trait Console {
-    fn arguments(&self) -> &[Argument];
+    fn arguments<'valid>(&'valid self) -> &'valid [Argument];
     fn read(&self, filename: &str) -> Result<String, Issue>;
-    fn sync(&mut self) -> ();
-    fn problem(&mut self, threat: Threat) -> ();
+    fn sync(&self) -> ();
+    fn problem(&self, threat: Threat) -> ();
 }

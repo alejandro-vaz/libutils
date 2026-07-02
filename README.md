@@ -1,4 +1,4 @@
-# libutils -- general utility library
+# libutils -- a general utility library
 
 This library is meant to have types that may be useful for coding executables and libraries that all need shared functionality.
 

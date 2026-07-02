@@ -39,9 +39,6 @@ use libutils_terminal::TERMINAL;
 //> HEAD -> THREAT
 use libutils_threat::Threat;
 
-//> HEAD -> CAGE
-use libutils_cage::Cage;
-
 //> HEAD -> CONSOLE
 use libutils_console::Console;
 
@@ -52,21 +49,18 @@ use libutils_console::Console;
 
 //> REPORT -> STRUCT
 pub struct Report<Current: State> {
-    data: Current,
-    cage: &'static Cage<dyn Console>
+    data: Current
 }
 
 //> REPORT -> IMPLEMENTATION
 impl Report<Main> {
-    pub const fn new(name: &'static str) -> Self {return Self::with(name, &TERMINAL)}
-    pub const fn with(name: &'static str, cage: &'static Cage<dyn Console>) -> Self {
+    pub const fn new(name: &'static str) -> Self {
         let mut chain = Vec::new();
         chain.push(name);
         return Self {
             data: Main {
-                chain: chain,
-            },
-            cage: cage
+                chain: chain
+            }
         };
     }
 }
@@ -80,17 +74,15 @@ const impl Default for Report<Main> {
 impl<Current: State> Report<Current> {
     #[inline]
     pub fn to<'valid, Following: DerivedState<'valid>>(&'valid mut self) -> Report<Following> {return Report {
-        data: Following::from(&mut self.data),
-        cage: self.cage
+        data: Following::convert(&mut self.data)
     }}
     #[inline]
     pub fn issue<Object: Into<Issue>, Type>(&self, object: Object) -> Option<Type> {
-        let mut console = self.cage.write();
-        console.problem(Threat {
+        TERMINAL.problem(Threat {
             issue: object.into(),
             chain: self.data.chain()
         });
-        console.sync();
+        TERMINAL.sync();
         return None;
     }
 }

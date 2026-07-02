@@ -48,7 +48,8 @@ use core::{
     ptr::{
         NonNull, 
         copy
-    }
+    },
+    array::from_fn as arrayfn
 };
 
 
@@ -120,6 +121,16 @@ impl<Type, const N: usize> Array<Type, N> {
         unsafe {copy(pointer.add(1).as_ptr(), pointer.as_ptr(), self.length - 1 - index)};
         self.length -= 1;
         return value;
+    }
+    #[inline]
+    pub fn retain(&mut self, mut closure: impl FnMut(&Type) -> bool) -> () {
+        let mut new = Array::new();
+        for (index, passes) in arrayfn::<Option<bool>, N, _>(|index| self.get(index).map(&mut closure)).into_iter().enumerate() {match passes {
+            None => break,
+            Some(true) => new.push(unsafe {self.pointer().add(index).read()}),
+            Some(false) => unsafe {self.pointer().add(index).read();}
+        }}
+        *self = new;
     }
 }
 

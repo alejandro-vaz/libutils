@@ -3,11 +3,10 @@
 //^
 
 //> HEAD -> FEATURES
-#![feature(default_field_values)]
 #![feature(const_trait_impl)]
+#![feature(const_default)]
 
 //> HEAD -> MODULES
-mod layout;
 mod problem;
 #[cfg(test)]
 mod tests;
@@ -17,7 +16,7 @@ use std::{
     env::args, 
     io::{
         Write, 
-        stderr
+        stdout
     }, 
     sync::LazyLock,
     fs::read_to_string,
@@ -33,9 +32,6 @@ use libutils_threat::Threat;
 //> HEAD -> DIFF
 use libutils_diff::Diff;
 
-//> HEAD -> LAYOUT
-use layout::Layout;
-
 //> HEAD -> ISSUE
 use libutils_issue::{
     Issue,
@@ -48,25 +44,32 @@ use libutils_console::{
     Argument
 };
 
+//> HEAD -> PROBLEM
+use problem::Problem;
+
 
 //^
 //^ TERMINAL
 //^
 
 //> TERMINAL -> INSTANCE
-pub static TERMINAL: Cage<Terminal> = Cage::new(Terminal {..});
+pub static TERMINAL: Terminal = Terminal {
+    arguments: LazyLock::new(|| args().map(Argument::from).collect()),
+    layout: Cage::default(),
+    output: Cage::default()
+};
 
 //> TERMINAL -> STRUCT
 pub struct Terminal {
-    layout: Layout = Layout {..},
-    arguments: LazyLock<Vec<Argument>> = LazyLock::new(|| args().map(Argument::from).collect()),
-    stderr: String = String::new()
+    arguments: LazyLock<Vec<Argument>>,
+    layout: Cage<Vec<Problem>>,
+    output: Cage<String>
 }
 
 //> TERMINAL -> IMPLEMENTATION
 impl Console for Terminal {
     #[inline]
-    fn arguments(&self) -> &[Argument] {return self.arguments.as_slice()}
+    fn arguments<'valid>(&'valid self) -> &'valid [Argument] {return self.arguments.as_slice()}
     #[inline]
     fn read(&self, filename: &str) -> Result<String, Issue> {return read_to_string(PathBuf::from(filename)).map_err(|error| Issue {
         name: "Failed to read file",
@@ -74,15 +77,18 @@ impl Console for Terminal {
         severity: Severity::Error
     })}
     #[inline]
-    fn sync(&mut self) -> () {
-        let content = self.layout.view();
-        stderr().lock().write(<Diff as Into<Vec<u8>>>::into(Diff::new(
-            self.stderr.as_bytes(), 
-            content.as_bytes())
-        ).as_ref()).unwrap();
-        stderr().lock().flush().unwrap();
-        self.stderr = content;
+    fn sync(&self) -> () {
+        let content = self.layout.read().iter().map(ToString::to_string).collect::<Vec<String>>().join("\n\n");
+        self.output.with_mut(|output| {
+            let mut lock = stdout().lock();
+            lock.write(<Diff as Into<Vec<u8>>>::into(Diff::new(
+                output.as_bytes(), 
+                content.as_bytes()
+            )).as_ref()).unwrap();
+            lock.flush().unwrap();
+            *output = content;
+        });
     }
     #[inline]
-    fn problem(&mut self, threat: Threat) -> () {self.layout.problems.push(threat.into())}
+    fn problem(&self, threat: Threat) -> () {self.layout.write().push(threat.into())}
 }

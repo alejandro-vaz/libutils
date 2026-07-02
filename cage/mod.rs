@@ -4,6 +4,8 @@
 
 //> HEAD -> FEATURES
 #![feature(test)]
+#![feature(const_trait_impl)]
+#![feature(const_default)]
 #![feature(lock_value_accessors)]
 
 //> HEAD -> CRATES
@@ -43,7 +45,7 @@ impl<Type: Sized> Cage<Type> {
     #[inline]
     pub fn release(self) -> Type {return self.being.into_inner().unwrap()}
     #[inline]
-    pub fn replace(&self, value: Type) -> () {self.being.replace(value).unwrap();}
+    pub fn replace(&self, value: Type) -> Type {self.being.replace(value).unwrap()}
 }
 
 //> CAGE -> IMPLEMENTATION
@@ -68,4 +70,10 @@ impl<Type: Copy> Cage<Type> {
 impl<Type: Clone> Cage<Type> {
     #[inline]
     pub fn cloned(&self) -> Type {self.read().clone()}
+}
+
+//> CAGE -> DEFAULT
+const impl<Type: [const] Default> Default for Cage<Type> {
+    #[inline]
+    fn default() -> Self {return Self::new(Type::default())}
 }

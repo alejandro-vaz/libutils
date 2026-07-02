@@ -16,5 +16,5 @@ use libutils_console::Console;
 //> TESTS -> CLI
 #[test]
 fn cli() -> () {
-    let _arguments = TERMINAL.read().arguments();
+    let _arguments = TERMINAL.arguments();
 }
