@@ -6,7 +6,7 @@
 use super::TERMINAL;
 
 //> HEAD -> CONSOLE
-use libutils_console::Console;
+use libutils_console::{Console, Handle};
 
 
 //^ 
@@ -17,4 +17,5 @@ use libutils_console::Console;
 #[test]
 fn cli() -> () {
     let _arguments = TERMINAL.arguments();
+    TERMINAL.print("value").ignore();
 }

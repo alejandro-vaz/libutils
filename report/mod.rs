@@ -40,7 +40,10 @@ use libutils_terminal::TERMINAL;
 use libutils_threat::Threat;
 
 //> HEAD -> CONSOLE
-use libutils_console::Console;
+use libutils_console::{
+    Console, 
+    Handle
+};
 
 
 //^ 
@@ -81,8 +84,7 @@ impl<Current: State> Report<Current> {
         TERMINAL.problem(Threat {
             issue: object.into(),
             chain: self.data.chain()
-        });
-        TERMINAL.sync();
+        }).sync();
         return None;
     }
 }

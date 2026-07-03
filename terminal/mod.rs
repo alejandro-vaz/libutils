@@ -7,6 +7,7 @@
 #![feature(const_default)]
 
 //> HEAD -> MODULES
+mod action;
 mod item;
 mod problem;
 #[cfg(test)]
@@ -15,17 +16,16 @@ mod tests;
 //> HEAD -> STD
 use std::{
     env::args, 
-    io::{
-        Write, 
-        stdout
-    }, 
     sync::LazyLock,
     fs::read_to_string,
     path::PathBuf
 };
 
 //> HEAD -> CORE
-use core::fmt::Display;
+use core::fmt::{
+    Display,
+    Debug
+};
 
 //> HEAD -> CAGE
 use libutils_cage::Cage;
@@ -33,8 +33,8 @@ use libutils_cage::Cage;
 //> HEAD -> PROBLEM
 use libutils_threat::Threat;
 
-//> HEAD -> DIFF
-use libutils_diff::Diff;
+//> HEAD -> ACTION
+use action::Action;
 
 //> HEAD -> ISSUE
 use libutils_issue::{
@@ -45,7 +45,8 @@ use libutils_issue::{
 //> HEAD -> CONSOLE
 use libutils_console::{
     Console,
-    Argument
+    Argument,
+    Handle
 };
 
 //> HEAD -> ITEM
@@ -81,20 +82,18 @@ impl Console for Terminal {
         severity: Severity::Error
     })}
     #[inline]
-    fn sync(&self) -> () {
-        let content = self.layout.read(|layout| layout.iter().map(ToString::to_string).collect::<Vec<String>>()).join("\n\n");
-        self.output.write(|output| {
-            let mut lock = stdout().lock();
-            lock.write(<Diff as Into<Vec<u8>>>::into(Diff::new(
-                output.as_bytes(), 
-                content.as_bytes()
-            )).as_ref()).unwrap();
-            lock.flush().unwrap();
-            *output = content;
-        });
+    fn problem(&self, threat: Threat) -> impl Handle {
+        self.layout.write(|layout| layout.push(Item::Problem(threat.into())));
+        return Action;
     }
     #[inline]
-    fn problem(&self, threat: Threat) -> () {return self.layout.write(|layout| layout.push(Item::Problem(threat.into())))}
+    fn print<Type: Display>(&self, value: Type) -> impl Handle {
+        self.layout.write(|layout| layout.push(Item::String(value.to_string())));
+        return Action;
+    }
     #[inline]
-    fn print<Type: Display>(&self, value: &Type) -> () {return self.layout.write(|layout| layout.push(Item::String(value.to_string())))}
+    fn debug<Type: Debug>(&self, value: Type) -> impl Handle {
+        self.layout.write(|layout| layout.push(Item::String(format!("{value:#?}"))));
+        return Action;
+    }
 }

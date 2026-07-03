@@ -10,6 +10,7 @@ extern crate alloc;
 
 //> HEAD -> MODULES
 mod argument;
+mod handle;
 
 //> HEAD -> THREAT
 use libutils_threat::Threat;
@@ -24,7 +25,13 @@ use libutils_issue::Issue;
 use alloc::string::String;
 
 //> HEAD -> CORE
-use core::fmt::Display;
+use core::fmt::{
+    Display,
+    Debug
+};
+
+//> HEAD -> HANDLE
+pub use handle::Handle;
 
 
 //^
@@ -35,7 +42,7 @@ use core::fmt::Display;
 pub trait Console {
     fn arguments<'valid>(&'valid self) -> &'valid [Argument];
     fn read(&self, filename: &str) -> Result<String, Issue>;
-    fn sync(&self) -> ();
-    fn problem(&self, threat: Threat) -> ();
-    fn print<Type: Display>(&self, value: &Type) -> ();
+    fn problem(&self, threat: Threat) -> impl Handle;
+    fn print<Type: Display>(&self, value: Type) -> impl Handle;
+    fn debug<Type: Debug>(&self, value: Type) -> impl Handle;
 }
