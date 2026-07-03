@@ -23,6 +23,9 @@ use libutils_issue::Issue;
 //> HEAD -> ALLOC
 use alloc::string::String;
 
+//> HEAD -> CORE
+use core::fmt::Display;
+
 
 //^
 //^ CONSOLE
@@ -34,4 +37,5 @@ pub trait Console {
     fn read(&self, filename: &str) -> Result<String, Issue>;
     fn sync(&self) -> ();
     fn problem(&self, threat: Threat) -> ();
+    fn print<Type: Display>(&self, value: &Type) -> ();
 }

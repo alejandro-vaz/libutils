@@ -19,11 +19,13 @@ mod derivations;
 mod tests;
 
 //> HEAD -> STD
-use std::{ops::{Deref, DerefMut}, sync::{
-    RwLock,
-    RwLockReadGuard,
-    RwLockWriteGuard
-}};
+use std::sync::RwLock;
+
+//> HEAD -> CORE
+use core::ops::{
+    Deref,
+    DerefMut
+};
 
 
 //^
@@ -51,25 +53,21 @@ impl<Type: Sized> Cage<Type> {
 //> CAGE -> IMPLEMENTATION
 impl<Type: ?Sized> Cage<Type> {
     #[inline]
-    pub fn read<'valid>(&'valid self) -> RwLockReadGuard<'valid, Type> {return self.being.read().unwrap()}
+    pub fn read<Returns>(&self, closure: impl FnOnce(&Type) -> Returns) -> Returns {return closure(self.being.read().unwrap().deref())}
     #[inline]
-    pub fn write<'valid>(&'valid self) -> RwLockWriteGuard<'valid, Type> {return self.being.write().unwrap()}
-    #[inline]
-    pub fn with<Returns>(&self, closure: impl FnOnce(&Type) -> Returns) -> Returns {return closure(self.read().deref())}
-    #[inline]
-    pub fn with_mut<Returns>(&self, closure: impl FnOnce(&mut Type) -> Returns) -> Returns {return closure(self.write().deref_mut())}
+    pub fn write<Returns>(&self, closure: impl FnOnce(&mut Type) -> Returns) -> Returns {return closure(self.being.write().unwrap().deref_mut())}
 }
 
 //> CAGE -> COPY IMPLEMENTATION
 impl<Type: Copy> Cage<Type> {
     #[inline]
-    pub fn get(&self) -> Type {*self.read()}
+    pub fn get(&self) -> Type {*self.being.read().unwrap()}
 }
 
 //> CAGE -> CLONE IMPLEMENTATION
 impl<Type: Clone> Cage<Type> {
     #[inline]
-    pub fn cloned(&self) -> Type {self.read().clone()}
+    pub fn cloned(&self) -> Type {self.being.read().unwrap().clone()}
 }
 
 //> CAGE -> DEFAULT

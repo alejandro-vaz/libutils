@@ -7,6 +7,7 @@
 #![feature(const_default)]
 
 //> HEAD -> MODULES
+mod item;
 mod problem;
 #[cfg(test)]
 mod tests;
@@ -22,6 +23,9 @@ use std::{
     fs::read_to_string,
     path::PathBuf
 };
+
+//> HEAD -> CORE
+use core::fmt::Display;
 
 //> HEAD -> CAGE
 use libutils_cage::Cage;
@@ -44,8 +48,8 @@ use libutils_console::{
     Argument
 };
 
-//> HEAD -> PROBLEM
-use problem::Problem;
+//> HEAD -> ITEM
+use item::Item;
 
 
 //^
@@ -62,7 +66,7 @@ pub static TERMINAL: Terminal = Terminal {
 //> TERMINAL -> STRUCT
 pub struct Terminal {
     arguments: LazyLock<Vec<Argument>>,
-    layout: Cage<Vec<Problem>>,
+    layout: Cage<Vec<Item>>,
     output: Cage<String>
 }
 
@@ -78,8 +82,8 @@ impl Console for Terminal {
     })}
     #[inline]
     fn sync(&self) -> () {
-        let content = self.layout.read().iter().map(ToString::to_string).collect::<Vec<String>>().join("\n\n");
-        self.output.with_mut(|output| {
+        let content = self.layout.read(|layout| layout.iter().map(ToString::to_string).collect::<Vec<String>>()).join("\n\n");
+        self.output.write(|output| {
             let mut lock = stdout().lock();
             lock.write(<Diff as Into<Vec<u8>>>::into(Diff::new(
                 output.as_bytes(), 
@@ -90,5 +94,7 @@ impl Console for Terminal {
         });
     }
     #[inline]
-    fn problem(&self, threat: Threat) -> () {self.layout.write().push(threat.into())}
+    fn problem(&self, threat: Threat) -> () {return self.layout.write(|layout| layout.push(Item::Problem(threat.into())))}
+    #[inline]
+    fn print<Type: Display>(&self, value: &Type) -> () {return self.layout.write(|layout| layout.push(Item::String(value.to_string())))}
 }

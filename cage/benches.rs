@@ -23,8 +23,8 @@ fn read(bencher: &mut Bencher) -> () {
     let cage = Cage::new(3);
     bencher.iter(|| {
         for _ in 0..2usize.pow(2u32.pow(2u32.pow(2))) {
-            let x = cage.read();
-            let _u = black_box(x);
+            let x = cage.read(|x| *x);
+            black_box(x);
         }
     });
 }

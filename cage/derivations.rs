@@ -18,10 +18,10 @@ use core::hash::{
 
 //> DERIVATIONS -> CLONE
 impl<Type: Clone + ?Sized> Clone for Cage<Type> {
-    fn clone(&self) -> Self {return Self::new(self.read().clone())}
+    fn clone(&self) -> Self {return Self::new(self.read(|value| value.clone()))}
 }
 
 //> DERIVATIONS -> HASH
 impl<Type: Hash + ?Sized> Hash for Cage<Type> {
-    fn hash<H: Hasher>(&self, state: &mut H) {return self.read().hash(state)}
+    fn hash<H: Hasher>(&self, state: &mut H) {return self.read(|value| value.hash(state))}
 }
