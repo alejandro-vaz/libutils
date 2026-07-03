@@ -36,6 +36,7 @@ use core::hash::{
 //^
 
 //> ISSUE -> STRUCT
+#[derive(Debug)]
 pub struct Issue {
     pub name: &'static str,
     pub description: Option<String>,

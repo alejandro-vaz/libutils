@@ -14,3 +14,6 @@ authors.workspace = true
 [lib]
 path = "./mod.rs"
 doctest = false
+
+[dependencies]
+libutils-issue = {workspace = true}

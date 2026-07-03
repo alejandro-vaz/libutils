@@ -6,26 +6,29 @@
 use super::Array;
 
 //> HEAD -> ALLOC
-use alloc::vec::Vec;
+use alloc::{
+    vec::Vec,
+    format
+};
+
+//> HEAD -> ISSUE
+use libutils_issue::{
+    Issue,
+    Severity
+};
 
 
 //^
-//^ CONVERSIONS
+//^ FROM
 //^
 
-//> CONVERSIONS -> FROM FIXED TO VARIABLE
+//> FROM -> FIXED TO VARIABLE
 impl<Type, const M: usize, const N: usize> From<[Type; N]> for Array<Type, M> where [(); M - N]: {
     #[inline]
     fn from(value: [Type; N]) -> Self {return Array::from_iter(value)}
 }
 
-//> CONVERSIONS -> TO VEC
-impl<Type, const N: usize> Into<Vec<Type>> for Array<Type, N> {
-    #[inline]
-    fn into(self) -> Vec<Type> {return Vec::from_iter(self.into_iter())}
-}
-
-//> CONVERSIONS -> FROM FUNCTION
+//> FROM -> FUNCTION
 impl<Type, const N: usize, Generator: FnMut(usize) -> Type> From<Generator> for Array<Type, N> {
     #[inline]
     fn from(mut value: Generator) -> Self {
@@ -35,4 +38,26 @@ impl<Type, const N: usize, Generator: FnMut(usize) -> Type> From<Generator> for 
         };
         return array;
     }
+}
+
+//> FROM -> VEC
+impl<Type, const N: usize> TryFrom<Vec<Type>> for Array<Type, N> {
+    type Error = Issue;
+    #[inline]
+    fn try_from(value: Vec<Type>) -> Result<Self, Self::Error> {return if value.len() > N {Err(Issue {
+        name: "Conversion from `Vec` to `Array` failed",
+        description: Some(format!("Vec of length {} but N = {N}", value.len())),
+        severity: Severity::Error
+    })} else {Ok(Self::from_iter(value.into_iter()))}}
+}
+
+
+//^
+//^ INTO
+//^
+
+//> INTO -> VEC
+impl<Type, const N: usize> Into<Vec<Type>> for Array<Type, N> {
+    #[inline]
+    fn into(self) -> Vec<Type> {return Vec::from_iter(self.into_iter())}
 }
