@@ -42,7 +42,7 @@ use libutils_threat::Threat;
 //> HEAD -> CONSOLE
 use libutils_console::{
     Console, 
-    Handle
+    Synchronization
 };
 
 

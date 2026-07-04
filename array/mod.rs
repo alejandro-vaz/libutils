@@ -72,8 +72,6 @@ impl<Type, const N: usize> Array<Type, N> {
 //> ARRAY -> IMPLEMENTATION
 impl<Type, const N: usize> Array<Type, N> {
     #[inline]
-    pub const fn capacity(&self) -> usize {return N}
-    #[inline]
     pub const fn new() -> Self {return Self::default()}
     #[inline]
     pub const fn push(&mut self, value: Type) -> () {

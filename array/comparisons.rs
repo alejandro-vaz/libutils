@@ -20,13 +20,21 @@ use core::{
 //^
 
 //> COMPARISONS -> EQ
-const impl<Type: [const] PartialEq<Type>, To: [const] AsRef<[Type]>, const N: usize> PartialEq<To> for Array<Type, N> {
+const impl<
+    Type: [const] PartialEq<Type>, 
+    To: [const] AsRef<[Type]>, 
+    const N: usize
+> PartialEq<To> for Array<Type, N> {
     #[inline]
     fn eq(&self, other: &To) -> bool {return self.as_ref().eq(other.as_ref())}
 }
 
 //> COMPARISONS -> ORD
-const impl<Type: [const] PartialOrd<Type>, To: [const] AsRef<[Type]>, const N: usize> PartialOrd<To> for Array<Type, N> {
+const impl<
+    Type: [const] PartialOrd<Type>, 
+    To: [const] AsRef<[Type]>, 
+    const N: usize
+> PartialOrd<To> for Array<Type, N> {
     #[inline]
     fn partial_cmp(&self, other: &To) -> Option<Ordering> {return self.as_ref().partial_cmp(other.as_ref())}
 }

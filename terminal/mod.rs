@@ -7,9 +7,9 @@
 #![feature(const_default)]
 
 //> HEAD -> MODULES
-mod action;
-mod item;
+mod continuations;
 mod problem;
+mod section;
 #[cfg(test)]
 mod tests;
 
@@ -17,7 +17,7 @@ mod tests;
 use std::{
     env::args, 
     sync::LazyLock,
-    fs::read_to_string,
+    fs::File,
     path::PathBuf
 };
 
@@ -33,8 +33,11 @@ use libutils_cage::Cage;
 //> HEAD -> PROBLEM
 use libutils_threat::Threat;
 
-//> HEAD -> ACTION
-use action::Action;
+//> HEAD -> CONTINUATIONS
+use continuations::{
+    ActionRequired,
+    FileDescriptor
+};
 
 //> HEAD -> ISSUE
 use libutils_issue::{
@@ -46,11 +49,12 @@ use libutils_issue::{
 use libutils_console::{
     Console,
     Argument,
-    Handle
+    Synchronization,
+    Descriptor
 };
 
-//> HEAD -> ITEM
-use item::Item;
+//> HEAD -> SECTION
+use section::Section;
 
 
 //^
@@ -67,7 +71,7 @@ pub static TERMINAL: Terminal = Terminal {
 //> TERMINAL -> STRUCT
 pub struct Terminal {
     arguments: LazyLock<Vec<Argument>>,
-    layout: Cage<Vec<Item>>,
+    layout: Cage<Vec<Section>>,
     output: Cage<String>
 }
 
@@ -76,24 +80,29 @@ impl Console for Terminal {
     #[inline]
     fn arguments<'valid>(&'valid self) -> &'valid [Argument] {return self.arguments.as_slice()}
     #[inline]
-    fn read(&self, filename: &str) -> Result<String, Issue> {return read_to_string(PathBuf::from(filename)).map_err(|error| Issue {
-        name: "Failed to read file",
-        description: Some(error.to_string()),
-        severity: Severity::Error
-    })}
+    fn open(&self, filename: &str) -> Result<impl Descriptor, Issue> {match File::open(PathBuf::from(filename)) {
+        Ok(file) => Ok(FileDescriptor {
+            file: file
+        }),
+        Err(error) => Err(Issue {
+            name: "Failed to open file",
+            description: Some(error.to_string()),
+            severity: Severity::Error
+        })
+    }}
     #[inline]
-    fn problem(&self, threat: Threat) -> impl Handle {
-        self.layout.write(|layout| layout.push(Item::Problem(threat.into())));
-        return Action;
+    fn problem(&self, threat: Threat) -> impl Synchronization {
+        self.layout.write(|layout| layout.push(Section::Problem(threat.into())));
+        return ActionRequired;
     }
     #[inline]
-    fn print<Type: Display>(&self, value: Type) -> impl Handle {
-        self.layout.write(|layout| layout.push(Item::String(value.to_string())));
-        return Action;
+    fn print(&self, value: impl Display) -> impl Synchronization {
+        self.layout.write(|layout| layout.push(Section::Display(value.to_string())));
+        return ActionRequired;
     }
     #[inline]
-    fn debug<Type: Debug>(&self, value: Type) -> impl Handle {
-        self.layout.write(|layout| layout.push(Item::String(format!("{value:#?}"))));
-        return Action;
+    fn debug(&self, value: impl Debug) -> impl Synchronization {
+        self.layout.write(|layout| layout.push(Section::Debug(format!("{value:#?}"))));
+        return ActionRequired;
     }
 }
