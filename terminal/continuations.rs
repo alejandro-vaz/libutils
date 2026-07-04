@@ -85,7 +85,7 @@ impl Descriptor for FileDescriptor {
         }
     }
     #[inline]
-    fn bytes(&mut self) -> Result<Vec<u8>, Issue> {
+    fn read_bytes(&mut self) -> Result<Vec<u8>, Issue> {
         let mut buffer = Vec::new();
         match self.file.read(&mut buffer) {
             Ok(_) => Ok(buffer),
@@ -96,4 +96,15 @@ impl Descriptor for FileDescriptor {
             })
         }
     }
+    #[inline]
+    fn write_bytes(&mut self, content: &[u8]) -> Result<(), Issue> {return match self.file.write(content) {
+        Ok(_) => Ok(()),
+        Err(error) => Err(Issue {
+            name: "Failure writing to file",
+            description: Some(error.to_string()),
+            severity: Severity::Error
+        })
+    }}
+    #[inline]
+    fn write(&mut self, content: &str) -> Result<(), Issue> {return self.write_bytes(content.as_bytes())}
 }

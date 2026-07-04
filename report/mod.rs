@@ -16,6 +16,7 @@
 mod state;
 #[cfg(test)]
 mod tests;
+mod then;
 
 //> HEAD -> PUBLIC STATE
 pub use state::{
@@ -44,6 +45,9 @@ use libutils_console::{
     Console, 
     Synchronization
 };
+
+//> HEAD -> THEN
+use then::Then;
 
 
 //^ 
@@ -80,11 +84,16 @@ impl<Current: State> Report<Current> {
         data: Following::convert(&mut self.data)
     }}
     #[inline]
-    pub fn issue<Object: Into<Issue>, Type>(&self, object: Object) -> Option<Type> {
+    pub fn issue(&self, object: impl Into<Issue>) -> Then {
         TERMINAL.problem(Threat {
             issue: object.into(),
             chain: self.data.chain()
         }).sync();
-        return None;
+        return Then;
     }
+    #[inline]
+    pub fn eat<Type>(&self, result: Result<Type, impl Into<Issue>>) -> Option<Type> {return match result {
+        Ok(value) => Some(value),
+        Err(object) => self.issue(object).none(),
+    }}
 }
