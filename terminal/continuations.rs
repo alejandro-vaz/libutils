@@ -54,8 +54,6 @@ impl Synchronization for ActionRequired {
             *output = content;
         });
     }
-    #[inline]
-    fn ignore(self) -> () {}
 }
 
 
@@ -70,20 +68,6 @@ pub struct FileDescriptor {
 
 //> FILEDESCRIPTOR -> DESCRIPTOR
 impl Descriptor for FileDescriptor {
-    #[inline]
-    fn close(self) -> () {}
-    #[inline]
-    fn read(&mut self) -> Result<String, Issue> {
-        let mut string = String::new();
-        match self.file.read_to_string(&mut string) {
-            Ok(_) => Ok(string),
-            Err(error) => Err(Issue {
-                name: "Failed to read file as string",
-                description: Some(error.to_string()),
-                severity: Severity::Error
-            })
-        }
-    }
     #[inline]
     fn read_bytes(&mut self) -> Result<Vec<u8>, Issue> {
         let mut buffer = Vec::new();
@@ -105,6 +89,4 @@ impl Descriptor for FileDescriptor {
             severity: Severity::Error
         })
     }}
-    #[inline]
-    fn write(&mut self, content: &str) -> Result<(), Issue> {return self.write_bytes(content.as_bytes())}
 }

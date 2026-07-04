@@ -9,6 +9,7 @@
 #![feature(adt_const_params)]
 #![feature(default_field_values)]
 #![feature(const_heap)]
+#![feature(never_type)]
 #![feature(const_default)]
 #![feature(generic_const_exprs)]
 
@@ -84,16 +85,20 @@ impl<Current: State> Report<Current> {
         data: Following::convert(&mut self.data)
     }}
     #[inline]
-    pub fn issue(&self, object: impl Into<Issue>) -> Then {
+    pub fn issue(&self, object: impl Into<Issue>) -> Then<!> {
         TERMINAL.problem(Threat {
             issue: object.into(),
             chain: self.data.chain()
         }).sync();
-        return Then;
+        return Then {
+            value: None
+        };
     }
     #[inline]
-    pub fn eat<Type>(&self, result: Result<Type, impl Into<Issue>>) -> Option<Type> {return match result {
-        Ok(value) => Some(value),
-        Err(object) => self.issue(object).none(),
+    pub fn apply<Type>(&self, result: Result<Type, impl Into<Issue>>) -> Then<Type> {return Then {
+        value: match result {
+            Ok(value) => Some(value),
+            Err(issue) => self.issue(issue).none()
+        }
     }}
 }

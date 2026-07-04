@@ -23,8 +23,8 @@ use std::{
 
 //> HEAD -> CORE
 use core::fmt::{
-    Display,
-    Debug
+    Debug, 
+    Display
 };
 
 //> HEAD -> CAGE

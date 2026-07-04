@@ -1,15 +1,11 @@
 # libutils -- a general utility library
 
-This library is meant to have types that may be useful for coding executables and libraries that all need shared functionality.
+This library is meant to be a general utility library with useful types and implementations.
 
-| Module | Description | Use cases | Requires `std` |
-|:-|:-|:-|:-|
-| `array` | A maximum-sized array stored on the stack | Upper-bounded length arrays, speed | No |
-| `cage` | A thread-safe static mutable wrapper | Safe mutable statics, atomic types | Yes |
-| `diff` | A bytearray diff | Incremental systems, text replacement | No |
-| `issue` | A easy-to-use customizable error type | Error handling, issue reporting | No |
-| `log` | A write-only vec-like buffer | Logs, no removals | No |
-| `pointer` | A typed custom pointer to data | Pointers, typed behavior | No |
-| `report` | A custom error wrapper for detailed logs | Compilers, error chains | Yes |
-| `terminal` | A custom embedded terminal handler | Pretty-printing, typed behavior | Yes |
-| `threat` | An error wrapper with additional metadata | Error handling, logs | No |
+It's goal is to make development faster and straightforward.
+
+This crate re-exports the `libutils-*` crates. Each individual crate is activated via features. By default, all crates are enabled.
+
+Visit [the documentation](https://docs.rs/libutils) to get to know how to use each crate.
+
+> Due to this crate making use of many nightly features, the minimum supported version for Rust is 1.98 on edition 2024.

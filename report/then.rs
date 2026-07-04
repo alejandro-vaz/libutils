@@ -3,12 +3,17 @@
 //^
 
 //> THEN -> STRUCT
-pub struct Then;
+#[must_use]
+pub struct Then<Type> {
+    pub value: Option<Type>
+}
 
 //> THEN -> IMPLEMENTATION
-impl Then {
+impl<Type> Then<Type> {
     #[inline]
     pub fn ignore(self) -> () {}
     #[inline]
-    pub fn none<Type>(self) -> Option<Type> {return None}
+    pub fn none<Wants>(self) -> Option<Wants> {return None}
+    #[inline]
+    pub fn get(self) -> Option<Type> {return self.value}
 }
