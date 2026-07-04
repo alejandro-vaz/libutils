@@ -14,15 +14,15 @@ license = "MIT"
 authors = ["Alejandro Vaz"]
 
 [workspace.dependencies]
-libutils-array = {version = "0.0.0", path = "array"}
-libutils-cage = {version = "0.0.0", path = "cage"}
-libutils-console = {version = "0.0.0", path = "console"}
-libutils-diff = {version = "0.0.0", path = "diff"}
-libutils-issue = {version = "0.0.0", path = "issue"}
-libutils-pointer = {version = "0.0.0", path = "pointer"}
-libutils-report = {version = "0.0.0", path = "report"}
-libutils-terminal = {version = "0.0.0", path = "terminal"}
-libutils-threat = {version = "0.0.0", path = "threat"}
+libutils-array = {version = "=0.0.0", path = "array"}
+libutils-cage = {version = "=0.0.0", path = "cage"}
+libutils-console = {version = "=0.0.0", path = "console"}
+libutils-diff = {version = "=0.0.0", path = "diff"}
+libutils-issue = {version = "=0.0.0", path = "issue"}
+libutils-pointer = {version = "=0.0.0", path = "pointer"}
+libutils-report = {version = "=0.0.0", path = "report"}
+libutils-terminal = {version = "=0.0.0", path = "terminal"}
+libutils-threat = {version = "=0.0.0", path = "threat"}
 
 [profile.bench]
 lto = "fat"
