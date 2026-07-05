@@ -1,7 +1,7 @@
 [package]
 name = "libutils-threat"
 description = "An error wrapper with additional metadata"
-version = "0.0.0"
+version = "0.0.1"
 edition.workspace = true
 rust-version.workspace = true
 categories.workspace = true

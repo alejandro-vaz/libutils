@@ -22,7 +22,7 @@ libutils-issue = {version = "=0.0.1", path = "issue"}
 libutils-pointer = {version = "=0.0.1", path = "pointer"}
 libutils-report = {version = "=0.1.1", path = "report"}
 libutils-terminal = {version = "=0.0.2", path = "terminal"}
-libutils-threat = {version = "=0.0.0", path = "threat"}
+libutils-threat = {version = "=0.0.1", path = "threat"}
 
 [profile.bench]
 lto = "fat"
