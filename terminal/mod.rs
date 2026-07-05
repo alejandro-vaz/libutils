@@ -62,23 +62,17 @@ use problem::Problem;
 //^ TERMINAL
 //^
 
-//> TERMINAL -> INSTANCE
-pub static TERMINAL: Terminal = Terminal {
-    arguments: LazyLock::new(|| args().map(Argument::from).collect()),
-    layout: Cage::default(),
-    output: Cage::default()
-};
+//> TERMINAL -> DATA
+static ARGUMENTS: LazyLock<Vec<Argument>> = LazyLock::new(|| args().map(Argument::from).collect());
+static LAYOUT: Cage<Vec<Section>> = Cage::default();
+static OUTPUT: Cage<String> = Cage::default();
 
 //> TERMINAL -> STRUCT
-pub struct Terminal {
-    arguments: LazyLock<Vec<Argument>>,
-    layout: Cage<Vec<Section>>,
-    output: Cage<String>
-}
+pub struct Terminal;
 
 //> TERMINAL -> IMPLEMENTATION
 impl Console for Terminal {
-    fn arguments<'valid>(&'valid self) -> &'valid [Argument] {return self.arguments.as_slice()}
+    fn arguments<'valid>(&'valid self) -> &'valid [Argument] {return ARGUMENTS.as_slice()}
     fn open(&self, filename: &str) -> Result<impl Descriptor, Issue> {match File::open(PathBuf::from(filename)) {
         Ok(file) => Ok(FileDescriptor {
             file: file
@@ -90,7 +84,7 @@ impl Console for Terminal {
         })
     }}
     fn problem(&self, issue: Issue, chain: &[&'static str]) -> impl Synchronization {
-        self.layout.write(|layout| layout.push(Section::Problem(Problem {
+        LAYOUT.write(|layout| layout.push(Section::Problem(Problem {
             chain: Vec::from(chain),
             issue: issue,
             _at: Instant::now()
@@ -98,11 +92,11 @@ impl Console for Terminal {
         return ActionRequired;
     }
     fn print(&self, value: impl Display) -> impl Synchronization {
-        self.layout.write(|layout| layout.push(Section::Display(value.to_string())));
+        LAYOUT.write(|layout| layout.push(Section::Display(value.to_string())));
         return ActionRequired;
     }
     fn debug(&self, value: impl Debug) -> impl Synchronization {
-        self.layout.write(|layout| layout.push(Section::Debug(format!("{value:#?}"))));
+        LAYOUT.write(|layout| layout.push(Section::Debug(format!("{value:#?}"))));
         return ActionRequired;
     }
 }

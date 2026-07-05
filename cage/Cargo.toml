@@ -1,7 +1,7 @@
 [package]
 name = "libutils-cage"
 description = "A thread-safe static mutable wrapper"
-version = "0.0.2"
+version = "0.0.3"
 edition.workspace = true
 rust-version.workspace = true
 categories.workspace = true
@@ -13,6 +13,5 @@ authors.workspace = true
 
 [lib]
 path = "./mod.rs"
-doctest = false
 
 [dependencies]

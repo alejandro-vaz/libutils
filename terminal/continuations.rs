@@ -10,7 +10,10 @@ use libutils_console::{
 };
 
 //> HEAD -> SUPER
-use super::TERMINAL;
+use super::{
+    LAYOUT,
+    OUTPUT
+};
 
 //> HEAD -> DIFF
 use libutils_diff::Diff;
@@ -45,9 +48,9 @@ pub struct ActionRequired;
 //> ACTIONREQUIRED -> SYNCHRONIZATION
 impl Synchronization for ActionRequired {
     fn sync(self) -> () {
-        let mut content = TERMINAL.layout.read(|layout| layout.iter().map(ToString::to_string).collect::<Vec<String>>()).join("\n\n");
+        let mut content = LAYOUT.read(|layout| layout.iter().map(ToString::to_string).collect::<Vec<String>>()).join("\n\n");
         content.push('\n');
-        TERMINAL.output.write(|output| {
+        OUTPUT.write(|output| {
             let mut lock = stdout().lock();
             lock.write(<Diff as Into<Vec<u8>>>::into(Diff::new(
                 output.as_bytes(), 

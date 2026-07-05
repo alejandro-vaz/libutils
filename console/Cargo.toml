@@ -1,7 +1,7 @@
 [package]
 name = "libutils-console"
 description = "A simple generalized I/O interface"
-version = "1.1.0"
+version = "1.1.1"
 edition.workspace = true
 rust-version.workspace = true
 categories.workspace = true
@@ -13,7 +13,6 @@ authors.workspace = true
 
 [lib]
 path = "./mod.rs"
-doctest = false
 
 [dependencies]
 libutils-issue = {workspace = true}
