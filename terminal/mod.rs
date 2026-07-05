@@ -5,13 +5,16 @@
 //> HEAD -> FEATURES
 #![feature(const_trait_impl)]
 #![feature(const_default)]
+#![feature(transmute_neo)]
 
 //> HEAD -> MODULES
-mod continuations;
+mod descriptor;
+mod metadata;
 mod problem;
 mod section;
 #[cfg(test)]
 mod tests;
+mod update;
 
 //> HEAD -> STD
 use std::{
@@ -31,11 +34,8 @@ use core::fmt::{
 //> HEAD -> CAGE
 use libutils_cage::Cage;
 
-//> HEAD -> CONTINUATIONS
-use continuations::{
-    ActionRequired,
-    FileDescriptor
-};
+//> HEAD -> UPDATE
+use update::Update;
 
 //> HEAD -> ISSUE
 use libutils_issue::{
@@ -47,8 +47,8 @@ use libutils_issue::{
 use libutils_console::{
     Console,
     Argument,
-    Synchronization,
-    Descriptor
+    Update as UpdateTrait,
+    Descriptor as DescriptorTrait
 };
 
 //> HEAD -> SECTION
@@ -56,6 +56,9 @@ use section::Section;
 
 //> HEAD -> PROBLEM
 use problem::Problem;
+
+//> HEAD -> DESCRIPTOR
+use descriptor::Descriptor;
 
 
 //^
@@ -73,30 +76,32 @@ pub struct Terminal;
 //> TERMINAL -> IMPLEMENTATION
 impl Console for Terminal {
     fn arguments<'valid>(&'valid self) -> &'valid [Argument] {return ARGUMENTS.as_slice()}
-    fn open(&self, filename: &str) -> Result<impl Descriptor, Issue> {match File::open(PathBuf::from(filename)) {
-        Ok(file) => Ok(FileDescriptor {
-            file: file
-        }),
-        Err(error) => Err(Issue {
-            name: "Failed to open file",
-            description: Some(error.to_string()),
-            severity: Severity::Error
-        })
-    }}
-    fn problem(&self, issue: Issue, chain: &[&'static str]) -> impl Synchronization {
+    fn open(&self, filename: &str) -> Result<impl DescriptorTrait, Issue> {
+        match File::open(PathBuf::from(filename)) {
+            Ok(file) => Ok(Descriptor {
+                file: file
+            }),
+            Err(error) => Err(Issue {
+                name: "Failed to open file",
+                description: Some(error.to_string()),
+                severity: Severity::Error
+            })
+        }
+    }
+    fn problem(&self, issue: Issue, chain: &[&'static str]) -> impl UpdateTrait {
         LAYOUT.write(|layout| layout.push(Section::Problem(Problem {
             chain: Vec::from(chain),
             issue: issue,
             _at: Instant::now()
         })));
-        return ActionRequired;
+        return Update;
     }
-    fn print(&self, value: impl Display) -> impl Synchronization {
+    fn print(&self, value: impl Display) -> impl UpdateTrait {
         LAYOUT.write(|layout| layout.push(Section::Display(value.to_string())));
-        return ActionRequired;
+        return Update;
     }
-    fn debug(&self, value: impl Debug) -> impl Synchronization {
+    fn debug(&self, value: impl Debug) -> impl UpdateTrait {
         LAYOUT.write(|layout| layout.push(Section::Debug(format!("{value:#?}"))));
-        return ActionRequired;
+        return Update;
     }
 }

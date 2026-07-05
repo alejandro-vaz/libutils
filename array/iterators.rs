@@ -20,7 +20,8 @@ use core::{
         DoubleEndedIterator,
         FusedIterator,
         TrustedLen
-    }
+    },
+    marker::Destruct
 };
 
 
@@ -37,7 +38,7 @@ pub struct Iterable<Type, const N: usize> {
 } 
 
 //> ITERABLE -> DROP
-impl<Type, const N: usize> Drop for Iterable<Type, N> {
+const impl<Type: [const] Destruct, const N: usize> Drop for Iterable<Type, N> {
     fn drop(&mut self) {while let Some(value) = self.next() {drop(value)}}
 }
 

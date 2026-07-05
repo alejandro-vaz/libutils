@@ -1,6 +1,6 @@
 [package]
 name = "libutils"
-version = "0.1.0"
+version = "1.0.0"
 edition.workspace = true
 authors.workspace = true
 rust-version.workspace = true
@@ -20,17 +20,15 @@ libutils-cage = {workspace = true, optional = true}
 libutils-console = {workspace = true, optional = true}
 libutils-diff = {workspace = true, optional = true}
 libutils-issue = {workspace = true, optional = true}
-libutils-pointer = {workspace = true, optional = true}
 libutils-report = {workspace = true, optional = true}
 libutils-terminal = {workspace = true, optional = true}
 
 [features]
-default = ["array", "cage", "console", "diff", "issue", "pointer", "report", "terminal"]
+default = ["array", "cage", "console", "diff", "issue", "report", "terminal"]
 array = ["dep:libutils-array"]
 cage = ["dep:libutils-cage"]
 console = ["dep:libutils-console"]
 diff = ["dep:libutils-diff"]
 issue = ["dep:libutils-issue"]
-pointer = ["dep:libutils-pointer"]
 report = ["dep:libutils-report"]
 terminal = ["dep:libutils-terminal"]

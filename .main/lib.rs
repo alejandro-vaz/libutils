@@ -22,10 +22,6 @@ pub extern crate libutils_diff as diff;
 #[cfg(feature = "issue")]
 pub extern crate libutils_issue as issue;
 
-//> LIBUTILS -> POINTER
-#[cfg(feature = "pointer")]
-pub extern crate libutils_pointer as pointer;
-
 //> LIBUTILS -> REPORT
 #[cfg(feature = "report")]
 pub extern crate libutils_report as report;

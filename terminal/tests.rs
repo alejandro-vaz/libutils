@@ -8,7 +8,7 @@ use super::Terminal;
 //> HEAD -> CONSOLE
 use libutils_console::{
     Console, 
-    Synchronization,
+    Update,
     Descriptor
 };
 

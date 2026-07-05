@@ -3,17 +3,17 @@
 //^
 
 //> STATE -> BASE
-pub trait State {
+pub const trait State {
     fn get<'valid>(&'valid self) -> &'valid Vec<&'static str>;
     fn get_mut<'valid>(&'valid mut self) -> &'valid mut Vec<&'static str>;
 }
 
 //> STATE -> DERIVED
-pub trait DerivedState<'valid>: State + Convert<'valid> {}
+pub const trait DerivedState<'valid>: const State + const Convert<'valid> {}
 
 //> STATE -> CONVERT
-pub trait Convert<'valid> {
-    fn convert<Current: State>(value: &'valid mut Current) -> Self;
+pub const trait Convert<'valid> {
+    fn convert<Current: const State>(value: &'valid mut Current) -> Self;
 }
 
 
@@ -27,7 +27,7 @@ pub struct Main {
 }
 
 //> MAIN -> STATE
-impl State for Main {
+const impl State for Main {
     fn get<'valid>(&'valid self) -> &'valid Vec<&'static str> {return &self.chain}
     fn get_mut<'valid>(&'valid mut self) -> &'valid mut Vec<&'static str> {return &mut self.chain}
 }
@@ -43,17 +43,17 @@ pub struct Same<'this> {
 } 
 
 //> SAME -> STATE
-impl<'this> State for Same<'this> {
+const impl<'this> State for Same<'this> {
     fn get<'valid>(&'valid self) -> &'valid Vec<&'static str> {return self.link}
     fn get_mut<'valid>(&'valid mut self) -> &'valid mut Vec<&'static str> {return self.link}
 }
 
 //> SAME -> DERIVED STATE
-impl<'valid> DerivedState<'valid> for Same<'valid> {}
+const impl<'valid> DerivedState<'valid> for Same<'valid> {}
 
 //> SAME -> CONVERT
-impl<'valid> Convert<'valid> for Same<'valid> {
-    fn convert<Current: State>(value: &'valid mut Current) -> Self {
+const impl<'valid> Convert<'valid> for Same<'valid> {
+    fn convert<Current: const State>(value: &'valid mut Current) -> Self {
         return Self {
             link: value.get_mut()
         }
@@ -71,7 +71,7 @@ pub struct Name<'valid, const NAME: &'static str> {
 } 
 
 //> NAME -> STATE
-impl<'this, const NAME: &'static str> State for Name<'this, NAME> {
+const impl<'this, const NAME: &'static str> State for Name<'this, NAME> {
     fn get<'valid>(&'valid self) -> &'valid Vec<&'static str> {return self.link}
     fn get_mut<'valid>(&'valid mut self) -> &'valid mut Vec<&'static str> {return self.link}
 } 
@@ -82,11 +82,11 @@ impl<'valid, const NAME: &'static str> Drop for Name<'valid, NAME> {
 }
 
 //> NAME -> DERIVED STATE
-impl<'valid, const NAME: &'static str> DerivedState<'valid> for Name<'valid, NAME> {}
+const impl<'valid, const NAME: &'static str> DerivedState<'valid> for Name<'valid, NAME> {}
 
 //> NAME -> CONVERT
-impl<'valid, const NAME: &'static str> Convert<'valid> for Name<'valid, NAME> {
-    fn convert<Current: State>(value: &'valid mut Current) -> Self {
+const impl<'valid, const NAME: &'static str> Convert<'valid> for Name<'valid, NAME> {
+    fn convert<Current: const State>(value: &'valid mut Current) -> Self {
         let link = value.get_mut();
         link.push(NAME);
         return Self {

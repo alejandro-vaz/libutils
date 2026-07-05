@@ -227,3 +227,10 @@ fn retain() -> () {
     array.retain(|value| value.is_power_of_two());
     assert_eq!(array.as_ref(), &[1, 2, 4]);
 }
+
+//> TESTS -> INDEX
+#[test]
+fn indexto() -> () {
+    let array = Array::<u8, 7>::from([1, 2, 3, 4, 5, 6]);
+    assert_eq!(array[2], 3);
+}

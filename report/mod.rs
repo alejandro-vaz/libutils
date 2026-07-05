@@ -40,7 +40,7 @@ use libutils_terminal::Terminal;
 //> HEAD -> CONSOLE
 use libutils_console::{
     Console, 
-    Synchronization
+    Update
 };
 
 
@@ -53,7 +53,7 @@ pub struct Report<Current: State> {
     data: Current
 }
 
-//> REPORT -> IMPLEMENTATION
+//> REPORT -> MAIN IMPLEMENTATION
 impl Report<Main> {
     pub const fn new(name: &'static str) -> Self {
         let mut chain = Vec::new();
@@ -66,16 +66,13 @@ impl Report<Main> {
     }
 }
 
-//> REPORT -> DEFAULT
-const impl Default for Report<Main> {
-    fn default() -> Self {return Self::new("Main")}
-}
-
 //> REPORT -> IMPLEMENTATION
-impl<Current: State> Report<Current> {
-    pub fn to<'valid, Following: DerivedState<'valid>>(&'valid mut self) -> Report<Following> {return Report {
-        data: Following::convert(&mut self.data)
-    }}
+impl<Current: const State> Report<Current> {
+    pub const fn to<'valid, Following: const DerivedState<'valid>>(&'valid mut self) -> Report<Following> {
+        return Report {
+            data: Following::convert(&mut self.data)
+        }
+    }
     pub fn issue(&self, object: impl Into<Issue>) -> Option<!> {
         Terminal.problem(object.into(), self.data.get()).sync();
         return None;
@@ -84,4 +81,9 @@ impl<Current: State> Report<Current> {
         Ok(value) => Some(value),
         Err(issue) => self.issue(issue)?
     }}
+}
+
+//> REPORT -> DEFAULT
+const impl Default for Report<Main> {
+    fn default() -> Self {return Self::new("Main")}
 }

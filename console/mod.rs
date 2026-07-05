@@ -5,12 +5,18 @@
 //> HEAD -> NO_STD
 #![no_std]
 
+//> HEAD -> FEATURES
+#![feature(const_trait_impl)]
+#![feature(const_destruct)]
+
 //> HEAD -> CRATES
 extern crate alloc;
 
 //> HEAD -> MODULES
 mod argument;
-mod continuations;
+mod descriptor;
+mod metadata;
+mod update;
 
 //> HEAD -> ARGUMENT
 pub use argument::Argument;
@@ -24,12 +30,14 @@ use core::fmt::{
     Debug
 };
 
-//> HEAD -> CONTINUATIONS
-pub use continuations::{
-    Synchronization,
-    Descriptor,
-    Data
-};
+//> HEAD -> UPDATE
+pub use update::Update;
+
+//> HEAD -> METADATA
+pub use metadata::Metadata;
+
+//> HEAD -> DESCRIPTOR
+pub use descriptor::Descriptor;
 
 
 //^
@@ -40,7 +48,7 @@ pub use continuations::{
 pub trait Console {
     fn arguments<'valid>(&'valid self) -> &'valid [Argument];
     fn open(&self, filename: &str) -> Result<impl Descriptor, Issue>;
-    fn problem(&self, issue: Issue, chain: &[&'static str]) -> impl Synchronization;
-    fn print(&self, value: impl Display) -> impl Synchronization;
-    fn debug(&self, value: impl Debug) -> impl Synchronization;
+    fn problem(&self, issue: Issue, chain: &[&'static str]) -> impl Update;
+    fn print(&self, value: impl Display) -> impl Update;
+    fn debug(&self, value: impl Debug) -> impl Update;
 }
