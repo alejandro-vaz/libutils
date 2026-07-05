@@ -2,14 +2,8 @@
 //^ HEAD
 //^
 
-//> HEAD -> THREAT
-use libutils_threat::Threat;
-
 //> HEAD -> ISSUE
-use libutils_issue::{
-    Issue,
-    Severity
-};
+use libutils_issue::Issue;
 
 //> HEAD -> CORE
 use core::fmt::{
@@ -37,19 +31,10 @@ pub struct Problem {
 impl Display for Problem {
     fn fmt(&self, formatter: &mut Formatter<'_>) -> Format {write!(
         formatter,
-        "@ {}\n{}: {}{}\n",
+        "@ {}\n{:#?}: {}{}\n",
         self.chain.join(" > "),
-        <&Severity as Into<&'static str>>::into(&self.issue.severity),
+        self.issue.severity,
         self.issue.name,
-        if let Some(description) = &self.issue.description {format!("\n    {}", description)} else {String::new()}
+        self.issue.description.as_ref().map(|description| format!("\n    {description}")).unwrap_or_default()
     )}
-}
-
-//> PROBLEM -> FROM THREAT
-impl From<Threat> for Problem {
-    fn from(value: Threat) -> Self {return Self {
-        chain: value.chain,
-        issue: value.issue,
-        _at: Instant::now()
-    }}
 }

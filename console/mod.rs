@@ -12,9 +12,6 @@ extern crate alloc;
 mod argument;
 mod continuations;
 
-//> HEAD -> THREAT
-use libutils_threat::Threat;
-
 //> HEAD -> ARGUMENT
 pub use argument::Argument;
 
@@ -43,7 +40,7 @@ pub use continuations::{
 pub trait Console {
     fn arguments<'valid>(&'valid self) -> &'valid [Argument];
     fn open(&self, filename: &str) -> Result<impl Descriptor, Issue>;
-    fn problem(&self, threat: Threat) -> impl Synchronization;
+    fn problem(&self, issue: Issue, chain: &[&'static str]) -> impl Synchronization;
     fn print(&self, value: impl Display) -> impl Synchronization;
     fn debug(&self, value: impl Debug) -> impl Synchronization;
 }

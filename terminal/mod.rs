@@ -16,9 +16,10 @@ mod tests;
 //> HEAD -> STD
 use std::{
     env::args, 
-    sync::LazyLock,
-    fs::File,
-    path::PathBuf
+    fs::File, 
+    path::PathBuf, 
+    sync::LazyLock, 
+    time::Instant
 };
 
 //> HEAD -> CORE
@@ -29,9 +30,6 @@ use core::fmt::{
 
 //> HEAD -> CAGE
 use libutils_cage::Cage;
-
-//> HEAD -> PROBLEM
-use libutils_threat::Threat;
 
 //> HEAD -> CONTINUATIONS
 use continuations::{
@@ -55,6 +53,9 @@ use libutils_console::{
 
 //> HEAD -> SECTION
 use section::Section;
+
+//> HEAD -> PROBLEM
+use problem::Problem;
 
 
 //^
@@ -88,8 +89,12 @@ impl Console for Terminal {
             severity: Severity::Error
         })
     }}
-    fn problem(&self, threat: Threat) -> impl Synchronization {
-        self.layout.write(|layout| layout.push(Section::Problem(threat.into())));
+    fn problem(&self, issue: Issue, chain: &[&'static str]) -> impl Synchronization {
+        self.layout.write(|layout| layout.push(Section::Problem(Problem {
+            chain: Vec::from(chain),
+            issue: issue,
+            _at: Instant::now()
+        })));
         return ActionRequired;
     }
     fn print(&self, value: impl Display) -> impl Synchronization {

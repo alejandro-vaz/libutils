@@ -4,8 +4,8 @@
 
 //> STATE -> BASE
 pub trait State {
-    fn chain(&self) -> Vec<&'static str>;
-    fn link<'valid>(&'valid mut self) -> &'valid mut Vec<&'static str>;
+    fn get<'valid>(&'valid self) -> &'valid Vec<&'static str>;
+    fn get_mut<'valid>(&'valid mut self) -> &'valid mut Vec<&'static str>;
 }
 
 //> STATE -> DERIVED
@@ -28,8 +28,8 @@ pub struct Main {
 
 //> MAIN -> STATE
 impl State for Main {
-    fn chain(&self) -> Vec<&'static str> {return self.chain.clone()}
-    fn link<'valid>(&'valid mut self) -> &'valid mut Vec<&'static str> {return &mut self.chain}
+    fn get<'valid>(&'valid self) -> &'valid Vec<&'static str> {return &self.chain}
+    fn get_mut<'valid>(&'valid mut self) -> &'valid mut Vec<&'static str> {return &mut self.chain}
 }
 
 
@@ -44,8 +44,8 @@ pub struct Same<'this> {
 
 //> SAME -> STATE
 impl<'this> State for Same<'this> {
-    fn chain(&self) -> Vec<&'static str> {return self.link.clone()}
-    fn link<'valid>(&'valid mut self) -> &'valid mut Vec<&'static str> {return self.link}
+    fn get<'valid>(&'valid self) -> &'valid Vec<&'static str> {return self.link}
+    fn get_mut<'valid>(&'valid mut self) -> &'valid mut Vec<&'static str> {return self.link}
 }
 
 //> SAME -> DERIVED STATE
@@ -55,7 +55,7 @@ impl<'valid> DerivedState<'valid> for Same<'valid> {}
 impl<'valid> Convert<'valid> for Same<'valid> {
     fn convert<Current: State>(value: &'valid mut Current) -> Self {
         return Self {
-            link: value.link()
+            link: value.get_mut()
         }
     }
 }
@@ -72,8 +72,8 @@ pub struct Name<'valid, const NAME: &'static str> {
 
 //> NAME -> STATE
 impl<'this, const NAME: &'static str> State for Name<'this, NAME> {
-    fn chain(&self) -> Vec<&'static str> {return self.link.clone()}
-    fn link<'valid>(&'valid mut self) -> &'valid mut Vec<&'static str> {return self.link}
+    fn get<'valid>(&'valid self) -> &'valid Vec<&'static str> {return self.link}
+    fn get_mut<'valid>(&'valid mut self) -> &'valid mut Vec<&'static str> {return self.link}
 } 
 
 //> NAME -> DROP
@@ -87,9 +87,10 @@ impl<'valid, const NAME: &'static str> DerivedState<'valid> for Name<'valid, NAM
 //> NAME -> CONVERT
 impl<'valid, const NAME: &'static str> Convert<'valid> for Name<'valid, NAME> {
     fn convert<Current: State>(value: &'valid mut Current) -> Self {
-        value.link().push(NAME);
+        let link = value.get_mut();
+        link.push(NAME);
         return Self {
-            link: value.link()
+            link: link
         }
     }
 }

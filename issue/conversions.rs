@@ -17,7 +17,7 @@ use super::{
 const impl From<&'static str> for Issue {
     fn from(value: &'static str) -> Self {return Self {
         name: value,
-        description: None,
-        severity: Severity::Critical
+        severity: Severity::Critical,
+        ..
     }}
 }

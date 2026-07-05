@@ -33,7 +33,3 @@ pub use libutils_report as report;
 //> LIBUTILS -> TERMINAL
 #[cfg(feature = "terminal")]
 pub use libutils_terminal as terminal;
-
-//> LIBUTILS -> THREAT
-#[cfg(feature = "threat")]
-pub use libutils_threat as threat;

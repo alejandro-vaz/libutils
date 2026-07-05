@@ -7,6 +7,7 @@
 
 //> HEAD -> FEATURES
 #![feature(const_convert)]
+#![feature(default_field_values)]
 #![feature(const_trait_impl)]
 
 //> HEAD -> CRATES
@@ -39,8 +40,8 @@ use core::hash::{
 #[derive(Debug)]
 pub struct Issue {
     pub name: &'static str,
-    pub description: Option<String>,
-    pub severity: Severity
+    pub description: Option<String> = None,
+    pub severity: Severity = Severity::Error
 }
 
 //> ISSUE -> HASH

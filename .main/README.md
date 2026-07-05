@@ -2,7 +2,7 @@
 
 This library is meant to be a general utility library with useful types and implementations.
 
-It's goal is to make development faster and straightforward.
+Its goal is to make development faster and straightforward.
 
 This crate re-exports the `libutils-*` crates. Each individual crate is activated via features. By default, all crates are enabled.
 

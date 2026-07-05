@@ -6,16 +6,7 @@
 use super::Array;
 
 //> HEAD -> ALLOC
-use alloc::{
-    vec::Vec,
-    format
-};
-
-//> HEAD -> ISSUE
-use libutils_issue::{
-    Issue,
-    Severity
-};
+use alloc::vec::Vec;
 
 
 //^
@@ -40,12 +31,10 @@ impl<Type, const N: usize, Generator: FnMut(usize) -> Type> From<Generator> for 
 
 //> FROM -> VEC
 impl<Type, const N: usize> TryFrom<Vec<Type>> for Array<Type, N> {
-    type Error = Issue;
-    fn try_from(value: Vec<Type>) -> Result<Self, Self::Error> {return if value.len() > N {Err(Issue {
-        name: "Conversion from `Vec` to `Array` failed",
-        description: Some(format!("Vec of length {} but N = {N}", value.len())),
-        severity: Severity::Error
-    })} else {Ok(Self::from_iter(value.into_iter()))}}
+    type Error = &'static str;
+    fn try_from(value: Vec<Type>) -> Result<Self, Self::Error> {return if value.len() > N {
+        Err("not enough capacity in array")
+    } else {Ok(Self::from_iter(value.into_iter()))}}
 }
 
 

@@ -37,9 +37,6 @@ use libutils_issue::Issue;
 //> HEAD -> TERMINAL
 use libutils_terminal::TERMINAL;
 
-//> HEAD -> THREAT
-use libutils_threat::Threat;
-
 //> HEAD -> CONSOLE
 use libutils_console::{
     Console, 
@@ -80,10 +77,7 @@ impl<Current: State> Report<Current> {
         data: Following::convert(&mut self.data)
     }}
     pub fn issue(&self, object: impl Into<Issue>) -> Option<!> {
-        TERMINAL.problem(Threat {
-            issue: object.into(),
-            chain: self.data.chain()
-        }).sync();
+        TERMINAL.problem(object.into(), self.data.get()).sync();
         return None;
     }
     pub fn eat<Type>(&self, result: Result<Type, Issue>) -> Option<Type> {return match result {
