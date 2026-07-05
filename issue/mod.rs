@@ -45,6 +45,5 @@ pub struct Issue {
 
 //> ISSUE -> HASH
 impl Hash for Issue {
-    #[inline]
     fn hash<H: Hasher>(&self, state: &mut H) {Hash::hash(self.name, state)}
 }

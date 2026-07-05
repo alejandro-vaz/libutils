@@ -40,38 +40,30 @@ pub struct Cage<Type: ?Sized> {
 
 //> CAGE -> SIZED IMPLEMENTATION
 impl<Type: Sized> Cage<Type> {
-    #[inline]
     pub const fn new(value: Type) -> Cage<Type> {return Self {
         being: RwLock::new(value)
     }}
-    #[inline]
     pub fn release(self) -> Type {return self.being.into_inner().unwrap()}
-    #[inline]
     pub fn replace(&self, value: Type) -> Type {self.being.replace(value).unwrap()}
 }
 
 //> CAGE -> IMPLEMENTATION
 impl<Type: ?Sized> Cage<Type> {
-    #[inline]
     pub fn read<Returns>(&self, closure: impl FnOnce(&Type) -> Returns) -> Returns {return closure(self.being.read().unwrap().deref())}
-    #[inline]
     pub fn write<Returns>(&self, closure: impl FnOnce(&mut Type) -> Returns) -> Returns {return closure(self.being.write().unwrap().deref_mut())}
 }
 
 //> CAGE -> COPY IMPLEMENTATION
 impl<Type: Copy> Cage<Type> {
-    #[inline]
     pub fn get(&self) -> Type {*self.being.read().unwrap()}
 }
 
 //> CAGE -> CLONE IMPLEMENTATION
 impl<Type: Clone> Cage<Type> {
-    #[inline]
     pub fn cloned(&self) -> Type {self.being.read().unwrap().clone()}
 }
 
 //> CAGE -> DEFAULT
 const impl<Type: [const] Default> Default for Cage<Type> {
-    #[inline]
     fn default() -> Self {return Self::new(Type::default())}
 }

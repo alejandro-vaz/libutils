@@ -38,7 +38,6 @@ const ERASE: [u8; 7] = [b'\x1B', b'[', b'D', b' ', b'\x1B', b'[', b'D'];
 
 //> DIFF -> IMPLEMENTATION
 impl<'valid> Diff<'valid> {
-    #[inline]
     pub fn new(current: &[u8], replacement: &'valid [u8]) -> Self {
         let mut old = current.into_iter();
         let mut new = replacement.into_iter();
@@ -52,7 +51,6 @@ impl<'valid> Diff<'valid> {
 
 //> DIFF -> INTO VEC U8
 impl<'valid> Into<Vec<u8>> for Diff<'valid> {
-    #[inline]
     fn into(self) -> Vec<u8> {
         let mut sequence = Vec::new();
         sequence.extend(ERASE.repeat(self.remove));

@@ -26,7 +26,6 @@ pub enum Section {
 
 //> SECTION -> DISPLAY
 impl Display for Section {
-    #[inline]
     fn fmt(&self, f: &mut Formatter<'_>) -> Format {match self {
         Section::Problem(problem) => Display::fmt(problem, f),
         Section::Display(string) => Display::fmt(string, f),

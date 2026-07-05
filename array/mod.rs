@@ -65,39 +65,31 @@ pub struct Array<Type, const N: usize> {
 
 //> ARRAY -> INTERNALS
 impl<Type, const N: usize> Array<Type, N> {
-    #[inline]
     const fn pointer(&mut self) -> NonNull<Type> {return NonNull::new(self.data.as_mut_ptr()).unwrap().cast()}
 }
 
 //> ARRAY -> IMPLEMENTATION
 impl<Type, const N: usize> Array<Type, N> {
-    #[inline]
     pub const fn new() -> Self {return Self::default()}
-    #[inline]
     pub const fn push(&mut self, value: Type) -> () {
         assert!(self.length != N, "array capacity exceeded");
         unsafe {self.pointer().add(self.length).write(value)};
         self.length += 1;
     }
-    #[inline]
     pub const fn push_mut<'valid>(&'valid mut self, value: Type) -> &'valid mut Type {
         let index = self.length;
         self.push(value);
         return &mut self[index];
     }
-    #[inline]
     pub const fn pop(&mut self) -> Option<Type> {return if self.length == 0 {None} else {
         self.length -= 1;
         Some(unsafe {self.pointer().add(self.length).read()})
     }}
-    #[inline]
     pub fn clear(&mut self) -> () {return self.truncate(0)}
-    #[inline]
     pub fn truncate(&mut self, length: usize) -> () {
         for index in length..self.length {unsafe {drop(self.pointer().add(index).read())}}
         self.length = length
     }
-    #[inline]
     pub const fn insert(&mut self, index: usize, value: Type) -> () {
         assert!(index <= self.length, "tried to insert out of bounds");
         assert!(self.length != N, "array capacity exceeded");
@@ -106,12 +98,10 @@ impl<Type, const N: usize> Array<Type, N> {
         unsafe {pointer.write(value)}
         self.length += 1;
     }
-    #[inline]
     pub const fn insert_mut<'valid>(&'valid mut self, index: usize, value: Type) -> &'valid mut Type {
         self.insert(index, value);
         return &mut self[index];
     }
-    #[inline]
     pub const fn remove(&mut self, index: usize) -> Type {
         assert!(index < self.length, "tried to remove out of bounds");
         let pointer = unsafe {self.pointer().add(index)};
@@ -120,7 +110,6 @@ impl<Type, const N: usize> Array<Type, N> {
         self.length -= 1;
         return value;
     }
-    #[inline]
     pub fn retain(&mut self, mut closure: impl FnMut(&Type) -> bool) -> () {
         let mut new = Array::new();
         for (index, passes) in arrayfn::<Option<bool>, N, _>(|index| self.get(index).map(&mut closure)).into_iter().enumerate() {match passes {
@@ -134,7 +123,6 @@ impl<Type, const N: usize> Array<Type, N> {
 
 //> ARRAY -> DROP
 impl<Type, const N: usize> Drop for Array<Type, N> {
-    #[inline]
     fn drop(&mut self) {self.clear()}
 }
 
@@ -145,19 +133,16 @@ impl<Type: Debug, const N: usize> Debug for Array<Type, N> {
 
 //> ARRAY -> EXTEND
 impl<Type, const N: usize> Extend<Type> for Array<Type, N> {
-    #[inline]
     fn extend<T: IntoIterator<Item = Type>>(&mut self, iter: T) {for item in iter {self.push(item)}}
 }
 
 //> ARRAY -> CLONE
 impl<Type: Clone, const N: usize> Clone for Array<Type, N> {
-    #[inline]
     fn clone(&self) -> Self {return Self::from_iter(self.as_ref().into_iter().cloned())}
 }
 
 //> ARRAY -> DEFAULT
 const impl<Type, const N: usize> Default for Array<Type, N> {
-    #[inline]
     fn default() -> Self {return Self {
         data: MaybeUninit::uninit(),
         length: 0

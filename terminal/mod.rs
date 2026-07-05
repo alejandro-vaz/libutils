@@ -77,9 +77,7 @@ pub struct Terminal {
 
 //> TERMINAL -> IMPLEMENTATION
 impl Console for Terminal {
-    #[inline]
     fn arguments<'valid>(&'valid self) -> &'valid [Argument] {return self.arguments.as_slice()}
-    #[inline]
     fn open(&self, filename: &str) -> Result<impl Descriptor, Issue> {match File::open(PathBuf::from(filename)) {
         Ok(file) => Ok(FileDescriptor {
             file: file
@@ -90,17 +88,14 @@ impl Console for Terminal {
             severity: Severity::Error
         })
     }}
-    #[inline]
     fn problem(&self, threat: Threat) -> impl Synchronization {
         self.layout.write(|layout| layout.push(Section::Problem(threat.into())));
         return ActionRequired;
     }
-    #[inline]
     fn print(&self, value: impl Display) -> impl Synchronization {
         self.layout.write(|layout| layout.push(Section::Display(value.to_string())));
         return ActionRequired;
     }
-    #[inline]
     fn debug(&self, value: impl Debug) -> impl Synchronization {
         self.layout.write(|layout| layout.push(Section::Debug(format!("{value:#?}"))));
         return ActionRequired;

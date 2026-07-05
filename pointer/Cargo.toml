@@ -1,7 +1,7 @@
 [package]
 name = "libutils-pointer"
 description = "A typed custom pointer to data"
-version = "0.0.0"
+version = "0.0.1"
 edition.workspace = true
 rust-version.workspace = true
 categories.workspace = true

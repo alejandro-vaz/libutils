@@ -24,13 +24,11 @@ use libutils_issue::{
 
 //> FROM -> FIXED TO VARIABLE
 impl<Type, const M: usize, const N: usize> From<[Type; N]> for Array<Type, M> where [(); M - N]: {
-    #[inline]
     fn from(value: [Type; N]) -> Self {return Array::from_iter(value)}
 }
 
 //> FROM -> FUNCTION
 impl<Type, const N: usize, Generator: FnMut(usize) -> Type> From<Generator> for Array<Type, N> {
-    #[inline]
     fn from(mut value: Generator) -> Self {
         let mut array = Self::new();
         for index in 0..N {
@@ -43,7 +41,6 @@ impl<Type, const N: usize, Generator: FnMut(usize) -> Type> From<Generator> for 
 //> FROM -> VEC
 impl<Type, const N: usize> TryFrom<Vec<Type>> for Array<Type, N> {
     type Error = Issue;
-    #[inline]
     fn try_from(value: Vec<Type>) -> Result<Self, Self::Error> {return if value.len() > N {Err(Issue {
         name: "Conversion from `Vec` to `Array` failed",
         description: Some(format!("Vec of length {} but N = {N}", value.len())),
@@ -58,6 +55,5 @@ impl<Type, const N: usize> TryFrom<Vec<Type>> for Array<Type, N> {
 
 //> INTO -> VEC
 impl<Type, const N: usize> Into<Vec<Type>> for Array<Type, N> {
-    #[inline]
     fn into(self) -> Vec<Type> {return Vec::from_iter(self.into_iter())}
 }

@@ -15,7 +15,6 @@ use super::{
 
 //> IMPLEMENTATIONS -> &'STATIC STR
 const impl From<&'static str> for Issue {
-    #[inline]
     fn from(value: &'static str) -> Self {return Self {
         name: value,
         description: None,

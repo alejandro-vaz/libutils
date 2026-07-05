@@ -44,7 +44,6 @@ impl<Type, const N: usize> Drop for Iterable<Type, N> {
 //> ITERABLE -> ITERATOR
 const impl<Type, const N: usize> Iterator for Iterable<Type, N> {
     type Item = Type;
-    #[inline]
     fn next(&mut self) -> Option<Self::Item> {
         return if self.length - self.reduced - self.index == 0 {None} else {
             let value = unsafe {(self.data.as_ptr() as *const Type).add(self.index).read()};
@@ -52,7 +51,6 @@ const impl<Type, const N: usize> Iterator for Iterable<Type, N> {
             Some(value)
         }
     }
-    #[inline]
     fn size_hint(&self) -> (usize, Option<usize>) {return (self.length - self.index, Some(self.length - self.index))}
 }
 
@@ -61,7 +59,6 @@ impl<Type, const N: usize> ExactSizeIterator for Iterable<Type, N> {}
 
 //> ITERABLE -> DOUBLE ENDED
 const impl<Type, const N: usize> DoubleEndedIterator for Iterable<Type, N> {
-    #[inline]
     fn next_back(&mut self) -> Option<Self::Item> {
         return if self.length - self.reduced - self.index == 0 {None} else {
             let value = unsafe {(self.data.as_ptr() as *const Type).add(self.length - 1 - self.reduced).read()};

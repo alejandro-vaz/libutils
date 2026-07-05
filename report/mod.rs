@@ -80,11 +80,9 @@ const impl Default for Report<Main> {
 
 //> REPORT -> IMPLEMENTATION
 impl<Current: State> Report<Current> {
-    #[inline]
     pub fn to<'valid, Following: DerivedState<'valid>>(&'valid mut self) -> Report<Following> {return Report {
         data: Following::convert(&mut self.data)
     }}
-    #[inline]
     pub fn issue(&self, object: impl Into<Issue>) -> Then<!> {
         TERMINAL.problem(Threat {
             issue: object.into(),
@@ -94,7 +92,6 @@ impl<Current: State> Report<Current> {
             value: None
         };
     }
-    #[inline]
     pub fn apply<Type>(&self, result: Result<Type, impl Into<Issue>>) -> Then<Type> {return Then {
         value: match result {
             Ok(value) => Some(value),
