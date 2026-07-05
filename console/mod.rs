@@ -30,7 +30,8 @@ use core::fmt::{
 //> HEAD -> CONTINUATIONS
 pub use continuations::{
     Synchronization,
-    Descriptor
+    Descriptor,
+    Data
 };
 
 

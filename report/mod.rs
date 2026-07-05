@@ -9,15 +9,14 @@
 #![feature(adt_const_params)]
 #![feature(default_field_values)]
 #![feature(const_heap)]
-#![feature(never_type)]
 #![feature(const_default)]
+#![feature(never_type)]
 #![feature(generic_const_exprs)]
 
 //> HEAD -> MODULES
 mod state;
 #[cfg(test)]
 mod tests;
-mod then;
 
 //> HEAD -> PUBLIC STATE
 pub use state::{
@@ -46,9 +45,6 @@ use libutils_console::{
     Console, 
     Synchronization
 };
-
-//> HEAD -> THEN
-use then::Then;
 
 
 //^ 
@@ -83,19 +79,15 @@ impl<Current: State> Report<Current> {
     pub fn to<'valid, Following: DerivedState<'valid>>(&'valid mut self) -> Report<Following> {return Report {
         data: Following::convert(&mut self.data)
     }}
-    pub fn issue(&self, object: impl Into<Issue>) -> Then<!> {
+    pub fn issue(&self, object: impl Into<Issue>) -> Option<!> {
         TERMINAL.problem(Threat {
             issue: object.into(),
             chain: self.data.chain()
         }).sync();
-        return Then {
-            value: None
-        };
+        return None;
     }
-    pub fn apply<Type>(&self, result: Result<Type, impl Into<Issue>>) -> Then<Type> {return Then {
-        value: match result {
-            Ok(value) => Some(value),
-            Err(issue) => self.issue(issue).none()
-        }
+    pub fn eat<Type>(&self, result: Result<Type, Issue>) -> Option<Type> {return match result {
+        Ok(value) => Some(value),
+        Err(issue) => self.issue(issue)?
     }}
 }

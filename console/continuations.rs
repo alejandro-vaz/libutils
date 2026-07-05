@@ -22,7 +22,7 @@ use libutils_issue::{
 //^ CONTINUATIONS
 //^
 
-//> CONTINUATIONS -> TRAIT
+//> CONTINUATIONS -> SYNCHRONIZATION
 #[must_use]
 pub trait Synchronization: Sized {
     fn sync(self) -> ();
@@ -32,6 +32,7 @@ pub trait Synchronization: Sized {
 //> CONTINUATIONS -> DESCRIPTOR
 #[must_use]
 pub trait Descriptor: Sized {
+    fn metadata(&self) -> Result<impl Data, Issue>;
     fn read_bytes(&mut self) -> Result<Vec<u8>, Issue>;
     fn read(&mut self) -> Result<String, Issue> {return String::from_utf8(self.read_bytes()?).map_err(|error| Issue {
         name: "Error encoding file to UTF-8",
@@ -41,4 +42,10 @@ pub trait Descriptor: Sized {
     fn write_bytes(&mut self, content: &[u8]) -> Result<(), Issue>;
     fn write(&mut self, content: &str) -> Result<(), Issue> {return self.write_bytes(content.as_bytes())}
     fn close(self) -> () {}
+}
+
+//> CONTINUATIONS -> DATA
+#[must_use]
+pub trait Data: Sized {
+    fn size(&self) -> usize;
 }

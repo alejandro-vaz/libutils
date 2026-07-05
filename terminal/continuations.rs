@@ -5,7 +5,8 @@
 //> HEAD -> CONSOLE
 use libutils_console::{
     Descriptor, 
-    Synchronization
+    Synchronization,
+    Data
 };
 
 //> HEAD -> SUPER
@@ -22,7 +23,10 @@ use libutils_issue::{
 
 //> HEAD -> STD
 use std::{
-    fs::File, 
+    fs::{
+        File,
+        Metadata
+    }, 
     io::{
         Read, 
         Write, 
@@ -67,8 +71,18 @@ pub struct FileDescriptor {
 
 //> FILEDESCRIPTOR -> DESCRIPTOR
 impl Descriptor for FileDescriptor {
+    fn metadata(&self) -> Result<impl Data, Issue> {return match self.file.metadata() {
+        Ok(metadata) => Ok(FileData {
+            metadata: metadata
+        }),
+        Err(error) => Err(Issue {
+            name: "Failed to read size of file",
+            description: Some(error.to_string()),
+            severity: Severity::Error
+        })
+    }}
     fn read_bytes(&mut self) -> Result<Vec<u8>, Issue> {
-        let mut buffer = Vec::new();
+        let mut buffer = Vec::with_capacity(self.metadata()?.size());
         match self.file.read(&mut buffer) {
             Ok(_) => Ok(buffer),
             Err(error) => Err(Issue {
@@ -86,4 +100,19 @@ impl Descriptor for FileDescriptor {
             severity: Severity::Error
         })
     }}
+}
+
+
+//^
+//^ FILEDATA
+//^
+
+//> FILEDATA -> STRUCT
+pub struct FileData {
+    metadata: Metadata
+}
+
+//> FILEDATA -> DATA
+impl Data for FileData {
+    fn size(&self) -> usize {return self.metadata.len() as usize}
 }
