@@ -1,9 +1,27 @@
-# cage
+# Cage
 
-`Cage<Type>` is a reader-writer lock with a simple and safe API.
+`Cage<Type>` is a reader-writer wrapper lock with a simple and safe API.
 
-It supports common methods for reading, writing, replacing, and getting the inner value.
+## Usage
 
-This type specifically solves those cases in which you need safe static mutables for global variables in your code.
+```rust
+use libutils::cage::Cage;
 
-See [the documentation](https://docs.rs/libutils-cage) for more information.
+static MUTABLE: Cage<u8> = Cage::default();
+
+MUTABLE.write(|variable| *variable = 1); // get a mutable reference
+
+let x = MUTABLE.get(); // copy
+```
+
+The `Cage` type offers a wrapper around `RwLock` from the standard library with a simplified API.
+
+## Performance
+
+Thss type's performance largely dependent on the `RwLock` implementation.
+
+## When to use it
+
+The type is useful in two situations:
+- Static mutable variables: synchronizes access
+- Interior mutability: enforces borrow checker rules at compile-time
