@@ -14,6 +14,10 @@ pub extern crate libutils_cage as cage;
 #[cfg(feature = "console")]
 pub extern crate libutils_console as console;
 
+//> LIBUTILS -> CONSTRANGEITER
+#[cfg(feature = "constrangeiter")]
+pub extern crate libutils_constrangeiter as constrangeiter;
+
 //> LIBUTILS -> DIFF
 #[cfg(feature = "diff")]
 pub extern crate libutils_diff as diff;

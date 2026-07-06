@@ -1,6 +1,6 @@
 [package]
 name = "libutils"
-version = "1.0.0"
+version = "2.0.0"
 edition.workspace = true
 authors.workspace = true
 rust-version.workspace = true
@@ -18,16 +18,18 @@ path = "./lib.rs"
 libutils-array = {workspace = true, optional = true}
 libutils-cage = {workspace = true, optional = true}
 libutils-console = {workspace = true, optional = true}
+libutils-constrangeiter = {workspace = true, optional = true}
 libutils-diff = {workspace = true, optional = true}
 libutils-issue = {workspace = true, optional = true}
 libutils-report = {workspace = true, optional = true}
 libutils-terminal = {workspace = true, optional = true}
 
 [features]
-default = ["array", "cage", "console", "diff", "issue", "report", "terminal"]
+default = ["array", "cage", "console", "constrangeiter", "diff", "issue", "report", "terminal"]
 array = ["dep:libutils-array"]
 cage = ["dep:libutils-cage"]
 console = ["dep:libutils-console"]
+constrangeiter = ["dep:libutils-constrangeiter"]
 diff = ["dep:libutils-diff"]
 issue = ["dep:libutils-issue"]
 report = ["dep:libutils-report"]

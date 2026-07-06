@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = [".main", "array", "cage", "console", "diff", "issue", "report", "terminal"]
+members = [".main", "array", "cage", "console", "constrangeiter", "diff", "issue", "report", "terminal"]
 default-members = [".main"]
 
 [workspace.package]
@@ -14,9 +14,10 @@ license = "MIT"
 authors = ["Alejandro Vaz <alejandro.vaz.myt@gmail.com>"]
 
 [workspace.dependencies]
-libutils-array = {version = "=0.2.0", path = "array"}
+libutils-array = {version = "=0.2.1", path = "array"}
 libutils-cage = {version = "=0.0.4", path = "cage"}
 libutils-console = {version = "=2.0.0", path = "console"}
+libutils-constrangeiter = {version = "=0.0.0", path = "constrangeiter"}
 libutils-diff = {version = "=0.0.3", path = "diff"}
 libutils-issue = {version = "=0.1.1", path = "issue"}
 libutils-report = {version = "=0.2.3", path = "report"}

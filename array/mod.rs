@@ -18,8 +18,10 @@
 #![feature(box_vec_non_null)]
 #![feature(trusted_len)]
 #![feature(const_clone)]
+#![feature(new_range)]
 #![feature(const_slice_make_iter)]
 #![feature(test)]
+#![feature(const_ops)]
 #![feature(generic_const_exprs)]
 #![feature(const_iter)]
 #![feature(const_convert)]
@@ -46,14 +48,20 @@ use core::{
         Formatter,
         Result as Format
     }, 
+    marker::Destruct, 
     mem::{
         MaybeUninit,
         forget
     }, 
-    ops::Drop, 
-    ptr::copy,
-    marker::Destruct
+    ops::{
+        Drop, 
+        SubAssign
+    }, 
+    ptr::copy
 };
+
+//> HEAD -> CONSTRANGEITER
+use libutils_constrangeiter::ConstIntoIterator;
 
 
 //^
@@ -85,20 +93,12 @@ impl<Type, const N: usize> Array<Type, N> {
         self.length -= 1;
         return Some(unsafe {self.as_ptr().add(self.length).read()});
     }}
-    pub const fn clear(&mut self) -> () where Type: [const] Destruct {
-        let inner = Array::<Type, N> {
-            length: self.length,
-            data: MaybeUninit::new(unsafe {self.data.as_ptr().read()})
-        };
-        drop(inner.into_iter());
-        self.length = 0;
-    }
-    pub const fn truncate<const LENGTH: usize>(&mut self) -> () where  Type: [const] Destruct, [(); N - LENGTH]: {
-        Array::<Type, {N - LENGTH}> {
-            length: self.length - LENGTH,
-            data: MaybeUninit::new(unsafe {self.data.as_ptr().add(LENGTH).cast::<[Type; N - LENGTH]>().read()})
-        }.clear();
-        self.length = LENGTH;
+    pub const fn clear(&mut self) -> () where Type: [const] Destruct {self.truncate(0)}
+    pub const fn truncate(&mut self, length: usize) -> () where  Type: [const] Destruct {
+        for index in (length..self.length).const_into_iter() {
+            drop(unsafe {self.data.as_ptr().add(index).read()})
+        }
+        self.length = length;
     }
     pub const fn insert(&mut self, index: usize, value: Type) -> () {
         assert!(index <= self.length, "tried to insert out of bounds");
@@ -125,21 +125,20 @@ impl<Type, const N: usize> Array<Type, N> {
         mut closure: impl [const] FnMut(&mut Type) -> bool + [const] Destruct
     ) -> () where Type: [const] Destruct {
         let mut offset = 0;
-        let mut position = 0;
-        while position < self.length {
+        for position in (0..self.length).const_into_iter() {
             let mut item = unsafe {self.as_mut_ptr().add(position).read()};
             if closure(&mut item) {
                 if offset == 0 {
-                    forget(item)
+                    forget(item);
                 } else {
-                    unsafe {self.as_mut_ptr().add(position).sub(offset).write(item)};
+                    unsafe {self.as_mut_ptr().add(position).sub(offset).write(item)}
                 }
             } else {
                 drop(item);
                 offset += 1;
             }
-            position += 1;
         }
+        self.length.sub_assign(offset);
     }
 }
 
@@ -162,12 +161,7 @@ impl<Type, const N: usize> Extend<Type> for Array<Type, N> {
 const impl<Type: [const] Clone, const N: usize> Clone for Array<Type, N> {
     fn clone(&self) -> Self {
         let mut array = Array::new();
-        let mut position = 0;
-        while position < self.length {
-            let item = &self[position];
-            array.push(item.clone());
-            position += 1;
-        }
+        for position in (0..self.length).const_into_iter() {array.push(self[position].clone())}
         return array;
     }
 }

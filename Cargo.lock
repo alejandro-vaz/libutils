@@ -4,11 +4,12 @@ version = 4
 
 [[package]]
 name = "libutils"
-version = "1.0.0"
+version = "2.0.0"
 dependencies = [
  "libutils-array",
  "libutils-cage",
  "libutils-console",
+ "libutils-constrangeiter",
  "libutils-diff",
  "libutils-issue",
  "libutils-report",
@@ -17,7 +18,10 @@ dependencies = [
 
 [[package]]
 name = "libutils-array"
-version = "0.2.0"
+version = "0.2.1"
+dependencies = [
+ "libutils-constrangeiter",
+]
 
 [[package]]
 name = "libutils-cage"
@@ -29,6 +33,10 @@ version = "2.0.0"
 dependencies = [
  "libutils-issue",
 ]
+
+[[package]]
+name = "libutils-constrangeiter"
+version = "0.0.0"
 
 [[package]]
 name = "libutils-diff"

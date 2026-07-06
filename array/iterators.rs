@@ -7,10 +7,7 @@ use super::Array;
 
 //> HEAD -> CORE
 use core::{
-    mem::{
-        MaybeUninit,
-        forget
-    },
+    mem::MaybeUninit,
     slice::{
         Iter,
         IterMut
@@ -94,13 +91,13 @@ const impl<Type, const N: usize> IntoIterator for Array<Type, N> {
     type Item = Type;
     type IntoIter = Iterable<Type, N>;
     fn into_iter(self) -> Self::IntoIter {
+        let (length, data) = self.into();
         let iterator = Self::IntoIter {
             index: 0,
             reduced: 0,
-            length: self.length,
-            data: unsafe {MaybeUninit::new(self.data.as_ptr().read())}
+            length: length,
+            data: data
         };
-        forget(self);
         return iterator;
     }
 }
