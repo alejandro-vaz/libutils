@@ -14,14 +14,14 @@ license = "MIT"
 authors = ["Alejandro Vaz <alejandro.vaz.myt@gmail.com>"]
 
 [workspace.dependencies]
-libutils-array = {version = "0.2.2", path = "array"}
-libutils-cage = {version = "0.0.5", path = "cage"}
-libutils-console = {version = "2.0.1", path = "console"}
-libutils-constrangeiter = {version = "0.0.1", path = "constrangeiter"}
-libutils-diff = {version = "0.0.4", path = "diff"}
-libutils-issue = {version = "0.1.1", path = "issue"}
-libutils-report = {version = "0.2.3", path = "report"}
-libutils-terminal = {version = "1.0.1", path = "terminal"}
+libutils-array = {version = "0.2", path = "array"}
+libutils-cage = {version = "0.0", path = "cage"}
+libutils-console = {version = "2.0", path = "console"}
+libutils-constrangeiter = {version = "0.0", path = "constrangeiter"}
+libutils-diff = {version = "0.0", path = "diff"}
+libutils-issue = {version = "0.1", path = "issue"}
+libutils-report = {version = "0.2", path = "report"}
+libutils-terminal = {version = "1.0", path = "terminal"}
 
 [profile.bench]
 lto = "fat"
