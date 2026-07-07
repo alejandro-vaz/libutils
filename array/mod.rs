@@ -96,7 +96,7 @@ impl<Type, const N: usize> Array<Type, N> {
     pub const fn clear(&mut self) -> () where Type: [const] Destruct {self.truncate(0)}
     pub const fn truncate(&mut self, length: usize) -> () where  Type: [const] Destruct {
         for index in (length..self.length).const_into_iter() {
-            drop(unsafe {self.data.as_ptr().add(index).read()})
+            drop(unsafe {self.as_ptr().add(index).read()})
         }
         self.length = length;
     }

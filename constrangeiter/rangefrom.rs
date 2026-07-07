@@ -14,9 +14,7 @@ use core::{
         ExactSizeIterator,
         FusedIterator,
         TrustedLen
-    },
-    range::RangeFrom,
-    marker::Destruct
+    }, marker::Destruct, ops::AddAssign, range::RangeFrom
 };
 
 
@@ -38,9 +36,12 @@ const impl<Type: const Target> Iterator for Iterable<Type> where usize: const Tr
         if now == Type::MAX {self.start = None} else {self.start.as_mut()?.add_assign(Type::ONE)}
         return Some(now);
     }
-    fn size_hint(&self) -> (usize, Option<usize>) {
-        return Type::MAX.hint(self.start.unwrap_or(Type::MAX));
-    }
+    fn size_hint(&self) -> (usize, Option<usize>) {return if let Some(number) = self.start {
+        let mut value = Type::MAX.hint(number);
+        value.0.add_assign(1);
+        value.1.as_mut().map(const |item| item.add_assign(1));
+        value
+    } else {(0, Some(0))}}
 }
 
 //> ITERATOR -> EXACT SIZE

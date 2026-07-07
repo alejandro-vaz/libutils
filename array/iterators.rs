@@ -44,7 +44,7 @@ const impl<Type, const N: usize> Iterator for Iterable<Type, N> {
     type Item = Type;
     fn next(&mut self) -> Option<Self::Item> {
         return if self.length - self.reduced - self.index == 0 {None} else {
-            let value = unsafe {(self.data.as_ptr() as *const Type).add(self.index).read()};
+            let value = unsafe {self.data.as_ptr().cast::<Type>().add(self.index).read()};
             self.index += 1;
             Some(value)
         }
@@ -59,7 +59,7 @@ impl<Type, const N: usize> ExactSizeIterator for Iterable<Type, N> {}
 const impl<Type, const N: usize> DoubleEndedIterator for Iterable<Type, N> {
     fn next_back(&mut self) -> Option<Self::Item> {
         return if self.length - self.reduced - self.index == 0 {None} else {
-            let value = unsafe {(self.data.as_ptr() as *const Type).add(self.length - 1 - self.reduced).read()};
+            let value = unsafe {self.data.as_ptr().cast::<Type>().add(self.length - 1 - self.reduced).read()};
             self.reduced += 1;
             Some(value)
         }
