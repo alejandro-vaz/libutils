@@ -35,6 +35,7 @@ static ARRAY: Array<u8, 6> = const {
     let mut instance = Array::<u8, 6>::from([1, 2, 3]);
     instance.push(4);
     instance.insert(0, 0);
+    instance.pop().unwrap();
     instance
 };
 ```

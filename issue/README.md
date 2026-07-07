@@ -1,11 +1,43 @@
-# issue
+# Issue
 
-This library exports a type called `Issue` which represents a tiny error wrapper with additional metadata.
+`Issue` is a small but detailed error wrapper that can be handled by upstream code and can be built from other types.
 
-This error type is meant to be passed and handled by other libraries, specifically between `libutils-report` and `libutils-terminal`.
+## The problem it solves
 
-Crates should by all means either implement their own type with `Into<Issue>` or use `Issue` directly.
+Easy, fast reporting to the user via a CLI with enough information.
 
-The issue type reflects errors that are meant to be shown to the user, not programming mistakes.
+## Usage
 
-See [the documentation](https://docs.rs/libutils-issue) for more information.
+This type is not meant to be used by ordinary people writing code, but by library backends defining custom errors:
+
+```
+enum MyError {
+    FirstCause,
+    SecondCause
+}
+
+impl Into<Issue> for MyError {
+    fn into(self) -> Issue {
+        return match self {
+            MyError::FirstCause => Issue {name: "error 1", ..},
+            MyError::SecondCause => Issue {name: "error 2", ..}
+        }
+    }
+}
+```
+
+Then, libraries might use it in two ways:
+- By returning it to the user on `Result<Type, Issue>` with standard try-trait workflow,
+- By submitting it to a type that implements `Console` (see `libutils-console` for that)
+
+## When to use it
+
+This error type is meant to be used for errors whose failure might interest the user. Common examples are:
+- A file doesn't exist
+- The input wasn't correct
+- Couldn't fetch
+
+Examples for instances in which you should not use it:
+- The program internals failed
+
+For that second case, you should likely use `.unwrap()` or `.expect(&'static str)` instead.

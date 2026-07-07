@@ -18,7 +18,7 @@ The `Cage` type offers a wrapper around `RwLock` from the standard library with 
 
 ## Performance
 
-Thss type's performance largely dependent on the `RwLock` implementation.
+This type's performance largely dependent on the `RwLock` implementation.
 
 ## When to use it
 
