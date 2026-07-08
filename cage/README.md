@@ -1,6 +1,6 @@
 # Cage
 
-`Cage<Type>` is a reader-writer wrapper lock with a simple and safe API.
+`Cage<Type>` is a reader-writer lock wrapper with a simple and safe API.
 
 ## Usage
 
@@ -24,4 +24,4 @@ This type's performance largely dependent on the `RwLock` implementation.
 
 The type is useful in two situations:
 - Static mutable variables: synchronizes access
-- Interior mutability: enforces borrow checker rules at compile-time
+- Interior mutability: enforces borrowing rules at runtime

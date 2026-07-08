@@ -1,16 +1,61 @@
-# report
+# Report
 
-Report is a type that allows for comprehensive error reporting to the terminal. It aims to replace `Result<T, E>` in large applications who need multi-error handling, additional metadata, backtracking to error cause.
+`Report` helps with issue reporting by providing a typed interface into error chain management.
 
-The `Report` type contains three modes:
-- `Main`: default mode when a report is created,
-- `Same`: does not increase the logging level
-- `Name<"section">`: increases the logging level
+## What problem it solves
 
-A report can be derived to be passed on to another function with the `.to()` method, that automatically adjusts the logging level.
+`Result<T, E>` can only carry one error but we want to show multiple (and possibly with different metadata) to the user.
 
-When a named report is dropped, the logging level is reduced and the caller gets control back.
+## Usage
 
-`Report` contains a `.issue(impl Into<Issue>) -> Option<!>` method that takes any object that can be converted into an issue and sends it to the terminal before returning `None`, and a `.eat(Result<Type, Issue>) -> Option<Type>` that reduces a result possibly containing an issue to an option.
+```rust
+use libutils::report::{
+    Report,
+    Same,
+    Name
+};
 
-See [the documentation](https://docs.rs/libutils-report) for more information.
+// creates a report
+// there should only be one report per program
+let report = Report::default();
+
+// report anything that implements Into<Issue>
+report.issue("an error happened");
+
+// closure with same chain
+let closure = |report: Report<Same>| {};
+
+// closure with added chain name
+// when this report is dropped, the chain node will be popped
+// the chain works effectively as a stack
+let another = |report: Report<Name<"Another">>| {
+    // pass on the report
+    closure(report.to());
+};
+```
+
+This type allows for management of the error chain (where issues are originated) based on a RAII pattern. The `Issue` type comes from `libutils_issue`.
+
+There are three modes for the report:
+- `Main`: just created
+- `Same`: no node added
+- `Name<&'static str>`: add a node, the pop when this report is dropped
+
+And includes three functions:
+- `.to()`: passes on the report to a function, and modifies/maintains error chain,
+- `.issue(impl Into<Issue>)`: reports an issue,
+- `.eat<Tyoe>(Result<Type, Issue>) -> Option<Type>`: reports the issue if it exists
+
+## When to use it
+
+This type is useful in application with complex error reporting. Specially, for programs in which the *amount* of errors is not as simplistic as `Result<T, E>`, and they must be shown to the user.
+
+It is not well-suited for:
+- simple libraries: should return `Result<T, Issue>` instead,
+- simple binaries: should use `Result<T, E>`,
+- `#![no_std]` environments
+
+It **is** well-suited for:
+- CLI tools,
+- compilers,
+- user-facing applications

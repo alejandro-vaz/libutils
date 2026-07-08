@@ -1,9 +1,25 @@
-# terminal
+# Terminal
 
-The static `TERMINAL: Terminal` is an implementation of `Console` from `libutils-console` that uses the standard library.
+This is an implementation using the standard library of `Console`.
 
-It aims to replace the API for handling that the stdlib offers by giving a simpler interface programmers can sympathize with faster.
+## Usage
 
-It makes use of thread synchronization via reader-writer lock to maintain interior mutability.
+This crate exposes the Zero-Sized Type `Terminal` that just refers to the internals of the implementation.
 
-See [the documentation](https://docs.rs/libutils-terminal) for more information.
+```rust
+use libutils::terminal::Terminal;
+use libutils::console::Console;
+use libutils::console::Update;
+
+let terminal: Terminal = Terminal;
+
+Terminal.print("hello!").sync();
+```
+
+For more information about usage and features, see `libutils_console`.
+
+## When to use it
+
+Use this type when you want to have a `Console` environment in a normal Rust program.
+
+> ![WARNING] Libraries should **NOT** implement direct calls to a certain `Console` like `Terminal`, but allow the caller binary to provide one.
