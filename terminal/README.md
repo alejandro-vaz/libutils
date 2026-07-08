@@ -16,7 +16,7 @@ let terminal: Terminal = Terminal;
 Terminal.print("hello!").sync();
 ```
 
-For more information about usage and features, see `libutils_console`.
+For more information about usage and features, see [`libutils-console`](https://crates.io/crates/libutils-console).
 
 ## When to use it
 

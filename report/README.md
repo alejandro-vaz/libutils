@@ -34,7 +34,7 @@ let another = |report: Report<Name<"Another">>| {
 };
 ```
 
-This type allows for management of the error chain (where issues are originated) based on a RAII pattern. The `Issue` type comes from `libutils_issue`.
+This type allows for management of the error chain (where issues are originated) based on a RAII pattern. The `Issue` type comes from [`libutils-issue`](https://crates.io/crates/libutils-issue).
 
 There are three modes for the report:
 - `Main`: just created
@@ -44,7 +44,7 @@ There are three modes for the report:
 And includes three functions:
 - `.to()`: passes on the report to a function, and modifies/maintains error chain,
 - `.issue(impl Into<Issue>)`: reports an issue,
-- `.eat<Tyoe>(Result<Type, Issue>) -> Option<Type>`: reports the issue if it exists
+- `.eat<Type>(Result<Type, Issue>) -> Option<Type>`: reports the issue if it exists
 
 ## When to use it
 
