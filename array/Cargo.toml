@@ -15,4 +15,4 @@ authors.workspace = true
 path = "./mod.rs"
 
 [dependencies]
-libutils-constrangeiter = {workspace = true}
+constrangeiter = {workspace = true}

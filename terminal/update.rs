@@ -17,8 +17,8 @@ use std::io::{
 //> HEAD -> CONSOLE
 use libutils_console::Update as UpdateTrait;
 
-//> HEAD -> DIFF
-use libutils_diff::Diff;
+//> HEAD -> BYTEDIFF
+use bytediff::Diff;
 
 
 //^

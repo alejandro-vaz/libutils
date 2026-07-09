@@ -3,14 +3,22 @@
 version = 4
 
 [[package]]
+name = "bytediff"
+version = "0.0.0"
+
+[[package]]
+name = "constrangeiter"
+version = "0.0.0"
+
+[[package]]
 name = "libutils"
-version = "2.2.1"
+version = "2.2.2"
 dependencies = [
+ "bytediff",
+ "constrangeiter",
  "libutils-array",
  "libutils-cage",
  "libutils-console",
- "libutils-constrangeiter",
- "libutils-diff",
  "libutils-issue",
  "libutils-report",
  "libutils-terminal",
@@ -20,7 +28,7 @@ dependencies = [
 name = "libutils-array"
 version = "0.4.1"
 dependencies = [
- "libutils-constrangeiter",
+ "constrangeiter",
 ]
 
 [[package]]
@@ -33,14 +41,6 @@ version = "2.0.2"
 dependencies = [
  "libutils-issue",
 ]
-
-[[package]]
-name = "libutils-constrangeiter"
-version = "0.0.3"
-
-[[package]]
-name = "libutils-diff"
-version = "0.0.4"
 
 [[package]]
 name = "libutils-issue"
@@ -57,10 +57,10 @@ dependencies = [
 
 [[package]]
 name = "libutils-terminal"
-version = "1.0.3"
+version = "1.0.4"
 dependencies = [
+ "bytediff",
  "libutils-cage",
  "libutils-console",
- "libutils-diff",
  "libutils-issue",
 ]

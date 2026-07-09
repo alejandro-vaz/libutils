@@ -16,11 +16,11 @@ pub extern crate libutils_console as console;
 
 //> LIBUTILS -> CONSTRANGEITER
 #[cfg(feature = "constrangeiter")]
-pub extern crate libutils_constrangeiter as constrangeiter;
+pub extern crate constrangeiter;
 
-//> LIBUTILS -> DIFF
-#[cfg(feature = "diff")]
-pub extern crate libutils_diff as diff;
+//> LIBUTILS -> BYTEDIFF
+#[cfg(feature = "bytediff")]
+pub extern crate bytediff;
 
 //> LIBUTILS -> ISSUE
 #[cfg(feature = "issue")]

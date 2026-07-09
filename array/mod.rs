@@ -62,7 +62,7 @@ use core::{
 };
 
 //> HEAD -> CONSTRANGEITER
-use libutils_constrangeiter::ConstIntoIterator;
+use constrangeiter::ConstIntoIterator;
 
 
 //^
