@@ -2,7 +2,7 @@
 
 `Console` is a wrapper for I/O operations that are frequently disorganized and all over the place in standard libraries.
 
-Types implementing it are commonly ZSTs that leverage opaque types and mutable statics behind to offer a good namespaced development experience.
+Types implementing it are commonly ZSTs that leverage opaque types and mutable statics behind the scenes to offer a good namespaced development experience.
 
 ```rust
 impl Console for Terminal {

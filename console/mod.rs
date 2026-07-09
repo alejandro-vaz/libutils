@@ -8,14 +8,20 @@
 //> HEAD -> FEATURES
 #![feature(const_trait_impl)]
 #![feature(const_destruct)]
+#![feature(test)]
 
 //> HEAD -> CRATES
 extern crate alloc;
+extern crate test;
 
 //> HEAD -> MODULES
 mod argument;
+#[cfg(test)]
+mod benches;
 mod descriptor;
 mod metadata;
+#[cfg(test)]
+mod tests;
 mod update;
 
 //> HEAD -> ARGUMENT
