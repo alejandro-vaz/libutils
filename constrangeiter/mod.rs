@@ -5,6 +5,9 @@
 //> HEAD -> NO_STD
 #![no_std]
 
+//> HEAD -> LINTS
+#![allow(unused_features)]
+
 //> HEAD -> FEATURES
 #![feature(const_trait_impl)]
 #![feature(const_iter)]

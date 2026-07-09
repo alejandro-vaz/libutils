@@ -11,7 +11,6 @@
 //> HEAD -> FEATURES
 #![feature(const_cmp)]
 #![feature(const_destruct)]
-#![feature(deref_pure_trait)]
 #![feature(const_array)]
 #![feature(transmute_neo)]
 #![feature(const_closures)]
@@ -58,7 +57,10 @@ use core::{
         Drop, 
         SubAssign
     }, 
-    ptr::copy
+    ptr::{
+        copy,
+        copy_nonoverlapping
+    }
 };
 
 //> HEAD -> CONSTRANGEITER
@@ -79,6 +81,51 @@ pub struct Array<Type, const N: usize> {
 impl<Type, const N: usize> Array<Type, N> {
     pub const fn new() -> Self {return Self::default()}
     pub const fn is_full(&self) -> bool {return self.length == N}
+    pub const fn repeat<
+        const TIMES: usize
+    >(self) -> Array<Type, {TIMES * N}> where Type: [const] Clone + [const] Destruct, [(); TIMES * N]: {
+        let (length, data) = self.into();
+        let mut additional = MaybeUninit::<[Type; TIMES * N]>::uninit();
+        if N == 0 {for index in (0..length).const_into_iter() {
+            drop(unsafe {data.as_ptr().cast::<Type>().add(index).read()});
+        }} else {
+            unsafe {copy_nonoverlapping(
+                data.as_ptr().cast::<Type>(),
+                additional.as_mut_ptr().cast::<Type>(), 
+                length
+            )};
+            for iteration in (1..TIMES).const_into_iter() {
+                for index in (0..length).const_into_iter() {
+                    unsafe {additional.as_mut_ptr().cast::<Type>().add(length * iteration).add(index).write(
+                        data.as_ptr().cast::<Type>().add(index).as_ref().unwrap().clone()
+                    )};
+                }
+            }
+        }
+        return Array::from((length * TIMES, additional));
+    }
+    pub const fn resize<const M: usize>(self) -> Array<Type, M> where Type: [const] Destruct {
+        let (length, data) = self.into();
+        let mut additional = MaybeUninit::<[Type; M]>::uninit();
+        return if M >= length {
+            unsafe {copy_nonoverlapping(
+                data.as_ptr().cast::<Type>(), 
+                additional.as_mut_ptr().cast::<Type>(), 
+                length
+            )};
+            Array::from((length, additional))
+        } else {
+            unsafe {copy_nonoverlapping(
+                data.as_ptr().cast::<Type>(), 
+                additional.as_mut_ptr().cast::<Type>(), 
+                M
+            )};
+            for index in (M..length).const_into_iter() {
+                drop(unsafe {data.as_ptr().cast::<Type>().add(index).read()});
+            };
+            Array::from((M, additional))
+        }
+    }
     pub const fn push(&mut self, value: Type) -> () {
         assert!(self.length != N, "array capacity exceeded");
         unsafe {self.as_mut_ptr().add(self.length).write(value)};
@@ -177,6 +224,12 @@ impl<Type, const N: usize> Array<Type, N> {
             }
         }
         self.length.sub_assign(offset);
+    }
+    pub const fn dedup_by_key<Key: [const] PartialEq<Key> + [const] Destruct>(
+        &mut self,
+        mut transformation: impl [const] FnMut(&mut Type) -> Key + [const] Destruct
+    ) -> () where Type: [const] Destruct {
+        self.dedup_by(const |first, second| transformation(first) == transformation(second));
     }
 }
 

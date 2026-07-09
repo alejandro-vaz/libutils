@@ -24,8 +24,8 @@ authors = ["Alejandro Vaz <alejandro.vaz.myt@gmail.com>"]
 [workspace.dependencies]
 bytediff = {version = "0.0", path = "bytediff"}
 constrangeiter = {version = "0.0", path = "constrangeiter"}
-libutils-array = {version = "0.4", path = "array"}
-libutils-cage = {version = "0.0", path = "cage"}
+libutils-array = {version = "0.5", path = "array"}
+libutils-cage = {version = "0.1", path = "cage"}
 libutils-console = {version = "2.1", path = "console"}
 libutils-issue = {version = "0.1", path = "issue"}
 libutils-report = {version = "0.2", path = "report"}

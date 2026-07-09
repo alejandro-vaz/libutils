@@ -25,9 +25,10 @@ The `Array` type exposes an API similar to that of `Vec` with common functions:
 - `.swap_remove(usize) -> Type`,
 - `.retain(impl FnMut(&mut Type) -> bool) -> ()`,
 - `.dedup() -> ()`,
-- `.dedup_by(impl FnMut(&mut Type, &mut Type) -> bool) -> ()`
+- `.dedup_by(impl FnMut(&mut Type, &mut Type) -> bool) -> ()`,
+- `.dedup_by_key<Key: PartialEq<Key>>(impl FnMut(&mut Type) -> Key) -> ()`
 
-The type implements `Deref<Target = [Type]>` along with `DerefMut` and `DerefPure` to access the methods of the slice type.
+The type implements `Deref<Target = [Type]>` along with `DerefMut` to access the methods of the slice type. There are also specialized functions for resizing the array.
 
 Furthermore, most of its methods and implementations use cutting-edge nightly const-features, which allows for complex compile-time constants:
 

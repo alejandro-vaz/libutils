@@ -17,8 +17,7 @@ use core::{
     },
     ops::{
         Deref,
-        DerefMut,
-        DerefPure
+        DerefMut
     }
 };
 
@@ -37,9 +36,6 @@ const impl<Type, const N: usize> Deref for Array<Type, N> {
 const impl<Type, const N: usize> DerefMut for Array<Type, N> {
     fn deref_mut(&mut self) -> &mut Self::Target {return unsafe {mutfat(self.data.as_mut_ptr().cast(), self.length)}}
 }
-
-//> DEREF -> PURE
-unsafe impl<Type, const N: usize> DerefPure for Array<Type, N> {}
 
 
 //^

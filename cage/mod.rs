@@ -6,6 +6,7 @@
 #![feature(test)]
 #![feature(const_trait_impl)]
 #![feature(const_default)]
+#![feature(const_convert)]
 #![feature(lock_value_accessors)]
 
 //> HEAD -> CRATES
@@ -14,6 +15,7 @@ extern crate test;
 //> HEAD -> MODULES
 #[cfg(test)]
 mod benches;
+mod conversions;
 #[cfg(test)]
 mod tests;
 

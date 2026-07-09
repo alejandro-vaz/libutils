@@ -253,3 +253,25 @@ fn swapremove() -> () {
     array.swap_remove(2);
     assert_eq!(array, [0, 4, 3, 2, 3, 0, 0]);
 }
+
+//> TESTS -> REPEAT
+#[test]
+fn repeat() -> () {
+    let array = Array::<u8, 7>::from([1, 2, 3]);
+    let double = array.repeat::<2>();
+    assert_eq!(double, [1, 2, 3, 1, 2, 3]);
+    let same = double.repeat::<1>();
+    assert_eq!(same, [1, 2, 3, 1, 2, 3]);
+    let none = same.repeat::<0>();
+    assert_eq!(none, []);
+}
+
+//> TESTS -> RESIZE
+#[test]
+fn resize() -> () {
+    let array = Array::<u8, 7>::from([1, 2, 3]);
+    let same = array.resize::<4>();
+    assert_eq!(same, [1, 2, 3]);
+    let trimmed = same.resize::<2>();
+    assert_eq!(trimmed, [1, 2]);
+}
