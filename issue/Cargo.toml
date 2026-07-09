@@ -1,11 +1,11 @@
 [package]
 name = "libutils-issue"
 description = "A easy-to-use customizable error type"
-version = "0.1.3"
+version = "0.1.4"
 edition.workspace = true
 rust-version.workspace = true
 categories = ["data-structures", "no-std::no-alloc", "rust-patterns", "value-formatting", "development-tools::debugging"]
-keywords.workspace = true
+keywords = ["issue", "error", "cli"]
 homepage.workspace = true
 repository.workspace = true
 license.workspace = true

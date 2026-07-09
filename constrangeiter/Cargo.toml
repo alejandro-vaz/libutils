@@ -1,11 +1,11 @@
 [package]
 name = "constrangeiter"
 description = "Constant iterators for ranges"
-version = "0.0.1"
+version = "0.0.2"
 edition.workspace = true
 rust-version.workspace = true
 categories = ["algorithms", "data-structures", "no-std::no-alloc", "rust-patterns"]
-keywords.workspace = true
+keywords = ["range", "const", "iter", "iterator"]
 homepage.workspace = true
 repository.workspace = true
 license.workspace = true

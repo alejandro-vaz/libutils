@@ -16,8 +16,6 @@ default-members = [".main"]
 [workspace.package]
 edition = "2024"
 rust-version = "1.99"
-#categories = ["development-tools", "config", "no-std"]
-keywords = ["utilities", "types", "utils", "libutils"]
 homepage = "https://github.com/alejandro-vaz/libutils"
 repository = "https://github.com/alejandro-vaz/libutils"
 license = "MIT"

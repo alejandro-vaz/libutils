@@ -1,11 +1,11 @@
 [package]
 name = "bytediff"
 description = "A bytearray diff"
-version = "0.0.1"
+version = "0.0.2"
 edition.workspace = true
 rust-version.workspace = true
 categories = ["algorithms", "compression", "data-structures", "no-std", "text-processing"]
-keywords.workspace = true
+keywords = ["diff", "binary", "bytearray", "bytediff"]
 homepage.workspace = true
 repository.workspace = true
 license.workspace = true

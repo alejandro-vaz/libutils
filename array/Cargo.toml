@@ -1,11 +1,11 @@
 [package]
 name = "libutils-array"
 description = "A maximum-sized array stored on the stack"
-version = "0.4.3"
+version = "0.4.4"
 edition.workspace = true
 rust-version.workspace = true
 categories = ["algorithms", "data-structures", "memory-management", "no-std"]
-keywords.workspace = true
+keywords = ["array", "stack", "stack-array"]
 homepage.workspace = true
 repository.workspace = true
 license.workspace = true
