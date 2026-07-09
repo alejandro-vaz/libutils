@@ -1,0 +1,19 @@
+[package]
+name = "ebnftobnf"
+description = "A straightforward EBNF to BNF reducer"
+version = "0.0.0"
+edition.workspace = true
+rust-version.workspace = true
+categories = ["algorithms", "compilers", "text-processing", "no-std"]
+keywords = ["bnf", "ebnf", "grammar", "cfg"]
+homepage.workspace = true
+repository.workspace = true
+license.workspace = true
+authors.workspace = true
+
+[lib]
+path = "./mod.rs"
+
+[dependencies]
+regex = "1.13"
+hashbrown = "0.17"

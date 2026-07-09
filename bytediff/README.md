@@ -1,6 +1,6 @@
-# Diff
+# bytediff
 
-`Diff` is a small utility type that represents the information required to update a bytearray to some new state in a terminal context.
+Bytediff is a small utility type that represents the information required to update a bytearray to some new state in a terminal context.
 
 ## What problem it solves
 
@@ -9,7 +9,7 @@ This type allows for updating terminal output without overwriting the full conte
 ## Usage
 
 ```rust
-use libutils::diff::Diff;
+use libutils::bytediff::Diff;
 
 const BEFORE: [u8; 5] = [0, 1, 2, 3, 4];
 const AFTER: [u8; 3] = [0, 1, 2];

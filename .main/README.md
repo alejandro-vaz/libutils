@@ -7,9 +7,9 @@ This is a general utility library containing all my crates to remove dependency 
 | Crate | Description |
 |:-|:-|
 | [`bytediff`](https://crates.io/crates/bytediff) | A bytearray diff |
+| [`cagelock`](https://crates.io/crates/cagelock) | A thread-safe static mutable wrapper |
 | [`constrangeiter`](https://crates.io/crates/constrangeiter) | Constant iterators for ranges |
 | [`libutils-array`](https://crates.io/crates/libutils-array) | A maximum-sized array stored on the stack |
-| [`libutils-cage`](https://crates.io/crates/libutils-cage) | A thread-safe static mutable wrapper |
 | [`libutils-console`](https://crates.io/crates/libutils-console) | A simple generalized I/O interface |
 | [`libutils-issue`](https://crates.io/crates/libutils-issue) | A easy-to-use customizable error type |
 | [`libutils-report`](https://crates.io/crates/libutils-report) | A custom error wrapper for detailed logs |

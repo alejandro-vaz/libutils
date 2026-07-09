@@ -3,10 +3,11 @@ resolver = "3"
 members = [
     ".main", 
     "array", 
+    "bytediff", 
     "cagelock", 
     "console", 
     "constrangeiter", 
-    "bytediff", 
+    "ebnftobnf",
     "issue", 
     "report", 
     "terminal"
@@ -25,6 +26,7 @@ authors = ["Alejandro Vaz <alejandro.vaz.myt@gmail.com>"]
 bytediff = {version = "0.0", path = "bytediff"}
 cagelock = {version = "0.0", path = "cagelock"}
 constrangeiter = {version = "0.0", path = "constrangeiter"}
+ebnftobnf = {version = "0.0", path = "ebnftobnf"}
 libutils-array = {version = "0.5", path = "array"}
 libutils-console = {version = "2.1", path = "console"}
 libutils-issue = {version = "0.1", path = "issue"}

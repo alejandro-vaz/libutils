@@ -1,11 +1,11 @@
-# Cage
+# cagelock
 
 `Cage<Type>` is a reader-writer lock wrapper with a simple and safe API.
 
 ## Usage
 
 ```rust
-use libutils::cage::Cage;
+use libutils::cagelock::Cage;
 
 static MUTABLE: Cage<u8> = Cage::default();
 
