@@ -7,17 +7,21 @@ name = "bytediff"
 version = "0.0.2"
 
 [[package]]
+name = "cagelock"
+version = "0.0.0"
+
+[[package]]
 name = "constrangeiter"
 version = "0.0.3"
 
 [[package]]
 name = "libutils"
-version = "2.4.0"
+version = "3.0.0"
 dependencies = [
  "bytediff",
+ "cagelock",
  "constrangeiter",
  "libutils-array",
- "libutils-cage",
  "libutils-console",
  "libutils-issue",
  "libutils-report",
@@ -30,10 +34,6 @@ version = "0.5.0"
 dependencies = [
  "constrangeiter",
 ]
-
-[[package]]
-name = "libutils-cage"
-version = "0.1.0"
 
 [[package]]
 name = "libutils-console"
@@ -60,7 +60,7 @@ name = "libutils-terminal"
 version = "1.1.1"
 dependencies = [
  "bytediff",
- "libutils-cage",
+ "cagelock",
  "libutils-console",
  "libutils-issue",
 ]

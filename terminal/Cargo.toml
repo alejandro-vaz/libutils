@@ -16,6 +16,6 @@ path = "./mod.rs"
 
 [dependencies]
 bytediff = {workspace = true}
-libutils-cage = {workspace = true}
+cagelock = {workspace = true}
 libutils-console = {workspace = true}
 libutils-issue = {workspace = true}
