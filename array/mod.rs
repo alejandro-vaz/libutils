@@ -14,6 +14,7 @@
 #![feature(deref_pure_trait)]
 #![feature(const_array)]
 #![feature(transmute_neo)]
+#![feature(const_closures)]
 #![feature(const_trait_impl)]
 #![feature(box_vec_non_null)]
 #![feature(trusted_len)]
@@ -77,8 +78,7 @@ pub struct Array<Type, const N: usize> {
 //> ARRAY -> IMPLEMENTATION
 impl<Type, const N: usize> Array<Type, N> {
     pub const fn new() -> Self {return Self::default()}
-    pub const fn as_ptr(&self) -> *const Type {return self.data.as_ptr().cast()}
-    pub const fn as_mut_ptr(&mut self) -> *mut Type {return self.data.as_mut_ptr().cast()}
+    pub const fn is_full(&self) -> bool {return self.length == N}
     pub const fn push(&mut self, value: Type) -> () {
         assert!(self.length != N, "array capacity exceeded");
         unsafe {self.as_mut_ptr().add(self.length).write(value)};
@@ -120,6 +120,14 @@ impl<Type, const N: usize> Array<Type, N> {
         self.length -= 1;
         return value;
     }
+    pub const fn swap_remove(&mut self, index: usize) -> Type {
+        assert!(index < self.length, "tried to remove out of bounds");
+        let pointer = unsafe {self.as_mut_ptr().add(index)};
+        let value = unsafe {pointer.read()};
+        unsafe {copy(self.as_ptr().add(self.length).sub(1), pointer, 1)}
+        self.length -= 1;
+        return value;
+    }
     pub const fn retain(
         &mut self, 
         mut closure: impl [const] FnMut(&mut Type) -> bool + [const] Destruct
@@ -141,25 +149,30 @@ impl<Type, const N: usize> Array<Type, N> {
         self.length.sub_assign(offset);
     }
     pub const fn dedup(&mut self) -> () where Type: [const] PartialEq<Type> + [const] Destruct {
+        self.dedup_by(const |first, second| (first as &Type).eq(second as &Type));
+    }
+    pub const fn dedup_by(
+        &mut self, 
+        mut decider: impl [const] FnMut(&mut Type, &mut Type) -> bool + [const] Destruct
+    ) -> () where Type: [const] Destruct {
+        if self.length < 2 {return}
         let mut offset = 0;
-        for position in (0..self.length - 1).const_into_iter() {
-            let first = unsafe {self.as_ptr().add(position).read()};
-            let second = unsafe {self.as_ptr().add(position).add(1).read()};
-            if first.eq(&second) {
-                if offset == 0 {
-                    forget(first)
-                } else {
-                    unsafe {self.as_mut_ptr().add(position).sub(offset).write(first)};
-                }
+        let mut first = None;
+        for position in (0..=self.length - 1).const_into_iter() {
+            let mut second = unsafe {self.as_ptr().add(position).read()};
+            if first.is_none() {
+                first = Some(second);
+                continue;
+            }
+            if decider(first.as_mut().unwrap(), &mut second) {
                 drop(second);
                 offset += 1;
             } else {
                 if offset == 0 {
-                    forget(first);
-                    forget(second);
+                    forget(first.replace(second).unwrap());
                 } else {
-                    unsafe {self.as_mut_ptr().add(position).sub(offset).write(first)};
-                    unsafe {self.as_mut_ptr().add(position).sub(offset).add(1).write(second)};
+                    unsafe {self.as_mut_ptr().add(position).sub(offset).write(second)};
+                    forget(first.replace(unsafe {self.as_mut_ptr().add(position).sub(offset).read()}).unwrap());
                 }
             }
         }

@@ -238,8 +238,18 @@ fn indexto() -> () {
 //> TESTS -> DEDUP
 #[test]
 fn dedup() -> () {
-    let mut array = Array::<u8, 10>::from([0, 4, 1, 2, 3, 0]);
+    let mut array = Array::<u8, 10>::from([0, 4, 1, 2, 3, 0, 0, 3]);
     array.sort();
     array.dedup();
     assert_eq!(array, [0, 1, 2, 3, 4]);
+    array.clear();
+    array.dedup();
+}
+
+//> TESTS -> SWAPREMOVE
+#[test]
+fn swapremove() -> () {
+    let mut array = Array::<u8, 10>::from([0, 4, 1, 2, 3, 0, 0, 3]);
+    array.swap_remove(2);
+    assert_eq!(array, [0, 4, 3, 2, 3, 0, 0]);
 }
