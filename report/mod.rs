@@ -76,7 +76,7 @@ impl<Current: const State> Report<Current> {
         }
     }
     pub fn issue(&self, object: impl Into<Issue>) -> Option<!> {
-        Terminal.problem(object.into(), self.data.get()).sync();
+        Terminal::problem(object.into(), self.data.get()).sync();
         return None;
     }
     pub fn eat<Type>(&self, result: Result<Type, Issue>) -> Option<Type> {return match result {

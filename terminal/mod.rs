@@ -75,8 +75,8 @@ pub struct Terminal;
 
 //> TERMINAL -> IMPLEMENTATION
 impl Console for Terminal {
-    fn arguments<'valid>(&'valid self) -> &'valid [Argument] {return ARGUMENTS.as_slice()}
-    fn open(&self, filename: &str) -> Result<impl DescriptorTrait, Issue> {
+    fn arguments() -> &'static [Argument] {return ARGUMENTS.as_slice()}
+    fn open(filename: &str) -> Result<impl DescriptorTrait, Issue> {
         match File::open(PathBuf::from(filename)) {
             Ok(file) => Ok(Descriptor {
                 file: file
@@ -88,7 +88,7 @@ impl Console for Terminal {
             })
         }
     }
-    fn problem(&self, issue: Issue, chain: &[&'static str]) -> impl UpdateTrait {
+    fn problem(issue: Issue, chain: &[&'static str]) -> impl UpdateTrait {
         LAYOUT.write(|layout| layout.push(Section::Problem(Problem {
             chain: Vec::from(chain),
             issue: issue,
@@ -96,11 +96,11 @@ impl Console for Terminal {
         })));
         return Update;
     }
-    fn print(&self, value: impl Display) -> impl UpdateTrait {
+    fn print(value: impl Display) -> impl UpdateTrait {
         LAYOUT.write(|layout| layout.push(Section::Display(value.to_string())));
         return Update;
     }
-    fn debug(&self, value: impl Debug) -> impl UpdateTrait {
+    fn debug(value: impl Debug) -> impl UpdateTrait {
         LAYOUT.write(|layout| layout.push(Section::Debug(format!("{value:#?}"))));
         return Update;
     }

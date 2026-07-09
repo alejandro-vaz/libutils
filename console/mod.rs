@@ -52,9 +52,9 @@ pub use descriptor::Descriptor;
 
 //> CONSOLE -> TRAIT
 pub trait Console {
-    fn arguments<'valid>(&'valid self) -> &'valid [Argument];
-    fn open(&self, filename: &str) -> Result<impl Descriptor, Issue>;
-    fn problem(&self, issue: Issue, chain: &[&'static str]) -> impl Update;
-    fn print(&self, value: impl Display) -> impl Update;
-    fn debug(&self, value: impl Debug) -> impl Update;
+    fn arguments() -> &'static [Argument];
+    fn open(filename: &str) -> Result<impl Descriptor, Issue>;
+    fn problem(issue: Issue, chain: &[&'static str]) -> impl Update;
+    fn print(value: impl Display) -> impl Update;
+    fn debug(value: impl Debug) -> impl Update;
 }
