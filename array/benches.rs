@@ -42,7 +42,7 @@ fn insertremove(bencher: &mut Bencher) -> () {
     });
 }
 
-//> BNECHES -> EXTENDCLEAR
+//> BENCHES -> EXTENDCLEAR
 #[bench]
 fn extendclear(bencher: &mut Bencher) -> () {
     let mut array = Array::<u8, 10>::new();

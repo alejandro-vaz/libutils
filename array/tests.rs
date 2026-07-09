@@ -234,3 +234,12 @@ fn indexto() -> () {
     let array = Array::<u8, 7>::from([1, 2, 3, 4, 5, 6]);
     assert_eq!(array[2], 3);
 }
+
+//> TESTS -> DEDUP
+#[test]
+fn dedup() -> () {
+    let mut array = Array::<u8, 10>::from([0, 4, 1, 2, 3, 0]);
+    array.sort();
+    array.dedup();
+    assert_eq!(array, [0, 1, 2, 3, 4]);
+}

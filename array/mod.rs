@@ -140,6 +140,31 @@ impl<Type, const N: usize> Array<Type, N> {
         }
         self.length.sub_assign(offset);
     }
+    pub const fn dedup(&mut self) -> () where Type: [const] PartialEq<Type> + [const] Destruct {
+        let mut offset = 0;
+        for position in (0..self.length - 1).const_into_iter() {
+            let first = unsafe {self.as_ptr().add(position).read()};
+            let second = unsafe {self.as_ptr().add(position).add(1).read()};
+            if first.eq(&second) {
+                if offset == 0 {
+                    forget(first)
+                } else {
+                    unsafe {self.as_mut_ptr().add(position).sub(offset).write(first)};
+                }
+                drop(second);
+                offset += 1;
+            } else {
+                if offset == 0 {
+                    forget(first);
+                    forget(second);
+                } else {
+                    unsafe {self.as_mut_ptr().add(position).sub(offset).write(first)};
+                    unsafe {self.as_mut_ptr().add(position).sub(offset).add(1).write(second)};
+                }
+            }
+        }
+        self.length.sub_assign(offset);
+    }
 }
 
 //> ARRAY -> DROP
