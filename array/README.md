@@ -22,7 +22,10 @@ The `Array` type exposes an API similar to that of `Vec` with common functions:
 - `.clear() -> ()`,
 - `.insert(usize, Type) -> ()`,
 - `.remove(usize) -> Type`,
-- `.retain(impl FnMut(&mut Type) -> bool) -> ()`
+- `.swap_remove(usize) -> Type`,
+- `.retain(impl FnMut(&mut Type) -> bool) -> ()`,
+- `.dedup() -> ()`,
+- `.dedup_by(impl FnMut(&mut Type, &mut Type) -> bool) -> ()`
 
 The type implements `Deref<Target = [Type]>` along with `DerefMut` and `DerefPure` to access the methods of the slice type.
 
