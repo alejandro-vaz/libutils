@@ -1,10 +1,10 @@
 [package]
 name = "libutils"
-version = "2.2.2"
+version = "2.2.3"
 edition.workspace = true
 authors.workspace = true
-rust-version.workspace = true
-categories.workspace = true
+#rust-version.workspace = true
+categories = ["development-tools", "config", "no-std"]
 keywords.workspace = true
 license.workspace = true
 homepage.workspace = true
@@ -15,22 +15,11 @@ description = "A general utility library"
 path = "./lib.rs"
 
 [dependencies]
-bytediff = {workspace = true, optional = true}
-libutils-array = {workspace = true, optional = true}
-libutils-cage = {workspace = true, optional = true}
-libutils-console = {workspace = true, optional = true}
-constrangeiter = {workspace = true, optional = true}
-libutils-issue = {workspace = true, optional = true}
-libutils-report = {workspace = true, optional = true}
-libutils-terminal = {workspace = true, optional = true}
-
-[features]
-default = ["array", "cage", "console", "constrangeiter", "bytediff", "issue", "report", "terminal"]
-array = ["dep:libutils-array"]
-bytediff = ["dep:bytediff"]
-cage = ["dep:libutils-cage"]
-console = ["dep:libutils-console"]
-constrangeiter = ["dep:constrangeiter"]
-issue = ["dep:libutils-issue"]
-report = ["dep:libutils-report"]
-terminal = ["dep:libutils-terminal"]
+bytediff = {workspace = true}
+constrangeiter = {workspace = true}
+libutils-array = {workspace = true}
+libutils-cage = {workspace = true}
+libutils-console = {workspace = true}
+libutils-issue = {workspace = true}
+libutils-report = {workspace = true}
+libutils-terminal = {workspace = true}

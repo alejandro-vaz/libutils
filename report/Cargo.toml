@@ -1,10 +1,10 @@
 [package]
 name = "libutils-report"
 description = "A custom error wrapper for detailed logs"
-version = "0.2.5"
+version = "0.2.6"
 edition.workspace = true
 rust-version.workspace = true
-categories.workspace = true
+categories = ["caching", "development-tools::debugging", "rust-patterns"]
 keywords.workspace = true
 homepage.workspace = true
 repository.workspace = true

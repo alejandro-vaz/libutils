@@ -2,8 +2,10 @@
 //^ HEAD
 //^
 
-//> HEAD -> FEATURES
+//> HEAD -> LINTS
 #![allow(incomplete_features)]
+
+//> HEAD -> FEATURES
 #![feature(const_trait_impl)]
 #![feature(unsized_const_params)]
 #![feature(adt_const_params)]

@@ -1,12 +1,22 @@
 [workspace]
 resolver = "3"
-members = [".main", "array", "cage", "console", "constrangeiter", "bytediff", "issue", "report", "terminal"]
+members = [
+    ".main", 
+    "array", 
+    "cage", 
+    "console", 
+    "constrangeiter", 
+    "bytediff", 
+    "issue", 
+    "report", 
+    "terminal"
+]
 default-members = [".main"]
 
 [workspace.package]
 edition = "2024"
-rust-version = "1.98"
-categories = ["development-tools", "config", "no-std"]
+rust-version = "1.99"
+#categories = ["development-tools", "config", "no-std"]
 keywords = ["utilities", "types", "utils", "libutils"]
 homepage = "https://github.com/alejandro-vaz/libutils"
 repository = "https://github.com/alejandro-vaz/libutils"
@@ -15,10 +25,10 @@ authors = ["Alejandro Vaz <alejandro.vaz.myt@gmail.com>"]
 
 [workspace.dependencies]
 bytediff = {version = "0.0", path = "bytediff"}
+constrangeiter = {version = "0.0", path = "constrangeiter"}
 libutils-array = {version = "0.4", path = "array"}
 libutils-cage = {version = "0.0", path = "cage"}
 libutils-console = {version = "2.0", path = "console"}
-constrangeiter = {version = "0.0", path = "constrangeiter"}
 libutils-issue = {version = "0.1", path = "issue"}
 libutils-report = {version = "0.2", path = "report"}
 libutils-terminal = {version = "1.0", path = "terminal"}

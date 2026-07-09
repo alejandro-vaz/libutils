@@ -1,10 +1,10 @@
 [package]
 name = "libutils-terminal"
 description = "A custom embedded terminal handler"
-version = "1.0.4"
+version = "1.0.5"
 edition.workspace = true
 rust-version.workspace = true
-categories.workspace = true
+categories = ["accessibility", "command-line-interface", "config", "filesystem", "rust-patterns"]
 keywords.workspace = true
 homepage.workspace = true
 repository.workspace = true

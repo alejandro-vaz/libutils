@@ -1,10 +1,10 @@
 [package]
 name = "libutils-console"
 description = "A simple generalized I/O interface"
-version = "2.0.2"
+version = "2.0.3"
 edition.workspace = true
 rust-version.workspace = true
-categories.workspace = true
+categories = ["command-line-interface", "config", "filesystem", "no-std", "simulation"]
 keywords.workspace = true
 homepage.workspace = true
 repository.workspace = true

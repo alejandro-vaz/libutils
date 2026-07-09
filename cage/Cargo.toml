@@ -1,10 +1,10 @@
 [package]
 name = "libutils-cage"
 description = "A thread-safe static mutable wrapper"
-version = "0.0.8"
+version = "0.0.9"
 edition.workspace = true
 rust-version.workspace = true
-categories.workspace = true
+categories = ["data-structures", "concurrency", "memory-management", "rust-patterns"]
 keywords.workspace = true
 homepage.workspace = true
 repository.workspace = true
