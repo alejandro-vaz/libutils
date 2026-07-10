@@ -2,8 +2,8 @@
 //^ HEAD
 //^
 
-//> HEAD -> ISSUE
-use libutils_issue::{
+//> HEAD -> ISSUING
+use issuing::{
     Issue,
     Severity
 };

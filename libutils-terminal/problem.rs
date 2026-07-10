@@ -2,8 +2,8 @@
 //^ HEAD
 //^
 
-//> HEAD -> ISSUE
-use libutils_issue::Issue;
+//> HEAD -> ISSUING
+use issuing::Issue;
 
 //> HEAD -> CORE
 use core::fmt::{

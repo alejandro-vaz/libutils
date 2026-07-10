@@ -42,8 +42,8 @@ use state::{
     DerivedState
 };
 
-//> HEAD -> ISSUE
-use libutils_issue::Issue;
+//> HEAD -> ISSUING
+use issuing::Issue;
 
 //> HEAD -> TERMINAL
 use libutils_terminal::Terminal;

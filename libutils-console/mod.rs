@@ -30,8 +30,8 @@ mod update;
 //> HEAD -> ARGUMENT
 pub use argument::Argument;
 
-//> HEAD -> ISSUE
-use libutils_issue::Issue;
+//> HEAD -> ISSUING
+use issuing::Issue;
 
 //> HEAD -> CORE
 use core::fmt::{
