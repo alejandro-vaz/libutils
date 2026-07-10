@@ -5,7 +5,7 @@
 ## Usage
 
 ```rust
-use libutils::array::Array;
+use stack_array::Array;
 
 let mut array = Array::<u8, 5>::new();
 
@@ -26,14 +26,15 @@ The `Array` type exposes an API similar to that of `Vec` with common functions:
 - `.retain(impl FnMut(&mut Type) -> bool) -> ()`,
 - `.dedup() -> ()`,
 - `.dedup_by(impl FnMut(&mut Type, &mut Type) -> bool) -> ()`,
-- `.dedup_by_key<Key: PartialEq>(impl FnMut(&mut Type) -> Key) -> ()`
+- `.dedup_by_key<Key: PartialEq>(impl FnMut(&mut Type) -> Key) -> ()`,
+- `.drain(impl RangeBounds<usize>) -> Self`
 
 The type implements `Deref<Target = [Type]>` along with `DerefMut` to access the methods of the slice type. There are also specialized functions for resizing the array.
 
 Furthermore, most of its methods and implementations use cutting-edge nightly const-features, which allows for complex compile-time constants:
 
 ```rust
-use libutils::array::Array;
+use stack_array::Array;
 
 static ARRAY: Array<u8, 6> = const {
     let mut instance = Array::<u8, 6>::from([1, 2, 3]);

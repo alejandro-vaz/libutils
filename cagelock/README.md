@@ -5,7 +5,7 @@
 ## Usage
 
 ```rust
-use libutils::cagelock::Cage;
+use cagelock::Cage;
 
 static MUTABLE: Cage<u8> = Cage::default();
 

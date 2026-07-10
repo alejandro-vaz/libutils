@@ -275,3 +275,12 @@ fn resize() -> () {
     let trimmed = same.resize::<2>();
     assert_eq!(trimmed, [1, 2]);
 }
+
+//> TESTS -> DRAIN
+#[test]
+fn drain() -> () {
+    let mut array = Array::<u8, 10>::from([0, 4, 1, 2, 3, 0, 0, 3]);
+    let subarray = array.drain(2..=5);
+    assert_eq!(subarray, [1, 2, 3, 0]);
+    assert_eq!(array, [0, 4, 0, 3]);
+}

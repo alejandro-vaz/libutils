@@ -5,14 +5,19 @@
 //> HEAD -> NO_STD
 #![no_std]
 
+//> HEAD -> DOCS
+#![doc = include_str!("README.md")]
+
 //> HEAD -> LINTS
 #![allow(incomplete_features)]
+#![allow(internal_features)]
 
 //> HEAD -> FEATURES
 #![feature(const_cmp)]
 #![feature(const_destruct)]
 #![feature(const_array)]
 #![feature(transmute_neo)]
+#![feature(const_range)]
 #![feature(const_closures)]
 #![feature(const_trait_impl)]
 #![feature(box_vec_non_null)]
@@ -54,7 +59,9 @@ use core::{
         forget
     }, 
     ops::{
+        Bound, 
         Drop, 
+        RangeBounds, 
         SubAssign
     }, 
     ptr::{
@@ -230,6 +237,24 @@ impl<Type, const N: usize> Array<Type, N> {
         mut transformation: impl [const] FnMut(&mut Type) -> Key + [const] Destruct
     ) -> () where Type: [const] Destruct {
         self.dedup_by(const |first, second| transformation(first) == transformation(second));
+    }
+    pub const fn drain(&mut self, range: impl [const] RangeBounds<usize> + [const] Destruct) -> Self {
+        let start = match range.start_bound() {
+            Bound::Excluded(_) => unreachable!(),
+            Bound::Included(bound) => if *bound < self.length {*bound} else {self.length - 1},
+            Bound::Unbounded => 0
+        };
+        let end = match range.end_bound() {
+            Bound::Excluded(bound) => if *bound <= self.length {*bound} else {self.length},
+            Bound::Included(bound) => if bound + 1 <= self.length {bound + 1} else {self.length},
+            Bound::Unbounded => self.length
+        };
+        let length = end - start;
+        let mut additional = MaybeUninit::<[Type; N]>::uninit();
+        unsafe {copy_nonoverlapping(self.as_ptr().add(start), additional.as_mut_ptr().cast::<Type>(), length)};
+        unsafe {copy(self.as_ptr().add(end), self.as_mut_ptr().add(start), self.length - end)}
+        self.length -= length;
+        return Self::from((length, additional));
     }
 }
 

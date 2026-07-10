@@ -1,11 +1,11 @@
 [package]
 name = "libutils"
-version = "4.1.0"
+version = "5.0.0"
 edition.workspace = true
 authors.workspace = true
 rust-version.workspace = true
 keywords = ["utilities", "utils", "libutils"]
-categories = ["development-tools", "config", "no-std"]
+categories = ["development-tools", "config"]
 license.workspace = true
 homepage.workspace = true
 repository.workspace = true
@@ -15,12 +15,32 @@ description = "A general utility library"
 path = "./lib.rs"
 
 [dependencies]
-bytediff = {workspace = true}
-cagelock = {workspace = true}
-constrangeiter = {workspace = true}
-ebnftobnf = {workspace = true}
-libutils-array = {workspace = true}
-libutils-console = {workspace = true}
-libutils-issue = {workspace = true}
-libutils-report = {workspace = true}
-libutils-terminal = {workspace = true}
+bytediff = {workspace = true, optional = true}
+cagelock = {workspace = true, optional = true}
+constrangeiter = {workspace = true, optional = true}
+ebnftobnf = {workspace = true, optional = true}
+libutils-console = {workspace = true, optional = true}
+libutils-issue = {workspace = true, optional = true}
+libutils-report = {workspace = true, optional = true}
+libutils-terminal = {workspace = true, optional = true}
+stack-array = {workspace = true, optional = true}
+
+[features]
+default = ["std"]
+no-alloc = [
+    "dep:constrangeiter"
+]
+no-std = [
+    "no-alloc",
+    "dep:bytediff", 
+    "dep:ebnftobnf", 
+    "dep:libutils-console", 
+    "dep:libutils-issue", 
+    "dep:stack-array"
+]
+std = [
+    "no-std", 
+    "dep:cagelock", 
+    "dep:libutils-report", 
+    "dep:libutils-terminal"
+]

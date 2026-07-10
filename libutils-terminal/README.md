@@ -7,9 +7,8 @@ This is an implementation using the standard library of `Console`.
 This crate exposes the Zero-Sized Type `Terminal` that just refers to the internals of the implementation.
 
 ```rust
-use libutils::terminal::Terminal;
-use libutils::console::Console;
-use libutils::console::Update;
+use libutils_terminal::Terminal;
+use libutils_console::{Console, Update};
 
 let terminal: Terminal = Terminal;
 

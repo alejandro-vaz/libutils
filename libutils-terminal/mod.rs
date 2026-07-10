@@ -2,6 +2,9 @@
 //^ HEAD
 //^
 
+//> HEAD -> DOCS
+#![doc = include_str!("README.md")]
+
 //> HEAD -> FEATURES
 #![feature(const_trait_impl)]
 #![feature(const_default)]

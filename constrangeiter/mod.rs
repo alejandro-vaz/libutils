@@ -5,6 +5,9 @@
 //> HEAD -> NO_STD
 #![no_std]
 
+//> HEAD -> DOCS
+#![doc = include_str!("README.md")]
+
 //> HEAD -> LINTS
 #![allow(unused_features)]
 

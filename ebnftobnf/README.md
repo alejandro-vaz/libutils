@@ -9,7 +9,7 @@ Transpiling from EBNF to BNF is an irritating process and writing a reducer that
 ## Usage
 
 ```rust
-use libutils::ebnftobnf::reduce;
+use ebnftobnf::reduce;
 
 fn main() -> () {
     let ebnf = "A: B+ (C* D)?";

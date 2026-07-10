@@ -2,6 +2,9 @@
 //^ HEAD
 //^
 
+//> HEAD -> DOCS
+#![doc = include_str!("README.md")]
+
 //> HEAD -> LINTS
 #![allow(incomplete_features)]
 

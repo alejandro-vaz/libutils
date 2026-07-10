@@ -2,13 +2,40 @@
 //^ LIBUTILS
 //^
 
-//> LIBUTILS -> CRATES
-pub extern crate bytediff;
-pub extern crate cagelock;
-pub extern crate constrangeiter;
-pub extern crate ebnftobnf;
-pub extern crate libutils_array as array;
-pub extern crate libutils_console as console;
-pub extern crate libutils_issue as issue;
-pub extern crate libutils_report as report;
-pub extern crate libutils_terminal as terminal;
+//> HEAD -> NO STD
+#![no_std]
+
+//> LIBUTILS -> DOCS
+#![doc = include_str!("README.md")]
+
+//> LIBUTILS -> IMPORTS
+#[cfg(feature = "no-alloc")]
+pub use noalloc::*;
+#[cfg(feature = "no-std")] 
+pub use nostd::*;
+#[cfg(feature = "std")] 
+pub use std::*;
+
+//> LIBUTILS -> NO ALLOC
+#[cfg(feature = "no-alloc")] 
+mod noalloc {
+    pub extern crate constrangeiter;
+}
+
+//> LIBUTILS -> NO STD
+#[cfg(feature = "no-std")] 
+mod nostd {
+    pub extern crate bytediff;
+    pub extern crate ebnftobnf;
+    pub extern crate libutils_console;
+    pub extern crate libutils_issue;
+    pub extern crate stack_array;
+}
+
+//> LIBUTILS -> STD
+#[cfg(feature = "std")] 
+mod std {
+    pub extern crate cagelock;
+    pub extern crate libutils_report;
+    pub extern crate libutils_terminal;
+}

@@ -2,15 +2,15 @@
 resolver = "3"
 members = [
     ".main", 
-    "array", 
     "bytediff", 
     "cagelock", 
-    "console", 
+    "libutils-console", 
     "constrangeiter", 
     "ebnftobnf",
-    "issue", 
-    "report", 
-    "terminal"
+    "libutils-issue", 
+    "libutils-report", 
+    "stack-array", 
+    "libutils-terminal"
 ]
 default-members = [".main"]
 
@@ -27,11 +27,11 @@ bytediff = {version = "0.0", path = "bytediff"}
 cagelock = {version = "0.0", path = "cagelock"}
 constrangeiter = {version = "0.0", path = "constrangeiter"}
 ebnftobnf = {version = "0.0", path = "ebnftobnf"}
-libutils-array = {version = "0.5", path = "array"}
-libutils-console = {version = "2.2", path = "console"}
-libutils-issue = {version = "0.1", path = "issue"}
-libutils-report = {version = "0.2", path = "report"}
-libutils-terminal = {version = "1.2", path = "terminal"}
+libutils-console = {version = "2.2", path = "libutils-console"}
+libutils-issue = {version = "0.1", path = "libutils-issue"}
+libutils-report = {version = "0.2", path = "libutils-report"}
+libutils-terminal = {version = "1.2", path = "libutils-terminal"}
+stack-array = {version = "0.6", path = "stack-array"}
 
 [profile.bench]
 lto = "fat"

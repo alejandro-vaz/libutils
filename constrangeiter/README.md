@@ -11,7 +11,7 @@ For that reason, we made a `ConstIntoIterator` trait implemented for the ranges 
 ## Usage
 
 ```rust
-use libutils::constrangeiter::ConstIntoIterator;
+use constrangeiter::ConstIntoIterator;
 
 const {
     for index in (0..6).const_into_iter() {

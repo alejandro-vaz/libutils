@@ -9,7 +9,7 @@ This type allows for updating terminal output without overwriting the full conte
 ## Usage
 
 ```rust
-use libutils::bytediff::Diff;
+use bytediff::Diff;
 
 const BEFORE: [u8; 5] = [0, 1, 2, 3, 4];
 const AFTER: [u8; 3] = [0, 1, 2];

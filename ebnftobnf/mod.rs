@@ -5,6 +5,9 @@
 //> HEAD -> NO STD
 #![no_std]
 
+//> HEAD -> DOCS
+#![doc = include_str!("README.md")]
+
 //> HEAD -> FEATURES
 #![feature(test)]
 

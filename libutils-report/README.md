@@ -9,7 +9,7 @@
 ## Usage
 
 ```rust
-use libutils::report::{
+use libutils_report::{
     Report,
     Same,
     Name

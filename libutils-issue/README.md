@@ -10,7 +10,9 @@ Easy, fast reporting to the user via a CLI with enough information.
 
 This type is not meant to be used by ordinary people writing code, but by library backends defining custom errors:
 
-```
+```rust
+use libutils_issue::Issue;
+
 enum MyError {
     FirstCause,
     SecondCause

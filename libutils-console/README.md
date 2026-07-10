@@ -5,6 +5,8 @@
 Types implementing it are commonly ZSTs that leverage opaque types and mutable statics behind the scenes to offer a good namespaced development experience.
 
 ```rust
+use libutils_console::Console;
+
 impl Console for Terminal {
     // ..
 }
@@ -22,6 +24,6 @@ Another special method on `Console` is the `.arguments() -> &[Argument]` method 
 
 ## When to use it
 
-Very few people should consider implementing their own `Console` type from default. Instead, use `libutils::terminal::Terminal`, which offers a better interface to the standard library.
+Very few people should consider implementing their own `Console` type from default. Instead, use `libutils_terminal::Terminal`, which offers a better interface to the standard library.
 
 However, to be able to use `Terminal`, you might need to import the traits from this module.
