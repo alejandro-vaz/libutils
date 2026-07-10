@@ -57,4 +57,5 @@ pub trait Console {
     fn problem(issue: Issue, chain: &[&'static str]) -> impl Update;
     fn print(value: impl Display) -> impl Update;
     fn debug(value: impl Debug) -> impl Update;
+    fn clear() -> impl Update;
 }

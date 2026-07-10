@@ -9,6 +9,7 @@ This is a general utility library containing all my crates to remove dependency 
 | [`bytediff`](https://crates.io/crates/bytediff) | A bytearray diff |
 | [`cagelock`](https://crates.io/crates/cagelock) | A thread-safe static mutable wrapper |
 | [`constrangeiter`](https://crates.io/crates/constrangeiter) | Constant iterators for ranges |
+| [`ebnftobnf`](https://crates.io/crates/ebnftobnf) | A straightforward EBNF to BNF reducer |
 | [`libutils-array`](https://crates.io/crates/libutils-array) | A maximum-sized array stored on the stack |
 | [`libutils-console`](https://crates.io/crates/libutils-console) | A simple generalized I/O interface |
 | [`libutils-issue`](https://crates.io/crates/libutils-issue) | A easy-to-use customizable error type |
@@ -19,4 +20,4 @@ This is a general utility library containing all my crates to remove dependency 
 
 Each crate has one feature which can be enabled or disabled to include or exclude that particular crate. All features are enabled by default.
 
-> Due to this crate making use of many nightly features, the MSRV is 1.98 on edition 2024.
+> Due to this crate making use of many nightly features, the MSRV is 1.99 on edition 2024.

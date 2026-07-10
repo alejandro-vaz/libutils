@@ -22,4 +22,4 @@ For more information about usage and features, see [`libutils-console`](https://
 
 Use this type when you want to have a `Console` environment in a normal Rust program.
 
-> ![WARNING] Libraries should **NOT** implement direct calls to a certain `Console` like `Terminal`, but allow the caller binary to provide one.
+> ![WARNING] Libraries should **NOT** implement direct calls to a certain `Console` instances like `Terminal`, but allow the caller binary to provide one or return `Result<T, Issue>`.

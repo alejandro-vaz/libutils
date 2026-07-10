@@ -28,10 +28,10 @@ cagelock = {version = "0.0", path = "cagelock"}
 constrangeiter = {version = "0.0", path = "constrangeiter"}
 ebnftobnf = {version = "0.0", path = "ebnftobnf"}
 libutils-array = {version = "0.5", path = "array"}
-libutils-console = {version = "2.1", path = "console"}
+libutils-console = {version = "2.2", path = "console"}
 libutils-issue = {version = "0.1", path = "issue"}
 libutils-report = {version = "0.2", path = "report"}
-libutils-terminal = {version = "1.1", path = "terminal"}
+libutils-terminal = {version = "1.2", path = "terminal"}
 
 [profile.bench]
 lto = "fat"

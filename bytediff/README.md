@@ -15,6 +15,8 @@ const BEFORE: [u8; 5] = [0, 1, 2, 3, 4];
 const AFTER: [u8; 3] = [0, 1, 2];
 
 let diff = Diff::new(&BEFORE, &AFTER);
+// when converted to Vec<u8> and appended to stdout,
+// output will become after
 ```
 
 `Diff` implements `Into<Vec<u8>>` which then can be written to some output stream. It will make sure to remove bytes not present anymore, and write the new ones (hence its lifetime is covariant over that of the second array);

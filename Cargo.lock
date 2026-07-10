@@ -19,7 +19,7 @@ checksum = "683d7910e743518b0e34f1186f92494becacb047c7b6bf616c96772180fef923"
 
 [[package]]
 name = "bytediff"
-version = "0.0.3"
+version = "0.0.4"
 
 [[package]]
 name = "cagelock"
@@ -31,7 +31,7 @@ version = "0.0.3"
 
 [[package]]
 name = "ebnftobnf"
-version = "0.0.0"
+version = "0.0.1"
 dependencies = [
  "hashbrown",
  "regex",
@@ -62,7 +62,7 @@ dependencies = [
 
 [[package]]
 name = "libutils"
-version = "4.0.0"
+version = "4.1.0"
 dependencies = [
  "bytediff",
  "cagelock",
@@ -77,25 +77,25 @@ dependencies = [
 
 [[package]]
 name = "libutils-array"
-version = "0.5.0"
+version = "0.5.1"
 dependencies = [
  "constrangeiter",
 ]
 
 [[package]]
 name = "libutils-console"
-version = "2.1.1"
+version = "2.2.0"
 dependencies = [
  "libutils-issue",
 ]
 
 [[package]]
 name = "libutils-issue"
-version = "0.1.4"
+version = "0.1.5"
 
 [[package]]
 name = "libutils-report"
-version = "0.2.8"
+version = "0.2.9"
 dependencies = [
  "libutils-console",
  "libutils-issue",
@@ -104,7 +104,7 @@ dependencies = [
 
 [[package]]
 name = "libutils-terminal"
-version = "1.1.2"
+version = "1.2.0"
 dependencies = [
  "bytediff",
  "cagelock",

@@ -5,9 +5,15 @@
 //> HEAD -> FEATURES
 #![feature(const_trait_impl)]
 #![feature(const_default)]
+#![feature(test)]
 #![feature(transmute_neo)]
 
+//> HEAD -> CRATES
+extern crate test;
+
 //> HEAD -> MODULES
+#[cfg(test)]
+mod benches;
 mod descriptor;
 mod metadata;
 mod problem;
@@ -102,6 +108,10 @@ impl Console for Terminal {
     }
     fn debug(value: impl Debug) -> impl UpdateTrait {
         LAYOUT.write(|layout| layout.push(Section::Debug(format!("{value:#?}"))));
+        return Update;
+    }
+    fn clear() -> impl UpdateTrait {
+        LAYOUT.write(Vec::clear);
         return Update;
     }
 }
