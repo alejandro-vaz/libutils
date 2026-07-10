@@ -15,13 +15,13 @@ description = "A general utility library"
 path = "./lib.rs"
 
 [dependencies]
+active-reporting = {workspace = true, optional = true}
 bytediff = {workspace = true, optional = true}
 cagelock = {workspace = true, optional = true}
 constrangeiter = {workspace = true, optional = true}
 ebnftobnf = {workspace = true, optional = true}
+issuing = {workspace = true, optional = true}
 libutils-console = {workspace = true, optional = true}
-libutils-issue = {workspace = true, optional = true}
-libutils-report = {workspace = true, optional = true}
 libutils-terminal = {workspace = true, optional = true}
 stack-array = {workspace = true, optional = true}
 
@@ -35,12 +35,12 @@ no-std = [
     "dep:bytediff", 
     "dep:ebnftobnf", 
     "dep:libutils-console", 
-    "dep:libutils-issue", 
+    "dep:issuing", 
     "dep:stack-array"
 ]
 std = [
     "no-std", 
+    "dep:active-reporting", 
     "dep:cagelock", 
-    "dep:libutils-report", 
     "dep:libutils-terminal"
 ]

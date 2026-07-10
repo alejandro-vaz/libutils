@@ -15,4 +15,4 @@ authors.workspace = true
 path = "./mod.rs"
 
 [dependencies]
-libutils-issue = {workspace = true}
+issuing = {workspace = true}

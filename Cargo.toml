@@ -2,13 +2,13 @@
 resolver = "3"
 members = [
     ".main", 
+    "active-reporting", 
     "bytediff", 
     "cagelock", 
     "libutils-console", 
     "constrangeiter", 
     "ebnftobnf",
-    "libutils-issue", 
-    "libutils-report", 
+    "issuing", 
     "stack-array", 
     "libutils-terminal"
 ]
@@ -23,13 +23,13 @@ license = "MIT"
 authors = ["Alejandro Vaz <alejandro.vaz.myt@gmail.com>"]
 
 [workspace.dependencies]
+active-reporting = {version = "0.0", path = "active-reporting"}
 bytediff = {version = "0.0", path = "bytediff"}
 cagelock = {version = "0.0", path = "cagelock"}
 constrangeiter = {version = "0.0", path = "constrangeiter"}
 ebnftobnf = {version = "0.0", path = "ebnftobnf"}
+issuing = {version = "0.0", path = "issuing"}
 libutils-console = {version = "2.2", path = "libutils-console"}
-libutils-issue = {version = "0.1", path = "libutils-issue"}
-libutils-report = {version = "0.2", path = "libutils-report"}
 libutils-terminal = {version = "1.2", path = "libutils-terminal"}
 stack-array = {version = "0.6", path = "stack-array"}
 

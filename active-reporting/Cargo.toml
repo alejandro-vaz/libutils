@@ -1,11 +1,11 @@
 [package]
-name = "libutils-report"
+name = "active-reporting"
 description = "A custom error wrapper for detailed logs"
-version = "0.2.10"
+version = "0.0.0"
 edition.workspace = true
 rust-version.workspace = true
 categories = ["caching", "development-tools::debugging", "rust-patterns"]
-keywords = ["reporting", "logging", "errors", "issue"]
+keywords = ["reporting", "logging", "errors", "issue", "active"]
 homepage.workspace = true
 repository.workspace = true
 license.workspace = true
@@ -15,6 +15,6 @@ authors.workspace = true
 path = "./mod.rs"
 
 [dependencies]
+issuing = {workspace = true}
 libutils-console = {workspace = true}
-libutils-issue = {workspace = true}
 libutils-terminal = {workspace = true}

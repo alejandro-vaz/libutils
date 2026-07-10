@@ -46,8 +46,8 @@ use cagelock::Cage;
 //> HEAD -> UPDATE
 use update::Update;
 
-//> HEAD -> ISSUE
-use libutils_issue::{
+//> HEAD -> ISSUING
+use issuing::{
     Issue,
     Severity
 };

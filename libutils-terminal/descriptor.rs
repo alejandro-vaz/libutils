@@ -17,8 +17,8 @@ use libutils_console::{
     Descriptor as DescriptorTrait
 };
 
-//> HEAD -> ISSUE
-use libutils_issue::{
+//> HEAD -> ISSUING
+use issuing::{
     Issue,
     Severity
 };

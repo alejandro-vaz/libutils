@@ -27,15 +27,15 @@ mod noalloc {
 mod nostd {
     pub extern crate bytediff;
     pub extern crate ebnftobnf;
+    pub extern crate issuing;
     pub extern crate libutils_console;
-    pub extern crate libutils_issue;
     pub extern crate stack_array;
 }
 
 //> LIBUTILS -> STD
 #[cfg(feature = "std")] 
 mod std {
+    pub extern crate active_reporting;
     pub extern crate cagelock;
-    pub extern crate libutils_report;
     pub extern crate libutils_terminal;
 }
