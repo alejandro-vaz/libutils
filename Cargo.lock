@@ -75,7 +75,7 @@ version = "0.0.0"
 
 [[package]]
 name = "libutils"
-version = "5.0.0"
+version = "5.0.1"
 dependencies = [
  "active-reporting",
  "bytediff",
@@ -90,14 +90,14 @@ dependencies = [
 
 [[package]]
 name = "libutils-console"
-version = "2.2.1"
+version = "2.2.2"
 dependencies = [
  "issuing",
 ]
 
 [[package]]
 name = "libutils-terminal"
-version = "1.2.1"
+version = "1.2.2"
 dependencies = [
  "bytediff",
  "cagelock",
