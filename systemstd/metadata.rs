@@ -2,8 +2,8 @@
 //^ HEAD
 //^
 
-//> HEAD -> CONSOLE
-use libutils_console::Metadata as MetadataTrait;
+//> HEAD -> SYSTEMIO
+use systemio::Metadata as MetadataTrait;
 
 //> HEAD -> STD
 use std::fs::Metadata as MetadataInfo;

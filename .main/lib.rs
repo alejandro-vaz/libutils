@@ -28,8 +28,8 @@ mod nostd {
     pub extern crate bytediff;
     pub extern crate ebnftobnf;
     pub extern crate issuing;
-    pub extern crate libutils_console;
     pub extern crate stack_array;
+    pub extern crate systemio;
 }
 
 //> LIBUTILS -> STD
@@ -37,5 +37,5 @@ mod nostd {
 mod std {
     pub extern crate active_reporting;
     pub extern crate cagelock;
-    pub extern crate libutils_terminal;
+    pub extern crate systemstd;
 }

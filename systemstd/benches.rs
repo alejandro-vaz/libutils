@@ -3,11 +3,13 @@
 //^
 
 //> HEAD -> SUPER
-use super::Terminal;
+use super::System;
 
-//> HEAD -> CONSOLE
-use libutils_console::{
-    Console, Descriptor, Update
+//> HEAD -> SYSTEMIO
+use systemio::{
+    SystemIO, 
+    Descriptor, 
+    Update
 };
 
 //> HEAD -> CORE
@@ -26,9 +28,9 @@ use test::Bencher;
 fn print(bencher: &mut Bencher) -> () {
     bencher.iter(|| {
         for _ in 0..100 {
-            black_box(Terminal::print(black_box("hello!"))).sync();
+            black_box(System::print(black_box("hello!"))).sync();
         }
-        Terminal::clear().sync();
+        System::clear().sync();
     });
 }
 
@@ -37,7 +39,7 @@ fn print(bencher: &mut Bencher) -> () {
 fn open(bencher: &mut Bencher) -> () {
     bencher.iter(|| {
         for _ in 0..100 {
-            Terminal::open("README.md").unwrap().close();
+            System::open("README.md").unwrap().close();
         }
     });
 }

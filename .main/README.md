@@ -12,9 +12,9 @@ This is a general utility library containing all my crates to remove dependency 
 | [`constrangeiter`](https://crates.io/crates/constrangeiter) | Constant iterators for ranges |
 | [`ebnftobnf`](https://crates.io/crates/ebnftobnf) | A straightforward EBNF to BNF reducer |
 | [`issuing`](https://crates.io/crates/issuing) | A easy-to-use customizable error type |
-| [`libutils-console`](https://crates.io/crates/libutils-console) | A simple generalized I/O interface |
-| [`libutils-terminal`](https://crates.io/crates/libutils-terminal) | A custom embedded terminal handler |
 | [`stack-array`](https://crates.io/crates/stack-array) | A maximum-sized array stored on the stack |
+| [`systemio`](https://crates.io/crates/systemio) | A simple generalized I/O interface |
+| [`systemstd`](https://crates.io/crates/systemstd) | A custom embedded terminal handler |
 
 ## Features
 

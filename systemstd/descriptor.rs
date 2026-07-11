@@ -11,8 +11,8 @@ use std::{
     }
 };
 
-//> HEAD -> CONSOLE
-use libutils_console::{
+//> HEAD -> SYSTEMIO
+use systemio::{
     Metadata as MetadataTrait,
     Descriptor as DescriptorTrait
 };

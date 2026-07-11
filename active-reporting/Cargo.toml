@@ -1,7 +1,7 @@
 [package]
 name = "active-reporting"
 description = "A custom error wrapper for detailed logs"
-version = "0.0.0"
+version = "0.0.1"
 edition.workspace = true
 rust-version.workspace = true
 categories = ["caching", "development-tools::debugging", "rust-patterns"]
@@ -16,5 +16,5 @@ path = "./mod.rs"
 
 [dependencies]
 issuing = {workspace = true}
-libutils-console = {workspace = true}
-libutils-terminal = {workspace = true}
+systemio = {workspace = true}
+systemstd = {workspace = true}

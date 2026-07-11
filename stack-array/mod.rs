@@ -10,7 +10,6 @@
 
 //> HEAD -> LINTS
 #![allow(incomplete_features)]
-#![allow(internal_features)]
 
 //> HEAD -> FEATURES
 #![feature(const_cmp)]

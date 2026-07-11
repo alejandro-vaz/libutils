@@ -5,12 +5,12 @@ members = [
     "active-reporting", 
     "bytediff", 
     "cagelock", 
-    "libutils-console", 
     "constrangeiter", 
     "ebnftobnf",
     "issuing", 
     "stack-array", 
-    "libutils-terminal"
+    "systemio", 
+    "systemstd"
 ]
 default-members = [".main"]
 
@@ -29,9 +29,9 @@ cagelock = {version = "0.0", path = "cagelock"}
 constrangeiter = {version = "0.0", path = "constrangeiter"}
 ebnftobnf = {version = "1.0", path = "ebnftobnf"}
 issuing = {version = "0.0", path = "issuing"}
-libutils-console = {version = "2.2", path = "libutils-console"}
-libutils-terminal = {version = "1.2", path = "libutils-terminal"}
 stack-array = {version = "0.6", path = "stack-array"}
+systemio = {version = "0.0", path = "systemio"}
+systemstd = {version = "0.0", path = "systemstd"}
 
 [profile.bench]
 lto = "fat"

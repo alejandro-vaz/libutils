@@ -50,11 +50,11 @@ pub use descriptor::Descriptor;
 
 
 //^
-//^ CONSOLE
+//^ SYSTEMIO
 //^
 
-//> CONSOLE -> TRAIT
-pub trait Console {
+//> SYSTEMIO -> TRAIT
+pub trait SystemIO {
     fn arguments() -> &'static [Argument];
     fn open(filename: &str) -> Result<impl Descriptor, Issue>;
     fn problem(issue: Issue, chain: &[&'static str]) -> impl Update;

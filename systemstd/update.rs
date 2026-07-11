@@ -14,8 +14,8 @@ use std::io::{
     Write
 };
 
-//> HEAD -> CONSOLE
-use libutils_console::Update as UpdateTrait;
+//> HEAD -> SYSTEMIO
+use systemio::Update as UpdateTrait;
 
 //> HEAD -> BYTEDIFF
 use bytediff::Diff;

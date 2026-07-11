@@ -4,11 +4,11 @@ version = 4
 
 [[package]]
 name = "active-reporting"
-version = "0.0.0"
+version = "0.0.1"
 dependencies = [
  "issuing",
- "libutils-console",
- "libutils-terminal",
+ "systemio",
+ "systemstd",
 ]
 
 [[package]]
@@ -76,7 +76,7 @@ version = "0.0.0"
 
 [[package]]
 name = "libutils"
-version = "6.0.0"
+version = "7.0.0"
 dependencies = [
  "active-reporting",
  "bytediff",
@@ -84,26 +84,9 @@ dependencies = [
  "constrangeiter",
  "ebnftobnf",
  "issuing",
- "libutils-console",
- "libutils-terminal",
  "stack-array",
-]
-
-[[package]]
-name = "libutils-console"
-version = "2.2.2"
-dependencies = [
- "issuing",
-]
-
-[[package]]
-name = "libutils-terminal"
-version = "1.2.2"
-dependencies = [
- "bytediff",
- "cagelock",
- "issuing",
- "libutils-console",
+ "systemio",
+ "systemstd",
 ]
 
 [[package]]
@@ -143,9 +126,26 @@ checksum = "d6f6ff9a378485b298a5286656da665ba74413d36db0979633275d2e708145d4"
 
 [[package]]
 name = "stack-array"
-version = "0.6.0"
+version = "0.6.1"
 dependencies = [
  "constrangeiter",
+]
+
+[[package]]
+name = "systemio"
+version = "0.0.0"
+dependencies = [
+ "issuing",
+]
+
+[[package]]
+name = "systemstd"
+version = "0.0.0"
+dependencies = [
+ "bytediff",
+ "cagelock",
+ "issuing",
+ "systemio",
 ]
 
 [[package]]

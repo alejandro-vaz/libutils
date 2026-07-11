@@ -52,9 +52,9 @@ use issuing::{
     Severity
 };
 
-//> HEAD -> CONSOLE
-use libutils_console::{
-    Console,
+//> HEAD -> SYSTEMIO
+use systemio::{
+    SystemIO,
     Argument,
     Update as UpdateTrait,
     Descriptor as DescriptorTrait
@@ -71,19 +71,19 @@ use descriptor::Descriptor;
 
 
 //^
-//^ TERMINAL
+//^ SYSTEM
 //^
 
-//> TERMINAL -> DATA
+//> SYSTEM -> DATA
 static ARGUMENTS: LazyLock<Vec<Argument>> = LazyLock::new(|| args().map(Argument::from).collect());
 static LAYOUT: Cage<Vec<Section>> = Cage::default();
 static OUTPUT: Cage<String> = Cage::default();
 
-//> TERMINAL -> STRUCT
-pub struct Terminal;
+//> SYSTEM -> STRUCT
+pub struct System;
 
-//> TERMINAL -> IMPLEMENTATION
-impl Console for Terminal {
+//> SYSTEM -> IMPLEMENTATION
+impl SystemIO for System {
     fn arguments() -> &'static [Argument] {return ARGUMENTS.as_slice()}
     fn open(filename: &str) -> Result<impl DescriptorTrait, Issue> {
         match File::open(PathBuf::from(filename)) {
