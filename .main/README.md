@@ -6,13 +6,13 @@ This is a general utility library containing all my crates to remove dependency 
 
 | Crate | Description |
 |:-|:-|
+| [`active-reporting`](https://crates.io/crates/active-reporting) | A custom error wrapper for detailed logs |
 | [`bytediff`](https://crates.io/crates/bytediff) | A bytearray diff |
 | [`cagelock`](https://crates.io/crates/cagelock) | A thread-safe static mutable wrapper |
 | [`constrangeiter`](https://crates.io/crates/constrangeiter) | Constant iterators for ranges |
 | [`ebnftobnf`](https://crates.io/crates/ebnftobnf) | A straightforward EBNF to BNF reducer |
+| [`issuing`](https://crates.io/crates/issuing) | A easy-to-use customizable error type |
 | [`libutils-console`](https://crates.io/crates/libutils-console) | A simple generalized I/O interface |
-| [`libutils-issue`](https://crates.io/crates/libutils-issue) | A easy-to-use customizable error type |
-| [`libutils-report`](https://crates.io/crates/libutils-report) | A custom error wrapper for detailed logs |
 | [`libutils-terminal`](https://crates.io/crates/libutils-terminal) | A custom embedded terminal handler |
 | [`stack-array`](https://crates.io/crates/stack-array) | A maximum-sized array stored on the stack |
 

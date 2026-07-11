@@ -9,19 +9,20 @@ Transpiling from EBNF to BNF is an irritating process and writing a reducer that
 ## Usage
 
 ```rust
-use ebnftobnf::reduce;
+use ebnftobnf::{
+    reduce,
+    Settings
+};
 
 fn main() -> () {
     let ebnf = "A: B+ (C* D)?";
-    let bnf: String = reduce(ebnf);
+    let bnf: String = reduce(ebnf, Settings {..});
 }
 ```
 
 ## BNF format
 
-The function returns a `String` who has deduplicated temporal productions. The format of a temporal production is `${N}` where N is a number.
-
-The delimiter between the rule name and the productions and derivations is now fixed to be `": "`.
+The input and output format can be customized with the struct `Settings`. It allows for changing many aspects of the (E)BNF flavour such as commenty style, delimiters, how temporal productions look, and whether to include comments or empty lines in the produced EBNF, among others.
 
 ## When to use it
 

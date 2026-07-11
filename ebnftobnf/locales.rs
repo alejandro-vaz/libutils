@@ -17,17 +17,17 @@ use regex::Regex;
 //^
 
 //> LOCALES -> STRUCT
-pub struct Locales {
+pub struct Locales<'arena> {
     pub parentheses: Map<String, usize>,
-    pub more: Map<String, usize> ,
-    pub multiple: Map<String, usize>,
-    pub optional: Map<String, usize>,
+    pub more: Map<&'arena str, usize> ,
+    pub multiple: Map<&'arena str, usize>,
+    pub optional: Map<&'arena str, usize>,
     pub collapse: Regex,
     pub postfix: Regex
 }
 
 //> LOCALES -> DEFAULT
-impl Default for Locales {
+impl<'arena> Default for Locales<'arena> {
     fn default() -> Self {return Self {
         parentheses: Map::new(),
         more: Map::new(),

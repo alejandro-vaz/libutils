@@ -27,7 +27,7 @@ active-reporting = {version = "0.0", path = "active-reporting"}
 bytediff = {version = "0.0", path = "bytediff"}
 cagelock = {version = "0.0", path = "cagelock"}
 constrangeiter = {version = "0.0", path = "constrangeiter"}
-ebnftobnf = {version = "0.0", path = "ebnftobnf"}
+ebnftobnf = {version = "1.0", path = "ebnftobnf"}
 issuing = {version = "0.0", path = "issuing"}
 libutils-console = {version = "2.2", path = "libutils-console"}
 libutils-terminal = {version = "1.2", path = "libutils-terminal"}

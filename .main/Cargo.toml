@@ -1,6 +1,6 @@
 [package]
 name = "libutils"
-version = "5.0.1"
+version = "6.0.0"
 edition.workspace = true
 authors.workspace = true
 rust-version.workspace = true
