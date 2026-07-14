@@ -24,7 +24,6 @@
 #![feature(const_clone)]
 #![feature(new_range)]
 #![feature(const_slice_make_iter)]
-#![feature(test)]
 #![feature(const_ops)]
 #![feature(generic_const_exprs)]
 #![feature(const_iter)]
@@ -33,11 +32,8 @@
 
 //> HEAD -> CRATES
 extern crate alloc;
-extern crate test;
 
 //> HEAD -> MODULES
-#[cfg(test)]
-mod benches;
 mod comparisons;
 mod conversions;
 mod iterators;

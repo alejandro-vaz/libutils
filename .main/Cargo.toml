@@ -17,10 +17,11 @@ path = "./lib.rs"
 [dependencies]
 active-reporting = {workspace = true, optional = true}
 bytediff = {workspace = true, optional = true}
-cagelock = {workspace = true, optional = true}
+cachetypes = {workspace = true, optional = true}
 constrangeiter = {workspace = true, optional = true}
 ebnftobnf = {workspace = true, optional = true}
 issuing = {workspace = true, optional = true}
+locks = {workspace = true, optional = true}
 stack-array = {workspace = true, optional = true}
 systemio = {workspace = true, optional = true}
 systemstd = {workspace = true, optional = true}
@@ -28,7 +29,9 @@ systemstd = {workspace = true, optional = true}
 [features]
 default = ["std"]
 no-alloc = [
-    "dep:constrangeiter"
+    "dep:cachetypes",
+    "dep:constrangeiter",
+    "dep:locks"
 ]
 no-std = [
     "no-alloc",
@@ -41,6 +44,5 @@ no-std = [
 std = [
     "no-std", 
     "dep:active-reporting", 
-    "dep:cagelock", 
     "dep:systemstd"
 ]

@@ -17,14 +17,8 @@
 #![feature(const_default)]
 #![feature(never_type)]
 #![feature(generic_const_exprs)]
-#![feature(test)]
-
-//> HEAD -> CRATES
-extern crate test;
 
 //> HEAD -> MODULES
-#[cfg(test)]
-mod benches;
 mod state;
 #[cfg(test)]
 mod tests;

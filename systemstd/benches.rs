@@ -2,8 +2,8 @@
 //^ HEAD
 //^
 
-//> HEAD -> SUPER
-use super::System;
+//> HEAD -> SYSTEMSTD
+use systemstd::System;
 
 //> HEAD -> SYSTEMIO
 use systemio::{
@@ -15,31 +15,33 @@ use systemio::{
 //> HEAD -> CORE
 use core::hint::black_box;
 
-//> HEAD -> TEST
-use test::Bencher;
+//> HEAD -> CRITERION
+use criterion::{
+    Criterion,
+    criterion_group,
+    criterion_main,
+    Throughput
+};
 
 
 //^
 //^ BENCHES
 //^
 
-//> BENCHES -> PRINT
-#[bench]
-fn print(bencher: &mut Bencher) -> () {
-    bencher.iter(|| {
-        for _ in 0..100 {
-            black_box(System::print(black_box("hello!"))).sync();
-        }
-        System::clear().sync();
-    });
-}
+//> BENCHES -> SETUP
+criterion_group!(systemstd, benches);
+criterion_main!(systemstd);
 
-//> BENCHES -> OPEN
-#[bench]
-fn open(bencher: &mut Bencher) -> () {
-    bencher.iter(|| {
-        for _ in 0..100 {
-            System::open("README.md").unwrap().close();
-        }
-    });
+//> BENCHES -> RUN
+fn benches(criterion: &mut Criterion) -> () {
+    let mut group = criterion.benchmark_group("systemstd");
+    const ITERATIONS: usize = 100;
+    group.throughput(Throughput::Elements(ITERATIONS as u64));
+    group.bench_function("print", |bencher| bencher.iter(|| for _ in 0..ITERATIONS {
+        System::print(black_box("hello!")).sync();
+    }));
+    System::clear().sync();
+    group.bench_function("open", |bencher| bencher.iter(|| for _ in 0..ITERATIONS {
+        System::open("README.md").unwrap().close();
+    }));
 }

@@ -3,10 +3,7 @@
 //^
 
 //> HEAD -> ISSUING
-use issuing::{
-    Issue,
-    Severity
-};
+use issuing::Issue;
 
 //> HEAD -> ALLOC
 use alloc::{
@@ -33,7 +30,7 @@ pub trait Descriptor: Sized {
     fn read(&mut self) -> Result<String, Issue> {return String::from_utf8(self.read_bytes()?).map_err(|error| Issue {
         name: "Error encoding file to UTF-8",
         description: Some(error.to_string()),
-        severity: Severity::Error
+        ..
     })}
     fn write_bytes(&mut self, content: &[u8]) -> Result<(), Issue>;
     fn write(&mut self, content: &str) -> Result<(), Issue> {return self.write_bytes(content.as_bytes())}

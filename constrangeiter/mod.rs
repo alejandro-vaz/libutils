@@ -21,13 +21,11 @@
 #![feature(const_try)]
 #![feature(const_cmp)]
 #![feature(trusted_len)]
-#![feature(test)]
 #![feature(const_destruct)]
 #![feature(new_range)]
 
 //> HEAD -> CRATES
 extern crate alloc;
-extern crate test;
 
 //> HEAD -> MODULES
 mod range;

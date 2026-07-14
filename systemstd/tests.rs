@@ -26,3 +26,10 @@ fn cli() -> () {
     let mut file = System::open("myfile.txt").unwrap();
     let _content = file.read().unwrap();
 }
+
+//> TESTS -> ERASE
+#[test]
+fn erase() -> () {
+    System::print("hello").sync();
+    System::clear().sync();
+}

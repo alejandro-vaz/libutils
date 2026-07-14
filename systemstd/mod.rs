@@ -8,15 +8,10 @@
 //> HEAD -> FEATURES
 #![feature(const_trait_impl)]
 #![feature(const_default)]
-#![feature(test)]
+#![feature(default_field_values)]
 #![feature(transmute_neo)]
 
-//> HEAD -> CRATES
-extern crate test;
-
 //> HEAD -> MODULES
-#[cfg(test)]
-mod benches;
 mod descriptor;
 mod metadata;
 mod problem;
@@ -40,17 +35,14 @@ use core::fmt::{
     Display
 };
 
-//> HEAD -> CAGELOCK
-use cagelock::Cage;
+//> HEAD -> LOCKS
+use locks::Mutex;
 
 //> HEAD -> UPDATE
 use update::Update;
 
 //> HEAD -> ISSUING
-use issuing::{
-    Issue,
-    Severity
-};
+use issuing::Issue;
 
 //> HEAD -> SYSTEMIO
 use systemio::{
@@ -76,8 +68,8 @@ use descriptor::Descriptor;
 
 //> SYSTEM -> DATA
 static ARGUMENTS: LazyLock<Vec<Argument>> = LazyLock::new(|| args().map(Argument::from).collect());
-static LAYOUT: Cage<Vec<Section>> = Cage::default();
-static OUTPUT: Cage<String> = Cage::default();
+static LAYOUT: Mutex<Vec<Section>> = Mutex::default();
+static OUTPUT: Mutex<String> = Mutex::default();
 
 //> SYSTEM -> STRUCT
 pub struct System;
@@ -85,20 +77,18 @@ pub struct System;
 //> SYSTEM -> IMPLEMENTATION
 impl SystemIO for System {
     fn arguments() -> &'static [Argument] {return ARGUMENTS.as_slice()}
-    fn open(filename: &str) -> Result<impl DescriptorTrait, Issue> {
-        match File::open(PathBuf::from(filename)) {
-            Ok(file) => Ok(Descriptor {
-                file: file
-            }),
-            Err(error) => Err(Issue {
-                name: "Failed to open file",
-                description: Some(error.to_string()),
-                severity: Severity::Error
-            })
-        }
-    }
+    fn open(filename: &str) -> Result<impl DescriptorTrait, Issue> {match File::open(PathBuf::from(filename)) {
+        Ok(file) => Ok(Descriptor {
+            file: file
+        }),
+        Err(error) => Err(Issue {
+            name: "Failed to open file",
+            description: Some(error.to_string()),
+            ..
+        })
+    }}
     fn problem(issue: Issue, chain: &[&'static str]) -> impl UpdateTrait {
-        LAYOUT.write(|layout| layout.push(Section::Problem(Problem {
+        LAYOUT.get(|layout| layout.push(Section::Problem(Problem {
             chain: Vec::from(chain),
             issue: issue,
             _at: Instant::now()
@@ -106,15 +96,15 @@ impl SystemIO for System {
         return Update;
     }
     fn print(value: impl Display) -> impl UpdateTrait {
-        LAYOUT.write(|layout| layout.push(Section::Display(value.to_string())));
+        LAYOUT.get(|layout| layout.push(Section::Display(value.to_string())));
         return Update;
     }
     fn debug(value: impl Debug) -> impl UpdateTrait {
-        LAYOUT.write(|layout| layout.push(Section::Debug(format!("{value:#?}"))));
+        LAYOUT.get(|layout| layout.push(Section::Debug(format!("{value:#?}"))));
         return Update;
     }
     fn clear() -> impl UpdateTrait {
-        LAYOUT.write(Vec::clear);
+        LAYOUT.get(|layout| layout.clear());
         return Update;
     }
 }

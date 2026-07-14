@@ -3,7 +3,7 @@
 //^
 
 //> HEAD -> SUPER
-use super::Cage;
+use super::Mutex;
 
 
 //^
@@ -11,6 +11,6 @@ use super::Cage;
 //^
 
 //> FROM -> FUNCTION
-const impl<Type, Generator: [const] FnOnce() -> Type> From<Generator> for Cage<Type> {
+const impl<Type, Generator: [const] FnOnce() -> Type> From<Generator> for Mutex<Type> {
     fn from(value: Generator) -> Self {return Self::new(value())}
 }

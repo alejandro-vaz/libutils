@@ -9,20 +9,19 @@
 #![doc = include_str!("README.md")]
 
 //> HEAD -> FEATURES
-#![feature(test)]
 #![feature(default_field_values)]
 #![feature(const_convert)]
 #![feature(const_trait_impl)]
 
 //> HEAD -> CRATES
 extern crate alloc;
-extern crate test;
 
 //> HEAD -> MODULES
-#[cfg(test)]
-mod benches;
+mod commentstyle;
+mod delimiter;
 mod locales;
 mod settings;
+mod temporalproductionstyle;
 #[cfg(test)]
 mod tests;
 
@@ -31,7 +30,6 @@ use locales::Locales;
 
 //> HEAD -> ALLOC
 use alloc::{
-    vec::Vec,
     string::{
         String,
         ToString
@@ -43,12 +41,19 @@ use alloc::{
 use typed_arena::Arena;
 
 //> HEAD -> SETTINGS
-pub use settings::{
-    Settings,
-    CommentStyle,
-    TemporalProductionStyle,
-    Delimiter
-};
+pub use settings::Settings;
+
+//> HEAD -> COMMENTSTYLE
+pub use commentstyle::CommentStyle;
+
+//> HEAD -> DELIMITER
+pub use delimiter::Delimiter;
+
+//> HEAD -> TEMPORALPRODUCTIONSTYLE
+pub use temporalproductionstyle::TemporalProductionStyle;
+
+//> HEAD -> HASHBROWN
+use hashbrown::HashSet as Set;
 
 
 //^
@@ -57,17 +62,17 @@ pub use settings::{
 
 //> REDUCER -> FUNCTION
 pub fn reduce(ebnf: &str, settings: Settings) -> String {
-    let mut rules = Vec::new();
+    let mut rules = Set::new();
     let mut counter = 0;
     let arena = Arena::new();
     let mut locales = Locales::default();
     for line in ebnf.lines().map(|line| line.trim()) {
         if line.is_empty() {
-            if settings.keep_empty_lines {rules.push(line.to_string())};
+            if settings.keep_empty_lines {rules.insert(line.to_string());}
             continue;
         }
         if line.starts_with(char::from(settings.comment_style)) {
-            if settings.keep_comments {rules.push(line.to_string())};
+            if settings.keep_comments {rules.insert(line.to_string());}
             continue;
         }
         let (rule, mut production) = line.split_once(
@@ -77,9 +82,20 @@ pub fn reduce(ebnf: &str, settings: Settings) -> String {
             second.trim().to_string()
         )).unwrap();
         expand(&mut production, &mut locales, &mut counter, &mut rules, &arena, settings);
-        rules.push(format!("{rule}{}{production}", <&'static str>::from(settings.delimiter)));
+        rules.insert(format!("{rule}{}{production}", <&'static str>::from(settings.delimiter)));
     };
-    return rules.join("\n");
+    rules.insert(format!(
+        "{}0{}Start",
+        char::from(settings.temporal_production_style),
+        <&'static str>::from(settings.delimiter)
+    ));
+    let mut full = String::new();
+    for rule in rules {
+        full.push_str(&rule);
+        full.push('\n');
+    };
+    full.pop();
+    return full;
 }
 
 //> REDUCER -> EXPAND
@@ -87,7 +103,7 @@ fn expand<'arena>(
     production: &mut String, 
     locales: &mut Locales<'arena>, 
     counter: &mut usize, 
-    rules: &mut Vec<String>, 
+    rules: &mut Set<String>, 
     arena: &'arena Arena<String>,
     settings: Settings
 ) -> () {
@@ -98,7 +114,7 @@ fn expand<'arena>(
             *counter
         });
         expand(&mut inside, locales, counter, rules, arena, settings);
-        rules.push(format!(
+        rules.insert(format!(
             "{}{symbol}{}{inside}", 
             char::from(settings.temporal_production_style), 
             <&'static str>::from(settings.delimiter)
@@ -122,7 +138,7 @@ fn expand<'arena>(
             *counter += 1;
             *counter
         });
-        rules.push(format!(
+        rules.insert(format!(
             "{}{symbol}{}{atom} {}",
             char::from(settings.temporal_production_style),
             <&'static str>::from(settings.delimiter),

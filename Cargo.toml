@@ -4,10 +4,11 @@ members = [
     ".main", 
     "active-reporting", 
     "bytediff", 
-    "cagelock", 
+    "cachetypes",
     "constrangeiter", 
     "ebnftobnf",
     "issuing", 
+    "locks", 
     "stack-array", 
     "systemio", 
     "systemstd"
@@ -25,10 +26,11 @@ authors = ["Alejandro Vaz <alejandro.vaz.myt@gmail.com>"]
 [workspace.dependencies]
 active-reporting = {version = "0.0", path = "active-reporting"}
 bytediff = {version = "0.0", path = "bytediff"}
-cagelock = {version = "0.0", path = "cagelock"}
+cachetypes = {version = "0.0", path = "cachetypes"}
 constrangeiter = {version = "0.0", path = "constrangeiter"}
 ebnftobnf = {version = "1.0", path = "ebnftobnf"}
 issuing = {version = "0.0", path = "issuing"}
+locks = {version = "0.0", path = "locks"}
 stack-array = {version = "0.6", path = "stack-array"}
 systemio = {version = "0.0", path = "systemio"}
 systemstd = {version = "0.0", path = "systemstd"}

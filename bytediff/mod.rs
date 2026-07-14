@@ -8,16 +8,10 @@
 //> HEAD -> DOCS
 #![doc = include_str!("README.md")]
 
-//> HEAD -> FEATURES
-#![feature(test)]
-
 //> HEAD -> CRATES
 extern crate alloc;
-extern crate test;
 
 //> HEAD -> MODULES
-#[cfg(test)]
-mod benches;
 #[cfg(test)]
 mod tests;
 

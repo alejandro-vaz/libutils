@@ -19,7 +19,9 @@ pub use std::*;
 //> LIBUTILS -> NO ALLOC
 #[cfg(feature = "no-alloc")] 
 mod noalloc {
+    pub extern crate cachetypes;
     pub extern crate constrangeiter;
+    pub extern crate locks;
 }
 
 //> LIBUTILS -> NO STD
@@ -36,6 +38,5 @@ mod nostd {
 #[cfg(feature = "std")] 
 mod std {
     pub extern crate active_reporting;
-    pub extern crate cagelock;
     pub extern crate systemstd;
 }

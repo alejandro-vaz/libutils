@@ -2,55 +2,62 @@
 //^ HEAD
 //^
 
-//> HEAD -> SUPER
-use super::Array;
+//> HEAD -> LINTS
+#![allow(incomplete_features)]
 
-//> HEAD -> TEST
-use test::Bencher;
+//> HEAD -> FEATURES
+#![feature(generic_const_exprs)]
+
+//> HEAD -> SUPER
+use stack_array::Array;
 
 //> HEAD -> CORE
 use core::hint::black_box;
+
+//> HEAD -> CRITERION
+use criterion::{
+    Criterion,
+    criterion_group,
+    criterion_main,
+    Throughput
+};
 
 
 //^
 //^ BENCHES
 //^
 
-//> BENCHES -> PUSHPOP
-#[bench]
-fn pushpop(bencher: &mut Bencher) -> () {
-    let mut array = Array::<u8, 1>::new();
-    bencher.iter(|| {
-        for _ in 0..2usize.pow(2u32.pow(2u32.pow(2))) {
-            array.push(black_box(0));
-            let x = black_box(array.pop());
-            black_box(x);
-        }
-    });
-}
+//> BENCHES -> SETUP
+criterion_group!(stack_array, benches);
+criterion_main!(stack_array);
 
-//> BENCHES -> INSERTREMOVE
-#[bench]
-fn insertremove(bencher: &mut Bencher) -> () {
-    let mut array = Array::<u8, 5>::from([1, 2, 3]);
-    bencher.iter(|| {
-        for _ in 0..2usize.pow(2u32.pow(2u32.pow(2))) {
-            array.insert(black_box(0), black_box(0));
-            let x = array.remove(black_box(0));
-            black_box(x);
-        }
-    });
-}
-
-//> BENCHES -> EXTENDCLEAR
-#[bench]
-fn extendclear(bencher: &mut Bencher) -> () {
-    let mut array = Array::<u8, 10>::new();
-    let source = [1, 2, 3, 4, 5];
-    bencher.iter(|| {
-        for _ in 0..2usize.pow(2u32.pow(2u32.pow(2))) {
-            array.extend(black_box(source));
-            array.clear();
-        }
-    });
+//> BENCHES -> RUN
+fn benches(criterion: &mut Criterion) -> () {
+    let mut group = criterion.benchmark_group("stack-array");
+    const ITERATIONS: usize = 10000;
+    group.throughput(Throughput::Elements(ITERATIONS as u64));
+    let mut array = Array::<u8, 10>::from([1, 2, 3]);
+    group.bench_function("pushpop", |bencher| bencher.iter(|| for _ in 0..ITERATIONS {
+        array.push(black_box(0));
+        let x = black_box(array.pop());
+        black_box(x);
+    }));
+    let mut vector = Vec::with_capacity(10);
+    vector.push(1);
+    vector.push(2);
+    vector.push(3);
+    group.bench_function("veccomparison", |bencher| bencher.iter(|| for _ in 0..ITERATIONS {
+        vector.push(black_box(0));
+        let x = black_box(array.pop());
+        black_box(x);
+    }));
+    group.bench_function("insertremove", |bencher| bencher.iter(|| for _ in 0..ITERATIONS {
+        array.insert(black_box(0), black_box(0));
+        let x = array.remove(black_box(0));
+        black_box(x);
+    }));
+    group.bench_function("extendclear", |bencher| bencher.iter(|| for _ in 0..ITERATIONS {
+        array.extend(black_box([1, 2, 3, 4, 5]));
+        array.clear();
+    }));
 }

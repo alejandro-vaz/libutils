@@ -31,11 +31,11 @@ pub struct Update;
 //> UPDATE -> TRAIT
 impl UpdateTrait for Update {
     fn sync(self) -> () {
-        let mut content = LAYOUT.read(|layout| {
+        let mut content = LAYOUT.get(|layout| {
             layout.iter().map(ToString::to_string).collect::<Vec<String>>()
         }).join("\n\n");
         content.push('\n');
-        OUTPUT.write(|output| {
+        OUTPUT.get(|output| {
             let mut lock = stdout().lock();
             lock.write(<Diff as Into<Vec<u8>>>::into(Diff::new(
                 output.as_bytes(), 

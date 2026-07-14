@@ -18,10 +18,7 @@ use systemio::{
 };
 
 //> HEAD -> ISSUING
-use issuing::{
-    Issue,
-    Severity
-};
+use issuing::Issue;
 
 //> HEAD -> SUPER
 use super::metadata::Metadata;
@@ -46,7 +43,7 @@ impl DescriptorTrait for Descriptor {
         Err(error) => Err(Issue {
             name: "Failed to read size of file",
             description: Some(error.to_string()),
-            severity: Severity::Error
+            ..
         })
     }}
     fn read_bytes(&mut self) -> Result<Vec<u8>, Issue> {
@@ -56,7 +53,7 @@ impl DescriptorTrait for Descriptor {
             Err(error) => Err(Issue {
                 name: "Failed to read file as binary",
                 description: Some(error.to_string()),
-                severity: Severity::Error
+                ..
             })
         }
     }
@@ -65,7 +62,7 @@ impl DescriptorTrait for Descriptor {
         Err(error) => Err(Issue {
             name: "Failure writing to file",
             description: Some(error.to_string()),
-            severity: Severity::Error
+            ..
         })
     }}
 }

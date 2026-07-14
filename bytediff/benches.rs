@@ -2,29 +2,38 @@
 //^ HEAD
 //^
 
-//> HEAD -> SUPER
-use super::Diff;
-
-//> HEAD -> TEST
-use test::Bencher;
+//> HEAD -> BYTEDIFF
+use bytediff::Diff;
 
 //> HEAD -> CORE
 use core::hint::black_box;
+
+//> HEAD -> CRITERION
+use criterion::{
+    Criterion,
+    criterion_group,
+    criterion_main,
+    Throughput
+};
 
 
 //^
 //^ BENCHES
 //^
 
-//> BENCHES -> NEW
-#[bench]
-fn new(bencher: &mut Bencher) -> () {
-    const ITERATIONS: usize = 2usize.pow(2u32.pow(2u32.pow(2)));
+//> BENCHES -> SETUP
+criterion_group!(bytediff, benches);
+criterion_main!(bytediff);
+
+//> BENCHES -> RUN
+fn benches(criterion: &mut Criterion) -> () {
+    let mut group = criterion.benchmark_group("bytediff");
+    const ITERATIONS: usize = 10000;
+    group.throughput(Throughput::Bytes(ITERATIONS as u64));
     let void = [0].repeat(ITERATIONS);
     let mut big = [0].repeat(ITERATIONS);
     big.push(0);
-    bencher.iter(|| {
-        let x = Diff::new(black_box(&void), black_box(&big));
-        black_box(x);
-    });
+    group.bench_function("new", |bencher| bencher.iter(|| {
+        black_box(Diff::new(black_box(&void), black_box(&big)));
+    }));
 }

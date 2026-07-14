@@ -2,33 +2,36 @@
 //^ HEAD
 //^
 
-//> HEAD -> SUPER
-use super::Argument;
-
-//> HEAD -> ALLOC
-use alloc::{
-    string::ToString,
-    vec::Vec
-};
-
-//> HEAD -> TEST
-use test::Bencher;
+//> HEAD -> SYSTEMIO
+use systemio::Argument;
 
 //> HEAD -> CORE
 use core::hint::black_box;
+
+//> HEAD -> CRITERION
+use criterion::{
+    Criterion,
+    criterion_group,
+    criterion_main,
+    Throughput
+};
 
 
 //^
 //^ BENCHES
 //^
 
-//> BENCHES -> PARSING
-#[bench]
-fn parsing(bencher: &mut Bencher) -> () {
+//> BENCHES -> SETUP
+criterion_group!(systemio, benches);
+criterion_main!(systemio);
+
+//> BENCHES -> RUN
+fn benches(criterion: &mut Criterion) -> () {
+    let mut group = criterion.benchmark_group("systemio");
+    const ITERATIONS: usize = 100;
     let arguments = ["myexec.exect", "rm", "-rf", "--please", "--opt=true", "&"];
-    bencher.iter(|| {
-        for _ in 0..2usize.pow(2u32.pow(2)) {
-            black_box(arguments.into_iter().map(ToString::to_string).map(Into::into).collect::<Vec<Argument>>());
-        }
-    });
+    group.throughput(Throughput::Elements((ITERATIONS * arguments.len()) as u64));
+    group.bench_function("parsing", |bencher| bencher.iter(|| for _ in 0..ITERATIONS {
+        black_box(arguments.into_iter().map(ToString::to_string).map(Into::into).collect::<Vec<Argument>>());
+    }));
 }
