@@ -19,7 +19,6 @@ pub use std::*;
 //> LIBUTILS -> NO ALLOC
 #[cfg(feature = "no-alloc")] 
 mod noalloc {
-    pub extern crate cachetypes;
     pub extern crate constrangeiter;
     pub extern crate locks;
 }
@@ -28,6 +27,7 @@ mod noalloc {
 #[cfg(feature = "no-std")] 
 mod nostd {
     pub extern crate bytediff;
+    pub extern crate cachetypes;
     pub extern crate ebnftobnf;
     pub extern crate issuing;
     pub extern crate stack_array;

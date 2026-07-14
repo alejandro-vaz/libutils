@@ -4,7 +4,7 @@ version = 4
 
 [[package]]
 name = "active-reporting"
-version = "0.0.2"
+version = "0.0.3"
 dependencies = [
  "criterion",
  "issuing",
@@ -69,7 +69,7 @@ dependencies = [
 
 [[package]]
 name = "cachetypes"
-version = "0.0.0"
+version = "0.0.1"
 dependencies = [
  "hashbrown",
 ]
@@ -150,7 +150,7 @@ checksum = "c8d4a3bb8b1e0c1050499d1815f5ab16d04f0959b233085fb31653fbfc9d98f9"
 
 [[package]]
 name = "constrangeiter"
-version = "0.0.5"
+version = "0.0.6"
 
 [[package]]
 name = "criterion"
@@ -300,7 +300,7 @@ dependencies = [
 
 [[package]]
 name = "issuing"
-version = "0.0.0"
+version = "0.0.1"
 
 [[package]]
 name = "itertools"
@@ -336,7 +336,7 @@ checksum = "68ab91017fe16c622486840e4c83c9a37afeff978bd239b5293d61ece587de66"
 
 [[package]]
 name = "libutils"
-version = "8.0.1"
+version = "9.0.0"
 dependencies = [
  "active-reporting",
  "bytediff",
@@ -352,7 +352,7 @@ dependencies = [
 
 [[package]]
 name = "locks"
-version = "0.0.0"
+version = "0.0.1"
 dependencies = [
  "criterion",
 ]
@@ -586,7 +586,7 @@ dependencies = [
 
 [[package]]
 name = "systemio"
-version = "0.0.1"
+version = "0.0.2"
 dependencies = [
  "criterion",
  "issuing",
@@ -594,7 +594,7 @@ dependencies = [
 
 [[package]]
 name = "systemstd"
-version = "0.0.2"
+version = "0.1.0"
 dependencies = [
  "bytediff",
  "criterion",

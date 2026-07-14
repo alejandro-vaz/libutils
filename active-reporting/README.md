@@ -1,4 +1,4 @@
-# Report
+# Active Reporting
 
 `Report` helps with issue reporting by providing a typed interface into error chain management.
 
@@ -9,14 +9,14 @@
 ## Usage
 
 ```rust
-use libutils_report::{
+use active_reporting::{
     Report,
     Same,
     Name
 };
 
 // creates a report
-// there should only be one report per program
+// there should only be one default report per program
 let report = Report::default();
 
 // report anything that implements Into<Issue>
@@ -34,10 +34,10 @@ let another = |report: Report<Name<"Another">>| {
 };
 ```
 
-This type allows for management of the error chain (where issues are originated) based on a RAII pattern. The `Issue` type comes from [`libutils-issue`](https://crates.io/crates/libutils-issue).
+This type allows for management of the error chain (where issues are originated) based on a RAII pattern. The `Issue` type comes from [`issuing`](https://crates.io/crates/issuing).
 
 There are three modes for the report:
-- `Main`: just created
+- `Main`: created by the default method
 - `Same`: no node added
 - `Name<&'static str>`: add a node, the pop when this report is dropped
 

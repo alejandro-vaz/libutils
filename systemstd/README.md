@@ -1,24 +1,22 @@
-# Terminal
+# systemstd
 
-This is an implementation using the standard library of `Console`.
+This is an implementation using the standard library of `SystemIO` from the [`systemio`](https://crates.io/crates/systemio) crate.
 
 ## Usage
 
-This crate exposes the Zero-Sized Type `Terminal` that just refers to the internals of the implementation.
+This crate exposes the Zero-Sized Type `System` that just refers to the internals of the implementation.
 
 ```rust
-use libutils_terminal::Terminal;
-use libutils_console::{Console, Update};
+use systemstd::System;
+use systemio::{SystemIO, Update};
 
-let terminal: Terminal = Terminal;
-
-Terminal.print("hello!").sync();
+System::print("hello!").sync();
 ```
 
-For more information about usage and features, see [`libutils-console`](https://crates.io/crates/libutils-console).
+For more information about usage and features, see [`systemio`](https://crates.io/crates/systemio).
 
 ## When to use it
 
-Use this type when you want to have a `Console` environment in a normal Rust program.
+Use this type when you want to have a `SystemIO` environment in a normal Rust program.
 
-> ![WARNING] Libraries should **NOT** implement direct calls to a certain `Console` instances like `Terminal`, but allow the caller binary to provide one or return `Result<T, Issue>`.
+> [!WARNING] Libraries should **NOT** implement direct calls to a certain `SystemIO` implementations like `System`, but allow the caller binary to provide one or return `Result<T, Issue>`.

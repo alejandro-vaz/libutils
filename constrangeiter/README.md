@@ -24,7 +24,7 @@ The method `.const_into_iter() -> impl const Iterator` must be explicitly called
 
 ## When to use it
 
-This is useful in contexts like constant iteration, and it is used in parts of [`libutils-array`](https://crates.io/crates/libutils-array).
+This is useful in contexts like constant iteration, and it is used in parts of [`stack-array`](https://crates.io/crates/stack-array).
 
 For example, if we want to drop some elements in an array-like storage, we first want to iterate over them and drop each one by one. That process would be const iff `Type: [const] Destruct`, but if range iteration is never const, we don't get to ever make it const even if the type has a constant drop implementation.
 

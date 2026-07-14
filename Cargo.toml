@@ -33,7 +33,7 @@ issuing = {version = "0.0", path = "issuing"}
 locks = {version = "0.0", path = "locks"}
 stack-array = {version = "0.6", path = "stack-array"}
 systemio = {version = "0.0", path = "systemio"}
-systemstd = {version = "0.0", path = "systemstd"}
+systemstd = {version = "0.1", path = "systemstd"}
 
 [profile.bench]
 lto = "fat"

@@ -10,6 +10,7 @@
 #![feature(const_default)]
 #![feature(default_field_values)]
 #![feature(transmute_neo)]
+#![feature(never_type)]
 
 //> HEAD -> MODULES
 mod descriptor;
@@ -72,7 +73,7 @@ static LAYOUT: Mutex<Vec<Section>> = Mutex::default();
 static OUTPUT: Mutex<String> = Mutex::default();
 
 //> SYSTEM -> STRUCT
-pub struct System;
+pub enum System {}
 
 //> SYSTEM -> IMPLEMENTATION
 impl SystemIO for System {

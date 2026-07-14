@@ -1,4 +1,4 @@
-# Issue
+# Issuing
 
 `Issue` is a small but detailed error wrapper that can be handled by upstream code and can be built from other types.
 
@@ -30,7 +30,7 @@ impl Into<Issue> for MyError {
 
 Then, libraries might use it in two ways:
 - By returning it to the user on `Result<Type, Issue>` with standard try-trait workflow,
-- By submitting it to a type that implements `Console` (see `libutils-console` for that)
+- By submitting it to a type that implements `SystemIO` (see [`systemio`](https://crates.io/crates/systemio) for that)
 
 ## When to use it
 
