@@ -104,7 +104,7 @@ impl SystemIO for System {
         return Update;
     }
     fn clear() -> impl UpdateTrait {
-        LAYOUT.get(|layout| layout.clear());
+        LAYOUT.get(Vec::clear);
         return Update;
     }
 }

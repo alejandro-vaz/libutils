@@ -48,7 +48,7 @@ impl DescriptorTrait for Descriptor {
     }}
     fn read_bytes(&mut self) -> Result<Vec<u8>, Issue> {
         let mut buffer = Vec::with_capacity(self.metadata()?.size());
-        match self.file.read(&mut buffer) {
+        match self.file.read_to_end(&mut buffer) {
             Ok(_) => Ok(buffer),
             Err(error) => Err(Issue {
                 name: "Failed to read file as binary",
