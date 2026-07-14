@@ -11,7 +11,10 @@
 //> HEAD -> FEATURES
 #![feature(const_trait_impl)]
 #![feature(const_destruct)]
+#![feature(final_associated_functions)]
 #![feature(default_field_values)]
+#![feature(transmute_neo)]
+#![feature(never_type)]
 
 //> HEAD -> CRATES
 extern crate alloc;
@@ -26,14 +29,17 @@ mod update;
 pub use argument::Argument;
 
 //> HEAD -> ISSUING
-use issuing::Issue;
+use issuing::{
+    Issue,
+    Severity
+};
 
 //> HEAD -> CORE
 use core::fmt::{
     Display,
     Debug
 };
-
+use core::mem::transmute_neo as transmute;
 //> HEAD -> UPDATE
 pub use update::Update;
 
@@ -52,7 +58,15 @@ pub use descriptor::Descriptor;
 pub trait SystemIO {
     fn arguments() -> &'static [Argument];
     fn open(filename: &str) -> Result<impl Descriptor, Issue>;
-    fn problem(issue: Issue, chain: &[&'static str]) -> impl Update;
+    fn problem(error: impl Into<Issue>, chain: &[&'static str]) -> impl Update;
+    final fn expect<Type>(result: Result<Type, impl Into<Issue>>, chain: &[&'static str]) -> Type {return match result {
+        Ok(value) => value,
+        Err(error) => {
+            let mut issue = Into::<Issue>::into(error);
+            issue.severity = Severity::Critical;
+            unsafe {transmute::<_, !>(Self::problem(issue, chain))};
+        }
+    }}
     fn print(value: impl Display) -> impl Update;
     fn debug(value: impl Debug) -> impl Update;
     fn clear() -> impl Update;

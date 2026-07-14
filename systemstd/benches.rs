@@ -8,7 +8,6 @@ use systemstd::System;
 //> HEAD -> SYSTEMIO
 use systemio::{
     SystemIO, 
-    Descriptor, 
     Update
 };
 
@@ -42,6 +41,6 @@ fn benches(criterion: &mut Criterion) -> () {
     }));
     System::clear().sync();
     group.bench_function("open", |bencher| bencher.iter(|| for _ in 0..ITERATIONS {
-        System::open("README.md").unwrap().close();
+        drop(System::open("README.md").unwrap());
     }));
 }

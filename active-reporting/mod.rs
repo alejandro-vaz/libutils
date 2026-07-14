@@ -12,39 +12,16 @@
 #![feature(const_trait_impl)]
 #![feature(unsized_const_params)]
 #![feature(adt_const_params)]
-#![feature(default_field_values)]
+#![feature(negative_impls)]
 #![feature(const_heap)]
 #![feature(const_default)]
-#![feature(never_type)]
 #![feature(generic_const_exprs)]
 
 //> HEAD -> MODULES
-mod state;
+mod root;
 
-//> HEAD -> PUBLIC STATE
-pub use state::{
-    Same,
-    Name
-};
-
-//> HEAD -> STATE
-use state::{
-    State,
-    Main,
-    DerivedState
-};
-
-//> HEAD -> ISSUING
-use issuing::Issue;
-
-//> HEAD -> SYSTEMSTD
-use systemstd::System;
-
-//> HEAD -> SYSTEMIO
-use systemio::{
-    SystemIO, 
-    Update
-};
+//> HEAD -> ROOT
+pub use root::Root;
 
 
 //^ 
@@ -52,41 +29,28 @@ use systemio::{
 //^ 
 
 //> REPORT -> STRUCT
-pub struct Report<Current: State> {
-    data: Current
-}
-
-//> REPORT -> MAIN IMPLEMENTATION
-impl Report<Main> {
-    pub const fn new(name: &'static str) -> Self {
-        let mut chain = Vec::new();
-        chain.push(name);
-        return Self {
-            data: Main {
-                chain: chain
-            }
-        };
-    }
+pub struct Report<'valid, const NAME: &'static str> {
+    chain: &'valid mut Vec<&'static str>
 }
 
 //> REPORT -> IMPLEMENTATION
-impl<Current: const State> Report<Current> {
-    pub const fn to<'valid, Following: const DerivedState<'valid>>(&'valid mut self) -> Report<Following> {
+impl<'valid, const NAME: &'static str> Report<'valid, NAME> {
+    pub const fn chain(&'valid self) -> &'valid [&'static str] {return self.chain.as_slice()}
+    pub const fn to<const OTHER: &'static str>(&'valid mut self) -> Report<'valid, OTHER> {
+        if !OTHER.is_empty() {self.chain.push(OTHER);}
         return Report {
-            data: Following::convert(&mut self.data)
+            chain: self.chain
         }
     }
-    pub fn issue(&self, object: impl Into<Issue>) -> Option<!> {
-        System::problem(object.into(), self.data.get()).sync();
-        return None;
-    }
-    pub fn eat<Type>(&self, result: Result<Type, Issue>) -> Option<Type> {return match result {
-        Ok(value) => Some(value),
-        Err(issue) => self.issue(issue)?
-    }}
 }
 
-//> REPORT -> DEFAULT
-const impl Default for Report<Main> {
-    fn default() -> Self {return Self::new("Main")}
+//> REPORT -> DROP
+impl<'valid, const NAME: &'static str> Drop for Report<'valid, NAME> {
+    fn drop(&mut self) {if !NAME.is_empty() {self.chain.pop();}}
 }
+
+//> REPORT -> !SEND
+impl<'valid, const NAME: &'static str> !Send for Report<'valid, NAME> {}
+
+//> REPORT -> !SYNC
+impl<'valid, const NAME: &'static str> !Sync for Report<'valid, NAME> {}

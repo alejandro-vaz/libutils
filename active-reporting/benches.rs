@@ -4,9 +4,7 @@
 
 //> HEAD -> ACTIVE_REPORTING
 use active_reporting::{
-    Report,
-    Same,
-    Name
+    Root
 };
 
 //> HEAD -> CORE
@@ -33,11 +31,11 @@ criterion_main!(active_reporting);
 fn benches(criterion: &mut Criterion) -> () {
     let mut group = criterion.benchmark_group("active-reporting");
     group.throughput(Throughput::Elements(10000));
-    let mut report = Report::default();
+    let mut root = Root::default();
     group.bench_function("same", |bencher| bencher.iter(|| {for _ in 0..10000 {
-        black_box(report.to::<Same>());
+        black_box(root.to::<"">());
     }}));
     group.bench_function("name", |bencher| bencher.iter(|| {for _ in 0..10000 {
-        black_box(report.to::<Name<"example">>());
+        black_box(root.to::<"example">());
     }}));
 }

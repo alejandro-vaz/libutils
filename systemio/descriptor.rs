@@ -27,12 +27,13 @@ use super::metadata::Metadata;
 pub trait Descriptor: Sized {
     fn metadata(&self) -> Result<impl Metadata, Issue>;
     fn read_bytes(&mut self) -> Result<Vec<u8>, Issue>;
-    fn read(&mut self) -> Result<String, Issue> {return String::from_utf8(self.read_bytes()?).map_err(|error| Issue {
-        name: "Error encoding file to UTF-8",
-        description: Some(error.to_string()),
+    final fn read(&mut self) -> Result<String, Issue> {
+        return String::from_utf8(self.read_bytes()?).map_err(|error| Issue {
+            name: "Error encoding file to UTF-8",
+            description: Some(error.to_string()),
         ..
-    })}
+        });
+    }
     fn write_bytes(&mut self, content: &[u8]) -> Result<(), Issue>;
-    fn write(&mut self, content: &str) -> Result<(), Issue> {return self.write_bytes(content.as_bytes())}
-    fn close(self) -> () {}
+    final fn write(&mut self, content: &str) -> Result<(), Issue> {return self.write_bytes(content.as_bytes())}
 }

@@ -24,7 +24,8 @@ use std::{
     fs::File, 
     path::PathBuf, 
     sync::LazyLock, 
-    time::Instant
+    time::Instant,
+    panic::set_hook
 };
 
 //> HEAD -> CORE
@@ -40,7 +41,10 @@ use locks::Mutex;
 use update::Update;
 
 //> HEAD -> ISSUING
-use issuing::Issue;
+use issuing::{
+    Issue,
+    Severity
+};
 
 //> HEAD -> SYSTEMIO
 use systemio::{
@@ -85,13 +89,21 @@ impl SystemIO for System {
             ..
         })
     }}
-    fn problem(issue: Issue, chain: &[&'static str]) -> impl UpdateTrait {
+    fn problem(error: impl Into<Issue>, chain: &[&'static str]) -> impl UpdateTrait {
+        let issue = Into::<Issue>::into(error);
+        let critical = if let Severity::Critical = issue.severity {true} else {false};
         LAYOUT.get(|layout| layout.push(Section::Problem(Problem {
             chain: Vec::from(chain),
             issue: issue,
             _at: Instant::now()
         })));
-        return Update;
+        return if critical {
+            Update.sync();
+            set_hook(Box::new(|_| ()));
+            panic!();
+        } else {
+            Update
+        }
     }
     fn print(value: impl Display) -> impl UpdateTrait {
         LAYOUT.get(|layout| layout.push(Section::Display(value.to_string())));

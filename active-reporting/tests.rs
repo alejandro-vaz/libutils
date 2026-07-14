@@ -2,11 +2,13 @@
 //^ HEAD
 //^
 
+//> HEAD -> FEATURES
+#![feature(default_field_values)]
+
 //> HEAD -> ACTIVE_REPORTING
 use active_reporting::{
     Report,
-    Same,
-    Name
+    Root
 };
 
 //> HEAD -> SYSTEMIO
@@ -18,6 +20,12 @@ use systemio::{
 //> HEAD -> SYSTEMSTD
 use systemstd::System;
 
+//> HEAD -> ISSUING
+use issuing::{
+    Issue,
+    Severity
+};
+
 
 //^
 //^ TESTS
@@ -26,15 +34,27 @@ use systemstd::System;
 //> TESTS -> USAGE
 #[test]
 fn usage() -> () {
-    let mut report = Report::new("Main");
-    let passing = |report: Report<Same<'_>>| {
-        report.issue("hello");
+    let mut root = Root::default();
+    let passing = |report: Report<"">| { // stays the same
+        System::problem(Issue {
+            name: "hello",
+            severity: Severity::Warning,
+            ..
+        }, report.chain()).sync();
     };
-    passing(report.to());
-    let upgrading = |report: Report<Name<'_, "Category">>| {
-        report.issue("hello");
+    passing(root.to());
+    let upgrading = |report: Report<"Category">| { // adds a category
+        System::problem(Issue {
+            name: "hello 2",
+            severity: Severity::Warning,
+            ..
+        }, report.chain()).sync();
     };
-    upgrading(report.to());
-    report.issue("outside");
+    upgrading(root.to());
+    System::problem(Issue {
+        name: "outside",
+        severity: Severity::Warning,
+        ..
+    }, root.chain()).sync();
     System::clear().sync();
 }
