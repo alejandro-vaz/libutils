@@ -34,7 +34,7 @@ impl Root {
         }
     }}
     pub const fn chain(&self) -> &[&'static str] {return self.chain.as_slice()}
-    pub const fn to<'valid, const NAME: &'static str>(&'valid mut self) -> Report<'valid, NAME> {
+    pub const fn to<'valid, 'next, const NAME: &'static str>(&'valid mut self) -> Report<'next, NAME> where 'valid: 'next {
         if !NAME.is_empty() {self.chain.push(NAME);}
         return Report {
             chain: NonNull::new(&raw mut self.chain).unwrap(),

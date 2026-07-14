@@ -55,7 +55,7 @@ impl<'valid, const NAME: &'static str> Report<'valid, NAME> {
     pub const fn chain(&'valid self) -> &'valid [&'static str] {
         return unsafe {self.chain.as_ref().as_slice()};
     }
-    pub const fn to<const OTHER: &'static str>(&'valid mut self) -> Report<'valid, OTHER> {
+    pub const fn to<'next, const OTHER: &'static str>(&'valid mut self) -> Report<'next, OTHER> where 'valid: 'next {
         if !OTHER.is_empty() {unsafe {self.chain.as_mut().push(OTHER)};}
         return Report {
             chain: self.chain,
