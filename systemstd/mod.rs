@@ -10,15 +10,12 @@
 #![feature(const_default)]
 #![feature(default_field_values)]
 #![feature(transmute_neo)]
-#![feature(never_type)]
 
 //> HEAD -> MODULES
 mod descriptor;
 mod metadata;
 mod problem;
 mod section;
-#[cfg(test)]
-mod tests;
 mod update;
 
 //> HEAD -> STD

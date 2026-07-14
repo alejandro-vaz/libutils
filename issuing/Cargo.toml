@@ -1,7 +1,7 @@
 [package]
 name = "issuing"
 description = "A easy-to-use customizable error type"
-version = "0.0.1"
+version = "0.0.2"
 edition.workspace = true
 rust-version.workspace = true
 categories = ["data-structures", "no-std::no-alloc", "rust-patterns", "value-formatting", "development-tools::debugging"]
@@ -13,5 +13,9 @@ authors.workspace = true
 
 [lib]
 path = "./mod.rs"
+
+[[test]]
+name = "issuing"
+path = "tests.rs"
 
 [dependencies]

@@ -19,8 +19,6 @@ extern crate alloc;
 //> HEAD -> MODULES
 mod conversions;
 mod severity;
-#[cfg(test)]
-mod tests;
 
 //> HEAD -> ALLOC
 use alloc::string::String;

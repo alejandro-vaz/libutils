@@ -1,7 +1,7 @@
 [package]
 name = "systemstd"
 description = "A custom embedded terminal handler"
-version = "0.1.0"
+version = "0.1.1"
 edition.workspace = true
 rust-version.workspace = true
 categories = ["accessibility", "command-line-interface", "config", "filesystem", "rust-patterns"]
@@ -18,6 +18,10 @@ path = "./mod.rs"
 name = "systemstd"
 harness = false
 path = "benches.rs"
+
+[[test]]
+name = "systemstd"
+path = "tests.rs"
 
 [dependencies]
 bytediff = {workspace = true}

@@ -20,8 +20,6 @@ extern crate alloc;
 mod argument;
 mod descriptor;
 mod metadata;
-#[cfg(test)]
-mod tests;
 mod update;
 
 //> HEAD -> ARGUMENT

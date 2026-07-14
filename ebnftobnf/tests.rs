@@ -2,8 +2,11 @@
 //^ HEAD
 //^
 
-//> HEAD -> SUPER
-use super::{
+//> HEAD -> FEATURES
+#![feature(default_field_values)]
+
+//> HEAD -> EBNFTOBNF
+use ebnftobnf::{
     reduce,
     Settings,
     Delimiter,

@@ -2,12 +2,21 @@
 //^ HEAD
 //^
 
-//> HEAD -> SUPER
-use super::{
+//> HEAD -> ACTIVE_REPORTING
+use active_reporting::{
     Report,
     Same,
     Name
 };
+
+//> HEAD -> SYSTEMIO
+use systemio::{
+    SystemIO,
+    Update
+};
+
+//> HEAD -> SYSTEMSTD
+use systemstd::System;
 
 
 //^
@@ -27,4 +36,5 @@ fn usage() -> () {
     };
     upgrading(report.to());
     report.issue("outside");
+    System::clear().sync();
 }

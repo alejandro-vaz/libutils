@@ -38,8 +38,6 @@ mod comparisons;
 mod conversions;
 mod iterators;
 mod references;
-#[cfg(test)]
-mod tests;
 
 //> HEAD -> CORE
 use core::{

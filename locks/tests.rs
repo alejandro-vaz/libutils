@@ -2,8 +2,12 @@
 //^ HEAD
 //^
 
-//> HEAD -> SUPER
-use super::Mutex;
+//> HEAD -> FEATURES
+#![feature(const_trait_impl)]
+#![feature(const_default)]
+
+//> HEAD -> LOCKS
+use locks::Mutex;
 
 //> HEAD -> CORE
 use core::ops::AddAssign;

@@ -28,7 +28,7 @@ active-reporting = {version = "0.0", path = "active-reporting"}
 bytediff = {version = "0.0", path = "bytediff"}
 cachetypes = {version = "0.0", path = "cachetypes"}
 constrangeiter = {version = "0.0", path = "constrangeiter"}
-ebnftobnf = {version = "1.0", path = "ebnftobnf"}
+ebnftobnf = {version = "1.1", path = "ebnftobnf"}
 issuing = {version = "0.0", path = "issuing"}
 locks = {version = "0.0", path = "locks"}
 stack-array = {version = "0.6", path = "stack-array"}

@@ -1,7 +1,7 @@
 [package]
 name = "stack-array"
 description = "A maximum-sized array stored on the stack"
-version = "0.6.2"
+version = "0.6.3"
 edition.workspace = true
 rust-version.workspace = true
 categories = ["algorithms", "data-structures", "memory-management", "no-std"]
@@ -18,6 +18,10 @@ path = "./mod.rs"
 name = "stack-array"
 harness = false
 path = "benches.rs"
+
+[[test]]
+name = "stack-array"
+path = "tests.rs"
 
 [dependencies]
 constrangeiter = {workspace = true}

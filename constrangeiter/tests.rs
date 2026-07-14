@@ -2,11 +2,11 @@
 //^ HEAD
 //^
 
-//> HEAD -> SUPER
-use super::ConstIntoIterator;
+//> HEAD -> FEATURES
+#![feature(new_range)]
 
-//> HEAD -> ALLOC
-use alloc::vec::Vec;
+//> HEAD -> CONSTRANGEITER
+use constrangeiter::ConstIntoIterator;
 
 //> HEAD -> CORE
 use core::array::from_fn as arrayfn;

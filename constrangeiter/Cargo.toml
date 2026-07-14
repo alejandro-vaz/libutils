@@ -1,7 +1,7 @@
 [package]
 name = "constrangeiter"
 description = "Constant iterators for ranges"
-version = "0.0.6"
+version = "0.0.7"
 edition.workspace = true
 rust-version.workspace = true
 categories = ["algorithms", "data-structures", "no-std::no-alloc", "rust-patterns"]
@@ -13,5 +13,9 @@ authors.workspace = true
 
 [lib]
 path = "./mod.rs"
+
+[[test]]
+name = "constrangeiter"
+path = "tests.rs"
 
 [dependencies]

@@ -2,8 +2,11 @@
 //^ HEAD
 //^
 
-//> HEAD -> SUPER
-use super::Issue;
+//> HEAD -> FEATURES
+#![feature(default_field_values)]
+
+//> HEAD -> ISSUING
+use issuing::Issue;
 
 
 //^

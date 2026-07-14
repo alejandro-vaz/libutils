@@ -31,8 +31,6 @@ extern crate alloc;
 mod range;
 mod rangefrom;
 mod rangeinclusive;
-#[cfg(test)]
-mod tests;
 
 //> HEAD -> CORE
 use core::{

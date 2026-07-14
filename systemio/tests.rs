@@ -2,11 +2,8 @@
 //^ HEAD
 //^
 
-//> HEAD -> SUPER
-use super::Argument;
-
-//> HEAD -> ALLOC
-use alloc::string::ToString;
+//> HEAD -> SYSTEMIO
+use systemio::Argument;
 
 //> HEAD -> CORE
 use core::assert_matches;

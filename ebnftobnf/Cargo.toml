@@ -1,7 +1,7 @@
 [package]
 name = "ebnftobnf"
 description = "A straightforward EBNF to BNF reducer"
-version = "1.0.1"
+version = "1.1.0"
 edition.workspace = true
 rust-version.workspace = true
 categories = ["algorithms", "compilers", "text-processing", "no-std"]
@@ -23,6 +23,10 @@ typed-arena = "2.0"
 name = "ebnftobnf"
 harness = false
 path = "benches.rs"
+
+[[test]]
+name = "ebnftobnf"
+path = "tests.rs"
 
 [dev-dependencies]
 criterion = "0.8"

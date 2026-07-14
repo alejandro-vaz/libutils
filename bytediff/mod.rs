@@ -12,11 +12,7 @@
 extern crate alloc;
 
 //> HEAD -> MODULES
-#[cfg(test)]
-mod tests;
-
-//> HEAD -> ALLOC
-use alloc::vec::Vec;
+mod conversions;
 
 
 //^ 
@@ -30,9 +26,6 @@ pub struct Diff<'valid> {
     write: &'valid [u8]
 }
 
-//> DIFF -> ERASE
-const ERASE: [u8; 7] = [b'\x1B', b'[', b'D', b' ', b'\x1B', b'[', b'D'];
-
 //> DIFF -> IMPLEMENTATION
 impl<'valid> Diff<'valid> {
     pub fn new(current: &[u8], replacement: &'valid [u8]) -> Self {
@@ -43,15 +36,5 @@ impl<'valid> Diff<'valid> {
             write: &replacement[index..]
         }} else {continue}}
         unreachable!();
-    }
-}
-
-//> DIFF -> INTO VEC U8
-impl<'valid> Into<Vec<u8>> for Diff<'valid> {
-    fn into(self) -> Vec<u8> {
-        let mut sequence = Vec::new();
-        sequence.extend(ERASE.repeat(self.remove));
-        sequence.extend(self.write);
-        return sequence;
     }
 }

@@ -20,8 +20,6 @@
 
 //> HEAD -> MODULES
 mod state;
-#[cfg(test)]
-mod tests;
 
 //> HEAD -> PUBLIC STATE
 pub use state::{

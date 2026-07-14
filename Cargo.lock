@@ -4,7 +4,7 @@ version = 4
 
 [[package]]
 name = "active-reporting"
-version = "0.0.3"
+version = "0.0.4"
 dependencies = [
  "criterion",
  "issuing",
@@ -62,7 +62,7 @@ checksum = "72f5acc6cb2ba439de613abc23857ec3d78374d8ed5ac84e9d11336e87da8649"
 
 [[package]]
 name = "bytediff"
-version = "0.0.6"
+version = "0.0.7"
 dependencies = [
  "criterion",
 ]
@@ -150,7 +150,7 @@ checksum = "c8d4a3bb8b1e0c1050499d1815f5ab16d04f0959b233085fb31653fbfc9d98f9"
 
 [[package]]
 name = "constrangeiter"
-version = "0.0.6"
+version = "0.0.7"
 
 [[package]]
 name = "criterion"
@@ -220,7 +220,7 @@ checksum = "460fbee9c2c2f33933d720630a6a0bac33ba7053db5344fac858d4b8952d77d5"
 
 [[package]]
 name = "ebnftobnf"
-version = "1.0.1"
+version = "1.1.0"
 dependencies = [
  "criterion",
  "hashbrown",
@@ -300,7 +300,7 @@ dependencies = [
 
 [[package]]
 name = "issuing"
-version = "0.0.1"
+version = "0.0.2"
 
 [[package]]
 name = "itertools"
@@ -336,7 +336,7 @@ checksum = "68ab91017fe16c622486840e4c83c9a37afeff978bd239b5293d61ece587de66"
 
 [[package]]
 name = "libutils"
-version = "10.0.0"
+version = "10.1.0"
 dependencies = [
  "active-reporting",
  "bytediff",
@@ -352,7 +352,7 @@ dependencies = [
 
 [[package]]
 name = "locks"
-version = "0.0.1"
+version = "0.0.2"
 dependencies = [
  "criterion",
 ]
@@ -567,7 +567,7 @@ checksum = "0c790de23124f9ab44544d7ac05d60440adc586479ce501c1d6d7da3cd8c9cf5"
 
 [[package]]
 name = "stack-array"
-version = "0.6.2"
+version = "0.6.3"
 dependencies = [
  "constrangeiter",
  "criterion",
@@ -586,7 +586,7 @@ dependencies = [
 
 [[package]]
 name = "systemio"
-version = "0.0.2"
+version = "0.0.3"
 dependencies = [
  "criterion",
  "issuing",
@@ -594,7 +594,7 @@ dependencies = [
 
 [[package]]
 name = "systemstd"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "bytediff",
  "criterion",
@@ -758,6 +758,6 @@ dependencies = [
 
 [[package]]
 name = "zmij"
-version = "1.0.22"
+version = "1.0.23"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bd2f034a4bebf216c9e4b7083603e024cf930873fd67830cfb083c9fa33129d9"
+checksum = "29666d0abbfad1e3dc4dcf6144730dd3a3ab225bbbdac83319345b1b44ccfc1b"

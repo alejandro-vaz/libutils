@@ -22,8 +22,6 @@ mod delimiter;
 mod locales;
 mod settings;
 mod temporalproductionstyle;
-#[cfg(test)]
-mod tests;
 
 //> HEAD -> LOCALES
 use locales::Locales;
@@ -61,7 +59,7 @@ use hashbrown::HashSet as Set;
 //^
 
 //> REDUCER -> FUNCTION
-pub fn reduce(ebnf: &str, settings: Settings) -> String {
+pub fn reduce(ebnf: &str, settings: Settings<'_>) -> String {
     let mut rules = Set::new();
     let mut counter = 0;
     let arena = Arena::new();
@@ -84,14 +82,15 @@ pub fn reduce(ebnf: &str, settings: Settings) -> String {
         expand(&mut production, &mut locales, &mut counter, &mut rules, &arena, settings);
         rules.insert(format!("{rule}{}{production}", <&'static str>::from(settings.delimiter)));
     };
-    rules.insert(format!(
-        "{}0{}Start",
+    if let Some(start) = settings.start_rule {rules.insert(format!(
+        "{}0{}{}",
         char::from(settings.temporal_production_style),
-        <&'static str>::from(settings.delimiter)
-    ));
+        <&'static str>::from(settings.delimiter),
+        start
+    ));}
     let mut full = String::new();
     for rule in rules {
-        full.push_str(&rule);
+        full.push_str(rule.as_str());
         full.push('\n');
     };
     full.pop();

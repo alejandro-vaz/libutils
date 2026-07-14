@@ -20,8 +20,6 @@
 //> HEAD -> MODULES
 mod conversions;
 mod handle;
-#[cfg(test)]
-mod tests;
 
 //> HEAD -> CORE
 use core::{

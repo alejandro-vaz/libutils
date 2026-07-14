@@ -2,11 +2,8 @@
 //^ HEAD
 //^
 
-//> HEAD -> SUPER
-use super::Diff;
-
-//> HEAD -> ALLOC
-use alloc::vec::Vec;
+//> HEAD -> BYTEDIFF
+use bytediff::Diff;
 
 
 //^

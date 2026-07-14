@@ -16,10 +16,11 @@ use super::{
 
 //> SETTINGS -> STRUCT
 #[derive(Clone, Copy)]
-pub struct Settings {
+pub struct Settings<'valid> {
     pub keep_empty_lines: bool = true,
     pub keep_comments: bool = true,
     pub comment_style: CommentStyle = CommentStyle::Slash,
     pub temporal_production_style: TemporalProductionStyle = TemporalProductionStyle::Dollar,
-    pub delimiter: Delimiter = Delimiter::ColonSpace
+    pub delimiter: Delimiter = Delimiter::ColonSpace,
+    pub start_rule: Option<&'valid str> = None
 }

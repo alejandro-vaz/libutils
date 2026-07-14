@@ -2,11 +2,14 @@
 //^ HEAD
 //^
 
-//> HEAD -> SUPER
-use super::Array;
+//> HEAD -> LINTS
+#![allow(incomplete_features)]
 
-//> HEAD -> ALLOC
-use alloc::vec::Vec;
+//> HEAD -> FEATURES
+#![feature(generic_const_exprs)]
+
+//> HEAD -> STACK_ARRAY
+use stack_array::Array;
 
 
 //^

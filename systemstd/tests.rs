@@ -2,8 +2,8 @@
 //^ HEAD
 //^
 
-//> HEAD -> SUPER
-use super::System;
+//> HEAD -> SYSTEMSTD
+use systemstd::System;
 
 //> HEAD -> SYSTEMIO
 use systemio::{
