@@ -15,7 +15,6 @@
 #![feature(const_trait_impl)]
 #![feature(unsized_const_params)]
 #![feature(adt_const_params)]
-#![feature(phantom_variance_markers)]
 #![feature(negative_impls)]
 #![feature(const_heap)]
 #![feature(const_default)]
@@ -34,10 +33,7 @@ pub use root::Root;
 use alloc::vec::Vec;
 
 //> HEAD -> CORE
-use core::{
-    marker::PhantomCovariantLifetime,
-    ptr::NonNull
-};
+use core::ptr::NonNull;
 
 
 //^ 
@@ -45,32 +41,30 @@ use core::{
 //^ 
 
 //> REPORT -> STRUCT
-pub struct Report<'valid, const NAME: &'static str> {
+pub struct Report<const NAME: &'static str> {
     chain: NonNull<Vec<&'static str>>,
-    _lifetime: PhantomCovariantLifetime<'valid>
 }
 
 //> REPORT -> IMPLEMENTATION
-impl<'valid, const NAME: &'static str> Report<'valid, NAME> {
-    pub const fn chain(&'valid self) -> &'valid [&'static str] {
+impl<const NAME: &'static str> Report<NAME> {
+    pub const fn chain(&self) -> &[&'static str] {
         return unsafe {self.chain.as_ref().as_slice()};
     }
-    pub const fn to<'next, const OTHER: &'static str>(&'valid mut self) -> Report<'next, OTHER> where 'valid: 'next {
+    pub const fn to<const OTHER: &'static str>(&mut self) -> Report<OTHER> {
         if !OTHER.is_empty() {unsafe {self.chain.as_mut().push(OTHER)};}
         return Report {
-            chain: self.chain,
-            _lifetime: PhantomCovariantLifetime::new()
+            chain: self.chain
         }
     }
 }
 
 //> REPORT -> DROP
-impl<'valid, const NAME: &'static str> Drop for Report<'valid, NAME> {
+impl<const NAME: &'static str> Drop for Report<NAME> {
     fn drop(&mut self) {if !NAME.is_empty() {unsafe {self.chain.as_mut().pop()};}}
 }
 
 //> REPORT -> !SEND
-impl<'valid, const NAME: &'static str> !Send for Report<'valid, NAME> {}
+impl<const NAME: &'static str> !Send for Report<NAME> {}
 
 //> REPORT -> !SYNC
-impl<'valid, const NAME: &'static str> !Sync for Report<'valid, NAME> {}
+impl<const NAME: &'static str> !Sync for Report<NAME> {}
