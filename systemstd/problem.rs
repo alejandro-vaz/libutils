@@ -31,7 +31,7 @@ pub struct Problem {
 impl Display for Problem {
     fn fmt(&self, formatter: &mut Formatter<'_>) -> Format {write!(
         formatter,
-        "@ {}\n{:#?}: {}{}\n",
+        "@ {}\n{:#?}: {}{}",
         self.chain.join(" > "),
         self.issue.severity,
         self.issue.name,
