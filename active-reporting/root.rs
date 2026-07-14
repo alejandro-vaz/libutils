@@ -6,7 +6,10 @@
 use super::Report;
 
 //> HEAD -> CORE
-use core::ptr::NonNull;
+use core::{
+    ptr::NonNull,
+    ops::Deref
+};
 
 //> HEAD -> ALLOC
 use alloc::vec::Vec;
@@ -30,7 +33,6 @@ impl Root {
             chain
         }
     }}
-    pub const fn chain(&self) -> &[&'static str] {return self.chain.as_slice()}
     pub const fn to<const NAME: &'static str>(&mut self) -> Report<NAME> {
         if !NAME.is_empty() {self.chain.push(NAME);}
         return Report {
@@ -46,3 +48,9 @@ const impl Default for Root {
 
 //> ROOT -> !SYNC
 impl !Sync for Root {}
+
+//> ROOT -> DEREF
+const impl Deref for Root {
+    type Target = [&'static str];
+    fn deref(&self) -> &Self::Target {return &self.chain}
+}

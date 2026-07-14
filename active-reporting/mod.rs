@@ -13,6 +13,7 @@
 
 //> HEAD -> FEATURES
 #![feature(const_trait_impl)]
+#![feature(const_convert)]
 #![feature(unsized_const_params)]
 #![feature(adt_const_params)]
 #![feature(negative_impls)]
@@ -33,7 +34,10 @@ pub use root::Root;
 use alloc::vec::Vec;
 
 //> HEAD -> CORE
-use core::ptr::NonNull;
+use core::{
+    ptr::NonNull,
+    ops::Deref
+};
 
 
 //^ 
@@ -47,9 +51,6 @@ pub struct Report<const NAME: &'static str> {
 
 //> REPORT -> IMPLEMENTATION
 impl<const NAME: &'static str> Report<NAME> {
-    pub const fn chain(&self) -> &[&'static str] {
-        return unsafe {self.chain.as_ref().as_slice()};
-    }
     pub const fn to<const OTHER: &'static str>(&mut self) -> Report<OTHER> {
         if !OTHER.is_empty() {unsafe {self.chain.as_mut().push(OTHER)};}
         return Report {
@@ -68,3 +69,9 @@ impl<const NAME: &'static str> !Send for Report<NAME> {}
 
 //> REPORT -> !SYNC
 impl<const NAME: &'static str> !Sync for Report<NAME> {}
+
+//> REPORT -> DEREF
+impl<const NAME: &'static str> Deref for Report<NAME> {
+    type Target = [&'static str];
+    fn deref(&self) -> &Self::Target {return unsafe {&self.chain.as_ref()}}
+}

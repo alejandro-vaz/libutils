@@ -40,7 +40,7 @@ fn usage() -> () {
             name: "hello",
             severity: Severity::Warning,
             ..
-        }, report.chain()).sync();
+        }, &*report).sync();
     };
     passing(root.to());
     let upgrading = |report: Report<"Category">| { // adds a category
@@ -48,13 +48,13 @@ fn usage() -> () {
             name: "hello 2",
             severity: Severity::Warning,
             ..
-        }, report.chain()).sync();
+        }, &*report).sync();
     };
     upgrading(root.to());
     System::problem(Issue {
         name: "outside",
         severity: Severity::Warning,
         ..
-    }, root.chain()).sync();
+    }, &*root).sync();
     System::clear().sync();
 }
