@@ -26,6 +26,7 @@ mod noalloc {
 //> LIBUTILS -> NO STD
 #[cfg(feature = "no-std")] 
 mod nostd {
+    pub extern crate active_reporting;
     pub extern crate bytediff;
     pub extern crate cachetypes;
     pub extern crate ebnftobnf;
@@ -37,6 +38,5 @@ mod nostd {
 //> LIBUTILS -> STD
 #[cfg(feature = "std")] 
 mod std {
-    pub extern crate active_reporting;
     pub extern crate systemstd;
 }

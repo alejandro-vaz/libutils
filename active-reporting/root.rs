@@ -11,6 +11,9 @@ use core::{
     marker::PhantomCovariantLifetime
 };
 
+//> HEAD -> ALLOC
+use alloc::vec::Vec;
+
 
 //^
 //^ ROOT

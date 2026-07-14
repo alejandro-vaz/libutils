@@ -2,6 +2,9 @@
 //^ HEAD
 //^
 
+//> HEAD -> NO STD
+#![no_std]
+
 //> HEAD -> DOCS
 #![doc = include_str!("README.md")]
 
@@ -18,11 +21,17 @@
 #![feature(const_default)]
 #![feature(generic_const_exprs)]
 
+//> HEAD -> CRATES
+extern crate alloc;
+
 //> HEAD -> MODULES
 mod root;
 
 //> HEAD -> ROOT
 pub use root::Root;
+
+//> HEAD -> ALLOC
+use alloc::vec::Vec;
 
 //> HEAD -> CORE
 use core::{

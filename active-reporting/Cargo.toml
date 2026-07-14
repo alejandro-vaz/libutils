@@ -1,10 +1,10 @@
 [package]
 name = "active-reporting"
 description = "A custom error wrapper for detailed logs"
-version = "1.0.1"
+version = "1.0.2"
 edition.workspace = true
 rust-version.workspace = true
-categories = ["caching", "development-tools::debugging", "rust-patterns"]
+categories = ["caching", "development-tools::debugging", "rust-patterns", "no-std"]
 keywords = ["reporting", "logging", "errors", "issue", "active"]
 homepage.workspace = true
 repository.workspace = true
