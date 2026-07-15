@@ -19,7 +19,6 @@ fn create() -> () {
     let _issue = Issue::from("hello");
     let _manual = Issue {
         name: "myname",
-        description: None,
         ..
     };
 }

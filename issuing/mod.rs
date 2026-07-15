@@ -23,9 +23,12 @@ mod conversions;
 use alloc::string::String;
 
 //> HEAD -> CORE
-use core::hash::{
-    Hash,
-    Hasher
+use core::{
+    hash::{
+        Hash,
+        Hasher
+    },
+    any::TypeId
 };
 
 
@@ -34,13 +37,16 @@ use core::hash::{
 //^
 
 //> ISSUE -> STRUCT
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct Issue {
     pub name: &'static str,
+    pub id: Option<TypeId> = None,
     pub description: Option<String> = None
 }
 
 //> ISSUE -> HASH
 impl Hash for Issue {
-    fn hash<H: Hasher>(&self, state: &mut H) {Hash::hash(self.name, state)}
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        return Hash::hash(&(self.name, self.id), state);
+    }
 }
