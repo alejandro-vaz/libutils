@@ -24,6 +24,7 @@ use std::time::Instant;
 pub struct Problem {
     pub chain: Vec<&'static str>,
     pub issue: Issue,
+    pub severity: Option<bool>,
     pub _at: Instant
 }
 
@@ -33,7 +34,11 @@ impl Display for Problem {
         formatter,
         "@ {}\n{:#?}: {}{}",
         self.chain.join(" > "),
-        self.issue.severity,
+        match self.severity {
+            None => "Critical",
+            Some(false) => "Warning",
+            Some(true) => "Error"
+        },
         self.issue.name,
         self.issue.description.as_ref().map(|description| format!("\n    {description}")).unwrap_or_default()
     )}

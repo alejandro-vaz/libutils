@@ -4,7 +4,7 @@ version = 4
 
 [[package]]
 name = "active-reporting"
-version = "1.1.0"
+version = "1.1.1"
 dependencies = [
  "criterion",
  "issuing",
@@ -300,7 +300,7 @@ dependencies = [
 
 [[package]]
 name = "issuing"
-version = "0.0.2"
+version = "0.1.0"
 
 [[package]]
 name = "itertools"
@@ -336,7 +336,7 @@ checksum = "68ab91017fe16c622486840e4c83c9a37afeff978bd239b5293d61ece587de66"
 
 [[package]]
 name = "libutils"
-version = "12.1.1"
+version = "13.0.0"
 dependencies = [
  "active-reporting",
  "bytediff",
@@ -586,7 +586,7 @@ dependencies = [
 
 [[package]]
 name = "systemio"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "criterion",
  "issuing",
@@ -594,7 +594,7 @@ dependencies = [
 
 [[package]]
 name = "systemstd"
-version = "0.2.2"
+version = "0.3.0"
 dependencies = [
  "bytediff",
  "criterion",

@@ -18,13 +18,9 @@ extern crate alloc;
 
 //> HEAD -> MODULES
 mod conversions;
-mod severity;
 
 //> HEAD -> ALLOC
 use alloc::string::String;
-
-//> HEAD -> SEVERITY
-pub use severity::Severity;
 
 //> HEAD -> CORE
 use core::hash::{
@@ -41,8 +37,7 @@ use core::hash::{
 #[derive(Debug)]
 pub struct Issue {
     pub name: &'static str,
-    pub description: Option<String> = None,
-    pub severity: Severity = Severity::Error
+    pub description: Option<String> = None
 }
 
 //> ISSUE -> HASH

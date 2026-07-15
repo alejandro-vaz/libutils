@@ -41,10 +41,7 @@ use locks::Mutex;
 use update::Update;
 
 //> HEAD -> ISSUING
-use issuing::{
-    Issue,
-    Severity
-};
+use issuing::Issue;
 
 //> HEAD -> SYSTEMIO
 use systemio::{
@@ -89,21 +86,34 @@ impl SystemIO for System {
             ..
         })
     }}
-    fn problem(error: impl Into<Issue>, chain: &[&'static str]) -> impl UpdateTrait {
-        let issue = Into::<Issue>::into(error);
-        let critical = if let Severity::Critical = issue.severity {true} else {false};
+    fn warning(error: impl Into<Issue>, chain: &[&'static str]) -> impl UpdateTrait {
         LAYOUT.get(|layout| layout.push(Section::Problem(Problem {
             chain: Vec::from(chain),
-            issue: issue,
+            issue: Into::<Issue>::into(error),
+            severity: Some(false),
             _at: Instant::now()
         })));
-        return if critical {
-            Update.sync();
-            set_hook(Box::new(|_| ()));
-            panic!();
-        } else {
-            Update
-        }
+        return Update;
+    }
+    fn error(error: impl Into<Issue>, chain: &[&'static str]) -> impl UpdateTrait {
+        LAYOUT.get(|layout| layout.push(Section::Problem(Problem {
+            chain: Vec::from(chain),
+            issue: Into::<Issue>::into(error),
+            severity: Some(true),
+            _at: Instant::now()
+        })));
+        return Update;
+    }
+    fn critical(error: impl Into<Issue>, chain: &[&'static str]) -> ! {
+        LAYOUT.get(|layout| layout.push(Section::Problem(Problem {
+            chain: Vec::from(chain),
+            issue: Into::<Issue>::into(error),
+            severity: None,
+            _at: Instant::now()
+        })));
+        Update.sync();
+        set_hook(Box::new(|_| ()));
+        panic!();
     }
     fn print(value: impl Display) -> impl UpdateTrait {
         LAYOUT.get(|layout| layout.push(Section::Display(value.to_string())));

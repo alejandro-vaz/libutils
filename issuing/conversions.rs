@@ -3,10 +3,7 @@
 //^
 
 //> HEAD -> SUPER
-use super::{
-    Issue,
-    severity::Severity
-};
+use super::Issue;
 
 
 //^
@@ -17,7 +14,6 @@ use super::{
 const impl From<&'static str> for Issue {
     fn from(value: &'static str) -> Self {return Self {
         name: value,
-        severity: Severity::Critical,
         ..
     }}
 }

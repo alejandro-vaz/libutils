@@ -21,10 +21,7 @@ use systemio::{
 use systemstd::System;
 
 //> HEAD -> ISSUING
-use issuing::{
-    Issue,
-    Severity
-};
+use issuing::Issue;
 
 
 //^
@@ -36,24 +33,21 @@ use issuing::{
 fn usage() -> () {
     let mut root = Root::default();
     let passing = |report: Report<"">| { // stays the same
-        System::problem(Issue {
+        System::warning(Issue {
             name: "hello",
-            severity: Severity::Warning,
             ..
         }, &*report).sync();
     };
     passing(root.to());
     let upgrading = |report: Report<"Category">| { // adds a category
-        System::problem(Issue {
+        System::warning(Issue {
             name: "hello 2",
-            severity: Severity::Warning,
             ..
         }, &*report).sync();
     };
     upgrading(root.to());
-    System::problem(Issue {
+    System::warning(Issue {
         name: "outside",
-        severity: Severity::Warning,
         ..
     }, &*root).sync();
     System::clear().sync();

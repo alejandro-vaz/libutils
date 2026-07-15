@@ -13,14 +13,13 @@
 #![feature(const_destruct)]
 #![feature(final_associated_functions)]
 #![feature(default_field_values)]
-#![feature(transmute_neo)]
-#![feature(never_type)]
 
 //> HEAD -> CRATES
 extern crate alloc;
 
 //> HEAD -> MODULES
 mod argument;
+mod clitype;
 mod descriptor;
 mod metadata;
 mod update;
@@ -29,17 +28,14 @@ mod update;
 pub use argument::Argument;
 
 //> HEAD -> ISSUING
-use issuing::{
-    Issue,
-    Severity
-};
+use issuing::Issue;
 
 //> HEAD -> CORE
 use core::fmt::{
-    Display,
-    Debug
+    Debug, 
+    Display
 };
-use core::mem::transmute_neo as transmute;
+
 //> HEAD -> UPDATE
 pub use update::Update;
 
@@ -48,6 +44,9 @@ pub use metadata::Metadata;
 
 //> HEAD -> DESCRIPTOR
 pub use descriptor::Descriptor;
+
+//> HEAD -> CLITYPE
+pub use clitype::CliType;
 
 
 //^
@@ -58,15 +57,15 @@ pub use descriptor::Descriptor;
 pub trait SystemIO {
     fn arguments() -> &'static [Argument];
     fn open(filename: &str) -> Result<impl Descriptor, Issue>;
-    fn problem(error: impl Into<Issue>, chain: &[&'static str]) -> impl Update;
-    final fn expect<Type>(result: Result<Type, impl Into<Issue>>, chain: &[&'static str]) -> Type {return match result {
-        Ok(value) => value,
-        Err(error) => {
-            let mut issue = Into::<Issue>::into(error);
-            issue.severity = Severity::Critical;
-            unsafe {transmute::<_, !>(Self::problem(issue, chain))};
+    fn warning(error: impl Into<Issue>, chain: &[&'static str]) -> impl Update;
+    fn error(error: impl Into<Issue>, chain: &[&'static str]) -> impl Update;
+    fn critical(error: impl Into<Issue>, chain: &[&'static str]) -> !;
+    final fn expect<Type>(result: Result<Type, impl Into<Issue>>, chain: &[&'static str]) -> Type {
+        return match result {
+            Ok(value) => value,
+            Err(error) => Self::critical(error, chain)
         }
-    }}
+    }
     fn print(value: impl Display) -> impl Update;
     fn debug(value: impl Debug) -> impl Update;
     fn clear() -> impl Update;
