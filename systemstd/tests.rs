@@ -3,14 +3,13 @@
 //^
 
 //> HEAD -> SYSTEMSTD
-use systemstd::System;
-
-//> HEAD -> SYSTEMIO
-use systemio::{
-    SystemIO, 
-    Update,
-    Descriptor
+use systemstd::{
+    System,
+    Argument
 };
+
+//> HEAD -> STD
+use std::assert_matches;
 
 
 //^ 
@@ -32,6 +31,20 @@ fn cli() -> () {
 fn erase() -> () {
     System::print("hello").sync();
     System::clear().sync();
+}
+
+//> TESTS -> ARGUMENTS
+#[test]
+fn arguments() -> () {
+    let args = ["myexec.exect", "rm", "-rf", "--please", "--opt=true", "&"].map(ToString::to_string).map(Into::into);
+    assert_matches!(args, [
+        Argument::Path(_),
+        Argument::Target(_),
+        Argument::Alias(_),
+        Argument::Flag(_),
+        Argument::Setting(_, _),
+        Argument::Unknown(_)
+    ]);
 }
 
 //> TESTS -> READ

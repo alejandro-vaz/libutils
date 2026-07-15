@@ -10,7 +10,6 @@ members = [
     "issuing", 
     "locks", 
     "stack-array", 
-    "systemio", 
     "systemstd"
 ]
 default-members = [".main"]
@@ -32,7 +31,6 @@ ebnftobnf = {version = "1.1", path = "ebnftobnf"}
 issuing = {version = "0.2", path = "issuing"}
 locks = {version = "0.0", path = "locks"}
 stack-array = {version = "0.6", path = "stack-array"}
-systemio = {version = "1.0", path = "systemio"}
 systemstd = {version = "0.3", path = "systemstd"}
 
 [profile.bench]

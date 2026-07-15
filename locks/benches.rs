@@ -32,7 +32,7 @@ fn benches(criterion: &mut Criterion) -> () {
     group.throughput(Throughput::Elements(ITERATIONS as u64));
     let cage = Mutex::new(3);
     group.bench_function("access", |bencher| bencher.iter(|| {for _ in 0..ITERATIONS {
-        let x = cage.get(|x| *x);
+        let x = cage.with(|x| *x);
         black_box(x);
     }}));
 }

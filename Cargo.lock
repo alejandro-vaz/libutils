@@ -8,7 +8,6 @@ version = "1.1.1"
 dependencies = [
  "criterion",
  "issuing",
- "systemio",
  "systemstd",
 ]
 
@@ -346,7 +345,6 @@ dependencies = [
  "issuing",
  "locks",
  "stack-array",
- "systemio",
  "systemstd",
 ]
 
@@ -585,14 +583,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "systemio"
-version = "1.0.0"
-dependencies = [
- "criterion",
- "issuing",
-]
-
-[[package]]
 name = "systemstd"
 version = "0.3.0"
 dependencies = [
@@ -600,7 +590,6 @@ dependencies = [
  "criterion",
  "issuing",
  "locks",
- "systemio",
 ]
 
 [[package]]

@@ -25,7 +25,6 @@ path = "tests.rs"
 
 [dependencies]
 issuing = {workspace = true}
-systemio = {workspace = true}
 systemstd = {workspace = true}
 
 [dev-dependencies]

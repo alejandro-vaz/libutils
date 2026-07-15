@@ -27,7 +27,6 @@ path = "tests.rs"
 bytediff = {workspace = true}
 issuing = {workspace = true}
 locks = {workspace = true}
-systemio = {workspace = true}
 
 [dev-dependencies]
 criterion = "0.8"

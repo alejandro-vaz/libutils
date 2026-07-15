@@ -2,15 +2,6 @@
 //^ HEAD
 //^
 
-//> HEAD -> ALLOC
-use alloc::{
-    vec::Vec,
-    string::{
-        String,
-        ToString
-    }
-};
-
 //> HEAD -> SUPER
 use super::clitype::CliType;
 

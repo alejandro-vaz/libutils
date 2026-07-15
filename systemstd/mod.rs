@@ -8,11 +8,14 @@
 //> HEAD -> FEATURES
 #![feature(const_trait_impl)]
 #![feature(const_default)]
-#![feature(default_field_values)]
+#![feature(core_io)]
 #![feature(transmute_neo)]
 
 //> HEAD -> MODULES
+mod argument;
+mod clitype;
 mod descriptor;
+mod ioerror;
 mod metadata;
 mod problem;
 mod section;
@@ -37,19 +40,14 @@ use core::fmt::{
 //> HEAD -> LOCKS
 use locks::Mutex;
 
+//> HEAD -> IOERROR
+pub use ioerror::IoError;
+
 //> HEAD -> UPDATE
 use update::Update;
 
 //> HEAD -> ISSUING
 use issuing::Issue;
-
-//> HEAD -> SYSTEMIO
-use systemio::{
-    SystemIO,
-    Argument,
-    Update as UpdateTrait,
-    Descriptor as DescriptorTrait
-};
 
 //> HEAD -> SECTION
 use section::Section;
@@ -59,6 +57,12 @@ use problem::Problem;
 
 //> HEAD -> DESCRIPTOR
 use descriptor::Descriptor;
+
+//> HEAD -> ARGUMENT
+pub use argument::Argument;
+
+//> HEAD -> CLITYPE
+pub use clitype::CliType;
 
 
 //^
@@ -74,20 +78,16 @@ static OUTPUT: Mutex<String> = Mutex::default();
 pub enum System {}
 
 //> SYSTEM -> IMPLEMENTATION
-impl SystemIO for System {
-    fn arguments() -> &'static [Argument] {return ARGUMENTS.as_slice()}
-    fn open(filename: &str) -> Result<impl DescriptorTrait, Issue> {match File::open(PathBuf::from(filename)) {
+impl System {
+    pub fn arguments() -> &'static [Argument] {return ARGUMENTS.as_slice()}
+    pub fn open(filename: &str) -> Result<Descriptor, IoError> {match File::open(PathBuf::from(filename)) {
         Ok(file) => Ok(Descriptor {
             file: file
         }),
-        Err(error) => Err(Issue {
-            name: "Failed to open file",
-            description: Some(error.to_string()),
-            ..
-        })
+        Err(error) => Err(IoError::CouldntOpenFile {error})
     }}
-    fn warning(error: impl Into<Issue>, chain: &[&'static str]) -> impl UpdateTrait {
-        LAYOUT.get(|layout| layout.push(Section::Problem(Problem {
+    pub fn warning(error: impl Into<Issue>, chain: &[&'static str]) -> Update {
+        LAYOUT.with(|layout| layout.push(Section::Problem(Problem {
             chain: Vec::from(chain),
             issue: Into::<Issue>::into(error),
             severity: Some(false),
@@ -95,8 +95,8 @@ impl SystemIO for System {
         })));
         return Update;
     }
-    fn error(error: impl Into<Issue>, chain: &[&'static str]) -> impl UpdateTrait {
-        LAYOUT.get(|layout| layout.push(Section::Problem(Problem {
+    pub fn error(error: impl Into<Issue>, chain: &[&'static str]) -> Update {
+        LAYOUT.with(|layout| layout.push(Section::Problem(Problem {
             chain: Vec::from(chain),
             issue: Into::<Issue>::into(error),
             severity: Some(true),
@@ -104,8 +104,8 @@ impl SystemIO for System {
         })));
         return Update;
     }
-    fn critical(error: impl Into<Issue>, chain: &[&'static str]) -> ! {
-        LAYOUT.get(|layout| layout.push(Section::Problem(Problem {
+    pub fn critical(error: impl Into<Issue>, chain: &[&'static str]) -> ! {
+        LAYOUT.with(|layout| layout.push(Section::Problem(Problem {
             chain: Vec::from(chain),
             issue: Into::<Issue>::into(error),
             severity: None,
@@ -115,16 +115,22 @@ impl SystemIO for System {
         set_hook(Box::new(|_| ()));
         panic!();
     }
-    fn print(value: impl Display) -> impl UpdateTrait {
-        LAYOUT.get(|layout| layout.push(Section::Display(value.to_string())));
+    pub fn expect<Type>(result: Result<Type, impl Into<Issue>>, chain: &[&'static str]) -> Type {
+        return match result {
+            Ok(value) => value,
+            Err(error) => Self::critical(error, chain)
+        }
+    }
+    pub fn print(value: impl Display) -> Update {
+        LAYOUT.with(|layout| layout.push(Section::Display(value.to_string())));
         return Update;
     }
-    fn debug(value: impl Debug) -> impl UpdateTrait {
-        LAYOUT.get(|layout| layout.push(Section::Debug(format!("{value:#?}"))));
+    pub fn debug(value: impl Debug) -> Update {
+        LAYOUT.with(|layout| layout.push(Section::Debug(format!("{value:#?}"))));
         return Update;
     }
-    fn clear() -> impl UpdateTrait {
-        LAYOUT.get(Vec::clear);
+    pub fn clear() -> Update {
+        LAYOUT.with(Vec::clear);
         return Update;
     }
 }

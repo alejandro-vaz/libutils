@@ -19,6 +19,7 @@
 
 //> HEAD -> MODULES
 mod conversions;
+mod guard;
 mod handle;
 
 //> HEAD -> CORE
@@ -38,6 +39,9 @@ use core::{
 //> HEAD -> HANDLE
 use handle::Handle;
 
+//> HEAD -> GUARD
+use guard::Guard;
+
 
 //^
 //^ MUTEX
@@ -56,11 +60,29 @@ impl<Type> Mutex<Type> {
         value: UnsafeCell::new(value),
         ..
     }}
-    pub fn get<Return>(&self, function: impl FnOnce(&mut Type) -> Return) -> Return {
+    pub fn try_with<Return>(&self, function: impl FnOnce(&mut Type) -> Return) -> Option<Return> {
+        let handle = Handle::acquire_now(&self.lock)?;
+        let value = function(unsafe {self.value.get().as_mut_unchecked()});
+        drop(handle);
+        return Some(value);
+    }
+    pub fn with<Return>(&self, function: impl FnOnce(&mut Type) -> Return) -> Return {
         let handle = Handle::acquire(&self.lock);
-        let value = function(unsafe {self.value.get().as_mut().unwrap()});
+        let value = function(unsafe {self.value.get().as_mut_unchecked()});
         drop(handle);
         return value;
+    }
+    pub fn try_get<'any, 'valid>(&'valid self) -> Option<Guard<'any, Type>> where 'valid: 'any {
+        return Some(Guard {
+            reference: unsafe {self.value.get().as_mut_unchecked()},
+            handle: Handle::acquire_now(&self.lock)?
+        })
+    }
+    pub fn get<'any, 'valid>(&'valid self) -> Guard<'any, Type> where 'valid: 'any {
+        return Guard {
+            reference: unsafe {self.value.get().as_mut_unchecked()},
+            handle: Handle::acquire(&self.lock)
+        }
     }
     pub fn release(self) -> Type {
         let (value, lock) = unsafe {transmute::<_, (Type, Atomic<bool>)>(self)};
@@ -75,7 +97,7 @@ impl<Type> Mutex<Type> {
     }
     pub fn cloned(&self) -> Type where Type: Clone {
         let handle = Handle::acquire(&self.lock);
-        let clone = unsafe {self.value.get().as_ref().unwrap().clone()};
+        let clone = unsafe {self.value.get().as_ref_unchecked().clone()};
         drop(handle);
         return clone;
     }

@@ -5,13 +5,16 @@
 ## Usage
 
 ```rust
-use cagelock::Cage;
+#![feature(const_default)]
+#![feature(const_trait_impl)]
 
-static MUTABLE: Cage<u8> = Cage::default();
+use locks::Mutex;
 
-MUTABLE.write(|variable| *variable = 1); // get a mutable reference
+static MUTABLE: Mutex<u8> = Mutex::default();
 
-let x = MUTABLE.get(); // copy
+MUTABLE.with(|variable| *variable = 1); // get a mutable reference
+
+let x = MUTABLE.get(); // get with a guard
 ```
 
 The `Cage` type offers a wrapper around `RwLock` from the standard library with a simplified API.

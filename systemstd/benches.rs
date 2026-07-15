@@ -5,12 +5,6 @@
 //> HEAD -> SYSTEMSTD
 use systemstd::System;
 
-//> HEAD -> SYSTEMIO
-use systemio::{
-    SystemIO, 
-    Update
-};
-
 //> HEAD -> CORE
 use core::hint::black_box;
 

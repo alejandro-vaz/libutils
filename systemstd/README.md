@@ -8,7 +8,6 @@ This crate exposes the Zero-Sized Type `System` that just refers to the internal
 
 ```rust
 use systemstd::System;
-use systemio::{SystemIO, Update};
 
 System::print("hello!").sync();
 ```

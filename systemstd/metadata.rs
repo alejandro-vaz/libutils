@@ -2,9 +2,6 @@
 //^ HEAD
 //^
 
-//> HEAD -> SYSTEMIO
-use systemio::Metadata as MetadataTrait;
-
 //> HEAD -> STD
 use std::fs::Metadata as MetadataInfo;
 
@@ -19,6 +16,6 @@ pub struct Metadata {
 }
 
 //> METADATA -> DATA
-impl MetadataTrait for Metadata {
-    fn size(&self) -> usize {return self.metadata.len() as usize}
+impl Metadata {
+    pub fn size(&self) -> usize {return self.metadata.len() as usize}
 }

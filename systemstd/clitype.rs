@@ -1,12 +1,4 @@
 //^
-//^ HEAD
-//^
-
-//> HEAD -> ALLOC
-use alloc::string::String;
-
-
-//^
 //^ CLITYPE
 //^
 

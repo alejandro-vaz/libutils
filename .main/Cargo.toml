@@ -23,7 +23,6 @@ ebnftobnf = {workspace = true, optional = true}
 issuing = {workspace = true, optional = true}
 locks = {workspace = true, optional = true}
 stack-array = {workspace = true, optional = true}
-systemio = {workspace = true, optional = true}
 systemstd = {workspace = true, optional = true}
 
 [features]
@@ -39,8 +38,7 @@ no-std = [
     "dep:cachetypes",
     "dep:ebnftobnf", 
     "dep:issuing", 
-    "dep:stack-array",
-    "dep:systemio"
+    "dep:stack-array"
 ]
 std = [
     "no-std", 

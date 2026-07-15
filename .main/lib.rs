@@ -32,7 +32,6 @@ mod nostd {
     pub extern crate ebnftobnf;
     pub extern crate issuing;
     pub extern crate stack_array;
-    pub extern crate systemio;
 }
 
 //> LIBUTILS -> STD
