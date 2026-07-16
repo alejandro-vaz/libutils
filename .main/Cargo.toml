@@ -16,7 +16,6 @@ path = "./lib.rs"
 
 [dependencies]
 active-reporting = {workspace = true, optional = true}
-bytediff = {workspace = true, optional = true}
 cachetypes = {workspace = true, optional = true}
 constrangeiter = {workspace = true, optional = true}
 ebnftobnf = {workspace = true, optional = true}
@@ -33,14 +32,13 @@ no-alloc = [
 ]
 no-std = [
     "no-alloc",
-    "dep:active-reporting", 
-    "dep:bytediff", 
+    "dep:active-reporting",
     "dep:cachetypes",
-    "dep:ebnftobnf", 
-    "dep:issuing", 
+    "dep:ebnftobnf",
+    "dep:issuing",
     "dep:stack-array"
 ]
 std = [
-    "no-std", 
+    "no-std",
     "dep:systemstd"
 ]

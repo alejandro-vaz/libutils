@@ -31,10 +31,12 @@ fn benches(criterion: &mut Criterion) -> () {
     const ITERATIONS: usize = 100;
     group.throughput(Throughput::Elements(ITERATIONS as u64));
     group.bench_function("print", |bencher| bencher.iter(|| for _ in 0..ITERATIONS {
-        System::print(black_box("hello!")).sync();
+        System::print(black_box("hello!"));
     }));
-    System::clear().sync();
     group.bench_function("open", |bencher| bencher.iter(|| for _ in 0..ITERATIONS {
         drop(System::open("README.md").unwrap());
+    }));
+    group.bench_function("openread", |bencher| bencher.iter(|| for _ in 0..ITERATIONS {
+        System::expect(System::expect(System::open("README.md"), &[]).read(), &[]);
     }));
 }

@@ -24,9 +24,8 @@ name = "systemstd"
 path = "tests.rs"
 
 [dependencies]
-bytediff = {workspace = true}
 issuing = {workspace = true}
-locks = {workspace = true}
+rich_rust = "0.2"
 
 [dev-dependencies]
 criterion = "0.8"

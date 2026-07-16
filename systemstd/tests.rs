@@ -12,16 +12,16 @@ use systemstd::{
 use std::assert_matches;
 
 
-//^ 
+//^
 //^ TESTS
-//^ 
+//^
 
 //> TESTS -> CLI
 #[test]
 #[should_panic]
 fn cli() -> () {
     let _arguments = System::arguments();
-    System::print("value").ignore();
+    System::print("value");
     let mut file = System::open("myfile.txt").unwrap();
     let _content = file.read().unwrap();
 }
@@ -29,8 +29,7 @@ fn cli() -> () {
 //> TESTS -> ERASE
 #[test]
 fn erase() -> () {
-    System::print("hello").sync();
-    System::clear().sync();
+    System::print("hello");
 }
 
 //> TESTS -> ARGUMENTS

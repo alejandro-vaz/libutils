@@ -11,23 +11,22 @@
 //> LIBUTILS -> IMPORTS
 #[cfg(feature = "no-alloc")]
 pub use noalloc::*;
-#[cfg(feature = "no-std")] 
+#[cfg(feature = "no-std")]
 pub use nostd::*;
-#[cfg(feature = "std")] 
+#[cfg(feature = "std")]
 pub use std::*;
 
 //> LIBUTILS -> NO ALLOC
-#[cfg(feature = "no-alloc")] 
+#[cfg(feature = "no-alloc")]
 mod noalloc {
     pub extern crate constrangeiter;
     pub extern crate locks;
 }
 
 //> LIBUTILS -> NO STD
-#[cfg(feature = "no-std")] 
+#[cfg(feature = "no-std")]
 mod nostd {
     pub extern crate active_reporting;
-    pub extern crate bytediff;
     pub extern crate cachetypes;
     pub extern crate ebnftobnf;
     pub extern crate issuing;
@@ -35,7 +34,7 @@ mod nostd {
 }
 
 //> LIBUTILS -> STD
-#[cfg(feature = "std")] 
+#[cfg(feature = "std")]
 mod std {
     pub extern crate systemstd;
 }

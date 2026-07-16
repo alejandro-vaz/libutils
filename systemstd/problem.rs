@@ -32,12 +32,12 @@ pub struct Problem {
 impl Display for Problem {
     fn fmt(&self, formatter: &mut Formatter<'_>) -> Format {write!(
         formatter,
-        "@ {}\n{:#?}: {}{}",
+        "[purple bold]@[/] [purple]{}[/]\n{}: {}{}",
         self.chain.join(" > "),
         match self.severity {
-            None => "Critical",
-            Some(false) => "Warning",
-            Some(true) => "Error"
+            None => "[bold red]Critical[/]",
+            Some(false) => "[red]Warning[/]",
+            Some(true) => "[yellow]Error[/]"
         },
         self.issue.name,
         self.issue.description.as_ref().map(|description| format!("\n    {description}")).unwrap_or_default()

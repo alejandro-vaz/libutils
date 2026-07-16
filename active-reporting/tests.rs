@@ -30,19 +30,18 @@ fn usage() -> () {
         System::warning(Issue {
             name: "hello",
             ..
-        }, &*report).sync();
+        }, &*report);
     };
     passing(root.to());
     let upgrading = |report: Report<"Category">| { // adds a category
         System::warning(Issue {
             name: "hello 2",
             ..
-        }, &*report).sync();
+        }, &*report);
     };
     upgrading(root.to());
     System::warning(Issue {
         name: "outside",
         ..
-    }, &*root).sync();
-    System::clear().sync();
+    }, &*root);
 }
