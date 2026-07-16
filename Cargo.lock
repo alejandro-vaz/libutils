@@ -4,7 +4,7 @@ version = 4
 
 [[package]]
 name = "active-reporting"
-version = "1.1.2"
+version = "1.1.3"
 dependencies = [
  "criterion",
  "issuing",
@@ -457,7 +457,7 @@ checksum = "68ab91017fe16c622486840e4c83c9a37afeff978bd239b5293d61ece587de66"
 
 [[package]]
 name = "libutils"
-version = "14.0.0"
+version = "14.1.0"
 dependencies = [
  "active-reporting",
  "cachetypes",
@@ -948,7 +948,7 @@ dependencies = [
 
 [[package]]
 name = "systemstd"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "criterion",
  "issuing",
