@@ -1,16 +1,4 @@
 //^
-//^ HEAD
-//^
-
-//> HEAD -> SUPER
-use super::{
-    delimiter::Delimiter,
-    commentstyle::CommentStyle,
-    temporalproductionstyle::TemporalProductionStyle
-};
-
-
-//^
 //^ SETTINGS
 //^
 
@@ -19,8 +7,8 @@ use super::{
 pub struct Settings<'valid> {
     pub keep_empty_lines: bool = true,
     pub keep_comments: bool = true,
-    pub comment_style: CommentStyle = CommentStyle::Slash,
-    pub temporal_production_style: TemporalProductionStyle = TemporalProductionStyle::Dollar,
-    pub delimiter: Delimiter = Delimiter::ColonSpace,
+    pub comment_start_character: char = '#',
+    pub temporal_production_character: char = '$',
+    pub delimiter: &'valid str = ": ",
     pub start_rule: Option<&'valid str> = None
 }

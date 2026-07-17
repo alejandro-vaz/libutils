@@ -22,6 +22,9 @@ use criterion::{
     Throughput
 };
 
+//> HEAD -> ARRAYVEC
+use arrayvec::ArrayVec;
+
 
 //^
 //^ BENCHES
@@ -48,7 +51,16 @@ fn benches(criterion: &mut Criterion) -> () {
     vector.push(3);
     group.bench_function("veccomparison", |bencher| bencher.iter(|| for _ in 0..ITERATIONS {
         vector.push(black_box(0));
-        let x = black_box(array.pop());
+        let x = black_box(vector.pop());
+        black_box(x);
+    }));
+    let mut competitor = ArrayVec::<u8, 10>::new();
+    competitor.push(1);
+    competitor.push(2);
+    competitor.push(3);
+    group.bench_function("arrayvec", |bencher| bencher.iter(|| for _ in 0..ITERATIONS {
+        competitor.push(black_box(0));
+        let x = black_box(competitor.pop());
         black_box(x);
     }));
     group.bench_function("insertremove", |bencher| bencher.iter(|| for _ in 0..ITERATIONS {

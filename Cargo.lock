@@ -4,7 +4,7 @@ version = 4
 
 [[package]]
 name = "active-reporting"
-version = "1.1.3"
+version = "1.1.4"
 dependencies = [
  "criterion",
  "issuing",
@@ -48,6 +48,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "940b3a0ca603d1eade50a4846a2afffd5ef57a9feac2c0e2ec2e14f9ead76000"
 
 [[package]]
+name = "arrayvec"
+version = "0.7.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d3fb67a6e08acf24fdeccbac2cb6ac4305825bd1f117462e0e6f2f193345ad56"
+
+[[package]]
 name = "autocfg"
 version = "1.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -82,7 +88,7 @@ checksum = "72f5acc6cb2ba439de613abc23857ec3d78374d8ed5ac84e9d11336e87da8649"
 
 [[package]]
 name = "cachetypes"
-version = "0.0.1"
+version = "0.0.2"
 dependencies = [
  "hashbrown 0.17.1",
 ]
@@ -309,7 +315,7 @@ dependencies = [
 
 [[package]]
 name = "ebnftobnf"
-version = "1.1.0"
+version = "2.0.0"
 dependencies = [
  "criterion",
  "hashbrown 0.17.1",
@@ -421,7 +427,7 @@ dependencies = [
 
 [[package]]
 name = "issuing"
-version = "0.3.0"
+version = "0.4.0"
 
 [[package]]
 name = "itertools"
@@ -457,7 +463,7 @@ checksum = "68ab91017fe16c622486840e4c83c9a37afeff978bd239b5293d61ece587de66"
 
 [[package]]
 name = "libutils"
-version = "14.1.0"
+version = "15.0.0"
 dependencies = [
  "active-reporting",
  "cachetypes",
@@ -492,7 +498,7 @@ dependencies = [
 
 [[package]]
 name = "locks"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "criterion",
 ]
@@ -919,8 +925,9 @@ checksum = "8ed6a63f02c8539c91a8685a86f4099661ba3da017932f6ebbea6de3f0fa7c90"
 
 [[package]]
 name = "stack-array"
-version = "0.6.3"
+version = "0.7.0"
 dependencies = [
+ "arrayvec",
  "constrangeiter",
  "criterion",
 ]
@@ -948,7 +955,7 @@ dependencies = [
 
 [[package]]
 name = "systemstd"
-version = "1.1.0"
+version = "2.0.0"
 dependencies = [
  "criterion",
  "issuing",

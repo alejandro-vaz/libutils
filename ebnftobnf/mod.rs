@@ -10,18 +10,14 @@
 
 //> HEAD -> FEATURES
 #![feature(default_field_values)]
-#![feature(const_convert)]
 #![feature(const_trait_impl)]
 
 //> HEAD -> CRATES
 extern crate alloc;
 
 //> HEAD -> MODULES
-mod commentstyle;
-mod delimiter;
 mod locales;
 mod settings;
-mod temporalproductionstyle;
 
 //> HEAD -> LOCALES
 use locales::Locales;
@@ -40,15 +36,6 @@ use typed_arena::Arena;
 
 //> HEAD -> SETTINGS
 pub use settings::Settings;
-
-//> HEAD -> COMMENTSTYLE
-pub use commentstyle::CommentStyle;
-
-//> HEAD -> DELIMITER
-pub use delimiter::Delimiter;
-
-//> HEAD -> TEMPORALPRODUCTIONSTYLE
-pub use temporalproductionstyle::TemporalProductionStyle;
 
 //> HEAD -> HASHBROWN
 use hashbrown::HashSet as Set;
@@ -69,23 +56,21 @@ pub fn reduce(ebnf: &str, settings: Settings<'_>) -> String {
             if settings.keep_empty_lines {rules.insert(line.to_string());}
             continue;
         }
-        if line.starts_with(char::from(settings.comment_style)) {
+        if line.starts_with(settings.comment_start_character) {
             if settings.keep_comments {rules.insert(line.to_string());}
             continue;
         }
-        let (rule, mut production) = line.split_once(
-            <&'static str>::from(settings.delimiter)
-        ).map(|(first, second)| (
+        let (rule, mut production) = line.split_once(settings.delimiter).map(|(first, second)| (
             first.trim(), 
             second.trim().to_string()
         )).unwrap();
         expand(&mut production, &mut locales, &mut counter, &mut rules, &arena, settings);
-        rules.insert(format!("{rule}{}{production}", <&'static str>::from(settings.delimiter)));
+        rules.insert(format!("{rule}{}{production}", settings.delimiter));
     };
     if let Some(start) = settings.start_rule {rules.insert(format!(
         "{}0{}{}",
-        char::from(settings.temporal_production_style),
-        <&'static str>::from(settings.delimiter),
+        settings.temporal_production_character,
+        settings.delimiter,
         start
     ));}
     let mut full = String::new();
@@ -115,13 +100,13 @@ fn expand<'arena>(
         expand(&mut inside, locales, counter, rules, arena, settings);
         rules.insert(format!(
             "{}{symbol}{}{inside}", 
-            char::from(settings.temporal_production_style), 
-            <&'static str>::from(settings.delimiter)
+            settings.temporal_production_character, 
+            settings.delimiter
         ));
         *production = format!(
             "{}{}{symbol}{}", 
             &production[..hit.start()], 
-            char::from(settings.temporal_production_style), 
+            settings.temporal_production_character, 
             &production[hit.end()..]
         );
     }
@@ -139,11 +124,11 @@ fn expand<'arena>(
         });
         rules.insert(format!(
             "{}{symbol}{}{atom} {}",
-            char::from(settings.temporal_production_style),
-            <&'static str>::from(settings.delimiter),
+            settings.temporal_production_character,
+            settings.delimiter,
             match operator {
-                '+' => format!("{}{symbol} | {atom}", char::from(settings.temporal_production_style)),
-                '*' => format!("{}{symbol} |", char::from(settings.temporal_production_style)),
+                '+' => format!("{}{symbol} | {atom}", settings.temporal_production_character),
+                '*' => format!("{}{symbol} |", settings.temporal_production_character),
                 '?' => format!("|"),
                 _ => unreachable!()
             }
@@ -152,7 +137,7 @@ fn expand<'arena>(
         *production = format!(
             "{}{}{symbol}{}", 
             &production[..group.start()], 
-            char::from(settings.temporal_production_style), 
+            settings.temporal_production_character, 
             &production[group.end()..]
         );
     }

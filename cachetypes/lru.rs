@@ -27,10 +27,14 @@ pub struct LruCache<Key: Clone + Hash + Eq, Value: Clone> {
 
 //> LRU -> POLICY
 impl<Key: Clone + Hash + Eq, Value: Clone> Policy<Key, Value> for LruCache<Key, Value> {
-    fn len(&self) -> usize {return self.first.is_some() as usize + self.last.is_some() as usize + self.body.len()}
-    fn is_full(&self) -> bool {
-        return self.first.is_some() && self.last.is_some() && self.body.len() == self.capacity.wrapping_sub(2);
+    fn len(&self) -> usize {
+        return self.first.is_some() as usize + self.last.is_some() as usize + self.body.len();
     }
+    fn is_full(&self) -> bool {return {
+        self.first.is_some() 
+        && self.last.is_some() 
+        && self.body.len() == self.capacity.wrapping_sub(2)
+    }}
     fn clear(&mut self) -> () {
         self.first.take();
         self.last.take();

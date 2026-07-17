@@ -12,7 +12,7 @@ use std::fs::Metadata as MetadataInfo;
 
 //> METADATA -> STRUCT
 pub struct Metadata {
-    metadata: MetadataInfo
+    pub metadata: MetadataInfo
 }
 
 //> METADATA -> DATA

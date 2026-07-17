@@ -3,7 +3,10 @@
 //^
 
 //> HEAD -> SYSTEMSTD
-use systemstd::System;
+use systemstd::{
+    System,
+    OpenMode
+};
 
 //> HEAD -> CORE
 use core::hint::black_box;
@@ -33,10 +36,10 @@ fn benches(criterion: &mut Criterion) -> () {
     group.bench_function("print", |bencher| bencher.iter(|| for _ in 0..ITERATIONS {
         System::print(black_box("hello!"));
     }));
-    group.bench_function("open", |bencher| bencher.iter(|| for _ in 0..ITERATIONS {
-        drop(System::open("README.md").unwrap());
-    }));
     group.bench_function("openread", |bencher| bencher.iter(|| for _ in 0..ITERATIONS {
-        System::expect(System::expect(System::open("README.md"), &[]).read(), &[]);
+        System::expect(System::expect(
+            System::path("README.md").file::<{OpenMode::Read}>(None), 
+            &[]
+        ).read(), &[]);
     }));
 }

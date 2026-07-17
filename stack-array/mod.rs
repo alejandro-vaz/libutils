@@ -14,9 +14,11 @@
 //> HEAD -> FEATURES
 #![feature(const_cmp)]
 #![feature(const_destruct)]
+#![feature(const_drop_in_place)]
 #![feature(const_array)]
 #![feature(transmute_neo)]
 #![feature(const_range)]
+#![feature(maybe_uninit_uninit_array_transpose)]
 #![feature(const_closures)]
 #![feature(const_trait_impl)]
 #![feature(box_vec_non_null)]
@@ -49,7 +51,9 @@ use core::{
     marker::Destruct, 
     mem::{
         MaybeUninit,
-        forget
+        forget,
+        transmute_neo as transmute,
+        replace
     }, 
     ops::{
         Bound, 
@@ -57,10 +61,8 @@ use core::{
         RangeBounds, 
         SubAssign
     }, 
-    ptr::{
-        copy,
-        copy_nonoverlapping
-    }
+    ptr::copy,
+    array::from_fn as arrayfn
 };
 
 //> HEAD -> CONSTRANGEITER
@@ -74,104 +76,121 @@ use constrangeiter::ConstIntoIterator;
 //> ARRAY -> STRUCT
 pub struct Array<Type, const N: usize> {
     length: usize,
-    data: MaybeUninit<[Type; N]>
+    data: [MaybeUninit<Type>; N]
 }
 
 //> ARRAY -> IMPLEMENTATION
 impl<Type, const N: usize> Array<Type, N> {
     pub const fn new() -> Self {return Self::default()}
     pub const fn is_full(&self) -> bool {return self.length == N}
-    pub const fn repeat<
-        const TIMES: usize
-    >(self) -> Array<Type, {TIMES * N}> where Type: [const] Clone + [const] Destruct, [(); TIMES * N]: {
-        let (length, data) = self.into();
-        let mut additional = MaybeUninit::<[Type; TIMES * N]>::uninit();
-        if N == 0 {for index in (0..length).const_into_iter() {
-            drop(unsafe {data.as_ptr().cast::<Type>().add(index).read()});
+    pub const fn repeat<const TIMES: usize>(self) -> Array<Type, {TIMES * N}> where Type: [const] Clone + [const] Destruct, [(); TIMES * N]: {
+        let (length, mut data) = self.into();
+        let mut additional = MaybeUninit::<[Type; TIMES * N]>::uninit().transpose();
+        if TIMES == 0 {for index in (0..length).const_into_iter() {
+            unsafe {data[index].assume_init_drop();};
         }} else {
-            unsafe {copy_nonoverlapping(
-                data.as_ptr().cast::<Type>(),
-                additional.as_mut_ptr().cast::<Type>(), 
-                length
-            )};
+            for index in (0..length).const_into_iter() {
+                additional[index].write(unsafe {data[index].assume_init_read()});
+            }
             for iteration in (1..TIMES).const_into_iter() {
                 for index in (0..length).const_into_iter() {
-                    unsafe {additional.as_mut_ptr().cast::<Type>().add(length * iteration).add(index).write(
-                        data.as_ptr().cast::<Type>().add(index).as_ref().unwrap().clone()
-                    )};
+                    additional[index + length * iteration].write(unsafe {
+                        data[index].assume_init_ref().clone()
+                    });
                 }
             }
         }
         return Array::from((length * TIMES, additional));
     }
     pub const fn resize<const M: usize>(self) -> Array<Type, M> where Type: [const] Destruct {
-        let (length, data) = self.into();
-        let mut additional = MaybeUninit::<[Type; M]>::uninit();
+        let (length, mut data) = self.into();
+        let mut additional = MaybeUninit::<[Type; M]>::uninit().transpose();
         return if M >= length {
-            unsafe {copy_nonoverlapping(
-                data.as_ptr().cast::<Type>(), 
-                additional.as_mut_ptr().cast::<Type>(), 
-                length
-            )};
+            for index in (0..length).const_into_iter() {
+                additional[index].write(unsafe {data[index].assume_init_read()});
+            }
             Array::from((length, additional))
         } else {
-            unsafe {copy_nonoverlapping(
-                data.as_ptr().cast::<Type>(), 
-                additional.as_mut_ptr().cast::<Type>(), 
-                M
-            )};
+            for index in (0..M).const_into_iter() {
+                additional[index].write(unsafe {data[index].assume_init_read()});
+            }
             for index in (M..length).const_into_iter() {
-                drop(unsafe {data.as_ptr().cast::<Type>().add(index).read()});
-            };
+                unsafe {data[index].assume_init_drop()};
+            }
             Array::from((M, additional))
         }
     }
+    pub const fn divide<const AT: usize>(self) -> (
+        Array<Type, AT>, 
+        Array<Type, {N - AT}>
+    ) where [(); N - AT]: {
+        let (length, data) = self.into();
+        let (first, second) = unsafe {transmute(data)};
+        return (Array {
+            length: length.min(AT),
+            data: first
+        }, Array {
+            length: length.saturating_sub(AT),
+            data: second
+        })
+    }
     pub const fn push(&mut self, value: Type) -> () {
-        assert!(self.length != N, "array capacity exceeded");
-        unsafe {self.as_mut_ptr().add(self.length).write(value)};
-        self.length += 1;
+        self.push_mut(value);
     }
     pub const fn push_mut<'valid>(&'valid mut self, value: Type) -> &'valid mut Type {
-        let index = self.length;
-        self.push(value);
-        return &mut self[index];
+        assert!(self.length != N, "array capacity exceeded");
+        let reference = self.data[self.length].write(value);
+        self.length += 1;
+        return reference;
     }
     pub const fn pop(&mut self) -> Option<Type> {return if self.length == 0 {None} else {
         self.length -= 1;
-        return Some(unsafe {self.as_ptr().add(self.length).read()});
+        return Some(unsafe {replace(
+            &mut self.data[self.length], 
+            MaybeUninit::uninit()
+        ).assume_init()});
     }}
     pub const fn clear(&mut self) -> () where Type: [const] Destruct {self.truncate(0)}
     pub const fn truncate(&mut self, length: usize) -> () where Type: [const] Destruct {
         for index in (length..self.length).const_into_iter() {
-            drop(unsafe {self.as_ptr().add(index).read()})
+            unsafe {self.data[index].assume_init_drop()};
         }
         self.length = length;
     }
     pub const fn insert(&mut self, index: usize, value: Type) -> () {
+        self.insert_mut(index, value);
+    }
+    pub const fn insert_mut<'valid>(
+        &'valid mut self, 
+        index: usize, 
+        value: Type
+    ) -> &'valid mut Type {
         assert!(index <= self.length, "tried to insert out of bounds");
         assert!(self.length != N, "array capacity exceeded");
-        let pointer = unsafe {self.as_mut_ptr().add(index)};
-        unsafe {copy(pointer, pointer.add(1), self.length - index)}
-        unsafe {pointer.write(value)}
+        if self.length != index {unsafe {copy(
+            self.data[index].as_ptr(), 
+            self.data[index + 1].as_mut_ptr(), 
+            self.length - index
+        )}};
+        let reference = self.data[index].write(value);
         self.length += 1;
-    }
-    pub const fn insert_mut<'valid>(&'valid mut self, index: usize, value: Type) -> &'valid mut Type {
-        self.insert(index, value);
-        return &mut self[index];
+        return reference;
     }
     pub const fn remove(&mut self, index: usize) -> Type {
         assert!(index < self.length, "tried to remove out of bounds");
-        let pointer = unsafe {self.as_mut_ptr().add(index)};
-        let value = unsafe {pointer.read()};
-        unsafe {copy(pointer.add(1), pointer, self.length - 1 - index)};
+        let value = unsafe {self.data[index].assume_init_read()};
+        unsafe {copy(
+            self.data[index + 1].as_ptr(),
+            self.data[index].as_mut_ptr(),
+            self.length - index - 1
+        )};
         self.length -= 1;
         return value;
     }
     pub const fn swap_remove(&mut self, index: usize) -> Type {
-        assert!(index < self.length, "tried to remove out of bounds");
-        let pointer = unsafe {self.as_mut_ptr().add(index)};
-        let value = unsafe {pointer.read()};
-        unsafe {copy(self.as_ptr().add(self.length).sub(1), pointer, 1)}
+        assert!(index < self.length - 1, "tried to remove out of bounds");
+        let value = unsafe {self.data[index].assume_init_read()};
+        self.data.swap(index, self.length - 1);
         self.length -= 1;
         return value;
     }
@@ -180,20 +199,18 @@ impl<Type, const N: usize> Array<Type, N> {
         mut closure: impl [const] FnMut(&mut Type) -> bool + [const] Destruct
     ) -> () where Type: [const] Destruct {
         let mut offset = 0;
-        for position in (0..self.length).const_into_iter() {
-            let mut item = unsafe {self.as_mut_ptr().add(position).read()};
-            if closure(&mut item) {
-                if offset == 0 {
-                    forget(item);
-                } else {
-                    unsafe {self.as_mut_ptr().add(position).sub(offset).write(item)}
+        for index in (0..self.length).const_into_iter() {
+            let mut item = unsafe {self.data[index].assume_init_read()};
+            match (closure(&mut item), offset == 0) {
+                (true, true) => forget(item),
+                (true, false) => {self.data[index - offset].write(item);},
+                (false, _) => {
+                    drop(item);
+                    offset += 1;
                 }
-            } else {
-                drop(item);
-                offset += 1;
             }
         }
-        self.length.sub_assign(offset);
+        self.length -= offset;
     }
     pub const fn dedup(&mut self) -> () where Type: [const] PartialEq<Type> + [const] Destruct {
         self.dedup_by(const |first, second| (first as &Type).eq(second as &Type));
@@ -205,8 +222,8 @@ impl<Type, const N: usize> Array<Type, N> {
         if self.length < 2 {return}
         let mut offset = 0;
         let mut first = None;
-        for position in (0..=self.length - 1).const_into_iter() {
-            let mut second = unsafe {self.as_ptr().add(position).read()};
+        for index in (0..self.length).const_into_iter() {
+            let mut second = unsafe {self.data[index].assume_init_read()};
             if first.is_none() {
                 first = Some(second);
                 continue;
@@ -218,8 +235,10 @@ impl<Type, const N: usize> Array<Type, N> {
                 if offset == 0 {
                     forget(first.replace(second).unwrap());
                 } else {
-                    unsafe {self.as_mut_ptr().add(position).sub(offset).write(second)};
-                    forget(first.replace(unsafe {self.as_mut_ptr().add(position).sub(offset).read()}).unwrap());
+                    let pointer = self.data[index - offset].write(second) as *mut Type;
+                    forget(first.replace(
+                        unsafe {pointer.read()}
+                    ).unwrap());
                 }
             }
         }
@@ -231,23 +250,61 @@ impl<Type, const N: usize> Array<Type, N> {
     ) -> () where Type: [const] Destruct {
         self.dedup_by(const |first, second| transformation(first) == transformation(second));
     }
-    pub const fn drain(&mut self, range: impl [const] RangeBounds<usize> + [const] Destruct) -> Self {
+    pub const fn drain(
+        &mut self, 
+        range: impl [const] RangeBounds<usize> + [const] Destruct
+    ) -> Self {
         let start = match range.start_bound() {
             Bound::Excluded(_) => unreachable!(),
-            Bound::Included(bound) => if *bound < self.length {*bound} else {self.length - 1},
+            Bound::Included(bound) => {
+                assert!(*bound <= self.length);
+                *bound
+            },
             Bound::Unbounded => 0
         };
         let end = match range.end_bound() {
-            Bound::Excluded(bound) => if *bound <= self.length {*bound} else {self.length},
-            Bound::Included(bound) => if bound + 1 <= self.length {bound + 1} else {self.length},
+            Bound::Excluded(bound) => {
+                assert!(*bound <= self.length + 1);
+                *bound
+            },
+            Bound::Included(bound) => {
+                assert!(*bound <= self.length);
+                *bound + 1
+            },
             Bound::Unbounded => self.length
         };
-        let length = end - start;
-        let mut additional = MaybeUninit::<[Type; N]>::uninit();
-        unsafe {copy_nonoverlapping(self.as_ptr().add(start), additional.as_mut_ptr().cast::<Type>(), length)};
-        unsafe {copy(self.as_ptr().add(end), self.as_mut_ptr().add(start), self.length - end)}
-        self.length -= length;
-        return Self::from((length, additional));
+        assert!(start <= end);
+        let mut additional = MaybeUninit::<[Type; N]>::uninit().transpose();
+        let array = match end - start {
+            0 => Array {
+                length: 0,
+                data: additional
+            },
+            1 => {
+                additional[0].write(self.remove(start));
+                Array {
+                    length: 1,
+                    data: additional
+                }
+            },
+            amount => {
+                for index in (start..end).const_into_iter() {
+                    let value = unsafe {self.data[index].assume_init_read()};
+                    additional[index - start].write(value);
+                }
+                unsafe {copy(
+                    self.data[end].as_ptr(),
+                    self.data[start].as_mut_ptr(),
+                    self.length - end
+                )};
+                Array {
+                    length: amount,
+                    data: additional
+                }
+            }
+        };
+        self.length -= end - start;
+        return array;
     }
 }
 
@@ -258,27 +315,32 @@ const impl<Type: [const] Destruct, const N: usize> Drop for Array<Type, N> {
 
 //> ARRAY -> DEBUG
 impl<Type: Debug, const N: usize> Debug for Array<Type, N> {
-    fn fmt(&self, formatter: &mut Formatter<'_>) -> Format {Debug::fmt(self.as_ref(), formatter)}
+    fn fmt(&self, formatter: &mut Formatter<'_>) -> Format {
+        return Debug::fmt(self.as_ref(), formatter);
+    }
 }
 
 //> ARRAY -> EXTEND
 impl<Type, const N: usize> Extend<Type> for Array<Type, N> {
-    fn extend<T: IntoIterator<Item = Type>>(&mut self, iter: T) {for item in iter {self.push(item)}}
+    fn extend<T: IntoIterator<Item = Type>>(&mut self, iter: T) {
+        for item in iter {self.push(item)}
+    }
 }
 
 //> ARRAY -> CLONE
 const impl<Type: [const] Clone, const N: usize> Clone for Array<Type, N> {
-    fn clone(&self) -> Self {
-        let mut array = Array::new();
-        for position in (0..self.length).const_into_iter() {array.push(self[position].clone())}
-        return array;
-    }
+    fn clone(&self) -> Self {return Array {
+        length: self.length,
+        data: arrayfn(const |index| if index >= self.length {MaybeUninit::uninit()} else {
+            MaybeUninit::new(unsafe {self.data[index].assume_init_ref().clone()})
+        })
+    }}
 }
 
 //> ARRAY -> DEFAULT
 const impl<Type, const N: usize> Default for Array<Type, N> {
     fn default() -> Self {return Self {
-        data: MaybeUninit::uninit(),
+        data: MaybeUninit::uninit().transpose(),
         length: 0
     }}
 }

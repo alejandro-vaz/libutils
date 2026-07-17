@@ -29,12 +29,16 @@ use core::{
 //> DEREF -> CONSTANT
 const impl<Type, const N: usize> Deref for Array<Type, N> {
     type Target = [Type];
-    fn deref(&self) -> &Self::Target {return unsafe {fat(self.data.as_ptr().cast(), self.length)}}
+    fn deref(&self) -> &Self::Target {
+        return unsafe {fat(self.data.as_ptr().cast(), self.length)};
+    }
 }
 
 //> DEREF -> MUTABLE
 const impl<Type, const N: usize> DerefMut for Array<Type, N> {
-    fn deref_mut(&mut self) -> &mut Self::Target {return unsafe {mutfat(self.data.as_mut_ptr().cast(), self.length)}}
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        return unsafe {mutfat(self.data.as_mut_ptr().cast(), self.length)};
+    }
 }
 
 

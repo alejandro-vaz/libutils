@@ -12,34 +12,43 @@ use core::fmt::{
     Display
 };
 
-//> HEAD -> STD
-use std::time::Instant;
-
 
 //^
 //^ PROBLEM
 //^
 
 //> PROBLEM -> STRUCT
-pub struct Problem {
-    pub chain: Vec<&'static str>,
+pub struct Problem<'valid> {
+    pub chain: &'valid [&'static str],
     pub issue: Issue,
-    pub severity: Option<bool>,
-    pub _at: Instant
+    pub severity: Option<bool>
 }
 
 //> PROBLEM -> DISPLAY
-impl Display for Problem {
+impl<'valid> Display for Problem<'valid> {
     fn fmt(&self, formatter: &mut Formatter<'_>) -> Format {write!(
         formatter,
-        "[purple bold]@[/] [purple]{}[/]\n{}: {}{}",
-        self.chain.join(" > "),
+        "{}[bold]: {}[/]{}",
         match self.severity {
             None => "[bold red]Critical[/]",
-            Some(false) => "[red]Warning[/]",
-            Some(true) => "[yellow]Error[/]"
+            Some(false) => "[bold red]Warning[/]",
+            Some(true) => "[bold yellow]Error[/]"
         },
         self.issue.name,
-        self.issue.description.as_ref().map(|description| format!("\n    {description}")).unwrap_or_default()
+        format!(
+            "{}{}{}{}",
+            (!self.chain.is_empty()).then(|| {
+                format!("\n[bold purple]@[/] [purple]{}[/]", self.chain.join(" > "))
+            }).unwrap_or_default(),
+            self.issue.traceback.as_ref().map(|string| {
+                format!("\n[gray]traceback[/]: {string}")
+            }).unwrap_or_default(),
+            self.issue.description.as_ref().map(|string| {
+                format!("\n{string}")
+            }).unwrap_or_default(),
+            self.issue.help.as_ref().map(|string| {
+                format!("\n[blue]help[/]: {string}")
+            }).unwrap_or_default()
+        ).replace('\n', "\n    ")
     )}
 }

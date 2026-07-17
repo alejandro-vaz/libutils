@@ -8,10 +8,7 @@
 //> HEAD -> EBNFTOBNF
 use ebnftobnf::{
     reduce,
-    Settings,
-    Delimiter,
-    TemporalProductionStyle,
-    CommentStyle
+    Settings
 };
 
 
@@ -40,7 +37,7 @@ fn multiple() -> () {
     let input = "% hello
 A: B*";
     assert_eq!(reduce(input, Settings {
-        comment_style: CommentStyle::Percentage,
+        comment_start_character: '%',
         ..
     }), r"% hello
 $1: B $1 |
@@ -52,7 +49,7 @@ A: $1")
 fn more() -> () {
     let input = "A: B+";
     assert_eq!(reduce(input, Settings {
-        temporal_production_style: TemporalProductionStyle::Ampersand,
+        temporal_production_character: '&',
         ..
     }), r"&1: B &1 | B
 A: &1")
@@ -63,7 +60,7 @@ A: &1")
 fn big() -> () {
     let input = "A -> (B C+)*";
     assert_eq!(reduce(input, Settings {
-        delimiter: Delimiter::SpaceThinArrowSpace,
+        delimiter: " -> ",
         ..
     }), "$2 -> C $2 | C\n$1 -> B $2\n$3 -> $1 $3 |\nA -> $3");
 }

@@ -95,7 +95,10 @@ fn get() -> () {
 fn intoiter() -> () {
     let initial = [1, 2, 3];
     let array = Array::<u8, 3>::from(initial.clone());
-    assert_eq!(array.into_iter().collect::<Vec<u8>>(), initial.into_iter().collect::<Vec<u8>>());
+    assert_eq!(
+        array.into_iter().collect::<Vec<u8>>(), 
+        initial.into_iter().collect::<Vec<u8>>()
+    );
 }
 
 //> TESTS -> ITER
@@ -286,4 +289,19 @@ fn drain() -> () {
     let subarray = array.drain(2..=5);
     assert_eq!(subarray, [1, 2, 3, 0]);
     assert_eq!(array, [0, 4, 0, 3]);
+}
+
+//> TESTS -> DIVIDE
+#[test]
+fn divide() -> () {
+    let array = Array::<u8, 10>::from([0, 4, 1, 2, 3, 0, 0, 3]);
+    let (first, second) = array.divide::<4>();
+    assert_eq!(first, [0, 4, 1, 2]);
+    assert_eq!(second, [3, 0, 0, 3]);
+    let (zero, some) = first.divide::<0>();
+    assert_eq!(zero, []);
+    assert_eq!(some, [0, 4, 1, 2]);
+    let (reverse, null) = second.divide::<6>();
+    assert_eq!(reverse, [3, 0, 0, 3]);
+    assert_eq!(null, []);
 }

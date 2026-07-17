@@ -36,12 +36,14 @@ fn usage() -> () {
     let upgrading = |report: Report<"Category">| { // adds a category
         System::warning(Issue {
             name: "hello 2",
+            description: Some("second time".to_string()),
             ..
         }, &*report);
     };
     upgrading(root.to());
     System::warning(Issue {
         name: "outside",
+        help: Some(format!("you need help?")),
         ..
     }, &*root);
 }

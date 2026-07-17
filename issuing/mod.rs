@@ -37,7 +37,9 @@ use core::hash::{
 #[derive(Debug, PartialEq, Eq)]
 pub struct Issue {
     pub name: &'static str,
-    pub description: Option<String> = None
+    pub description: Option<String> = None,
+    pub help: Option<String> = None,
+    pub traceback: Option<String> = None
 }
 
 //> ISSUE -> IMPLEMENTATION
@@ -50,9 +52,9 @@ impl Issue {
         (self.name_nodoublespace(), "name has double spaces in it"),
         (self.description_notempty(), "description is empty or none")
     ] {assert!(condition, "{message}: {self:#?}")}}
-    fn name_startlowercase(&self) -> bool {
-        return self.name.chars().next().map(|character| character.is_lowercase()).unwrap_or_default();
-    }
+    fn name_startlowercase(&self) -> bool {return self.name.chars().next().map(|character| {
+        return character.is_lowercase();
+    }).unwrap_or_default()}
     fn name_notempty(&self) -> bool {return !self.name.is_empty()}
     fn name_nopadding(&self) -> bool {return self.name.trim() == self.name}
     fn name_nodots(&self) -> bool {self.name.chars().all(|character| character != '.')}
@@ -65,12 +67,12 @@ impl Issue {
         }
         return true;
     }
-    fn description_notempty(&self) -> bool {return if let Some(string) = &self.description && !string.is_empty() {true} else {false}}
+    fn description_notempty(&self) -> bool {
+        if let Some("") = self.description.as_ref().map(String::as_str) {false} else {true}
+    }
 }
 
 //> ISSUE -> HASH
 impl Hash for Issue {
-    fn hash<H: Hasher>(&self, state: &mut H) {
-        return Hash::hash(&self.name, state);
-    }
+    fn hash<H: Hasher>(&self, state: &mut H) {return Hash::hash(&self.name, state)}
 }

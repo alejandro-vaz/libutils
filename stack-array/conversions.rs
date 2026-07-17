@@ -7,6 +7,7 @@ use super::Array;
 
 //> HEAD -> ALLOC
 use alloc::vec::Vec;
+use constrangeiter::ConstIntoIterator;
 
 //> HEAD -> CORE
 use core::{
@@ -14,7 +15,6 @@ use core::{
         MaybeUninit,
         transmute_neo as transmute
     },
-    ptr::copy_nonoverlapping,
     array::from_fn as arrayfn,
     marker::Destruct
 };
@@ -25,14 +25,22 @@ use core::{
 //^
 
 //> FROM -> FIXED ARRAY
-const impl<Type, const M: usize, const N: usize> From<[Type; N]> for Array<Type, M> where [(); M - N]: {
+const impl<
+    Type: [const] Destruct, 
+    const M: usize, 
+    const N: usize
+> From<[Type; N]> for Array<Type, M> where [(); M - N]: {
     fn from(value: [Type; N]) -> Self {
-        let mut array = Array {
+        let mut data = MaybeUninit::<[Type; M]>::uninit().transpose();
+        let mut index = 0;
+        let _ = value.map(const |element| {
+            data[index].write(element); 
+            index += 1;
+        });
+        return Array {
             length: N,
-            data: MaybeUninit::uninit()
+            data: data
         };
-        unsafe {array.data.as_mut_ptr().cast::<[Type; N]>().write(value)};
-        return array;
     }
 }
 
@@ -42,9 +50,9 @@ const impl<
     const N: usize, 
     Generator: [const] FnMut(usize) -> Type + [const] Destruct
 > From<Generator> for Array<Type, N> {
-    fn from(value: Generator) -> Self {return Array {
+    fn from(mut value: Generator) -> Self {return Array {
         length: N,
-        data: MaybeUninit::new(arrayfn(value))
+        data: arrayfn(const |index| MaybeUninit::new(value(index)))
     }}
 }
 
@@ -52,20 +60,23 @@ const impl<
 const impl<Type, const N: usize> TryFrom<Vec<Type>> for Array<Type, N> {
     type Error = &'static str;
     fn try_from(value: Vec<Type>) -> Result<Self, Self::Error> {
+
         let (pointer, length, _) = value.into_parts();
         if length > N {return Err("vector doesn't fit into array, length > N")}
         let mut array = Array {
             length: length,
-            data: MaybeUninit::uninit()
+            data: MaybeUninit::uninit().transpose()
         };
-        unsafe {copy_nonoverlapping(pointer.as_ptr(), array.as_mut_ptr(), length)};
+        for index in (0..length).const_into_iter() {
+            array.data[index].write(unsafe {pointer.add(index).read()});
+        }
         return Ok(array);
     }
 }
 
 //> FROM -> PARTS
-const impl<Type, const N: usize> From<(usize, MaybeUninit<[Type; N]>)> for Array<Type, N> {
-    fn from(value: (usize, MaybeUninit<[Type; N]>)) -> Self {return unsafe {transmute(value)};}
+const impl<Type, const N: usize> From<(usize, [MaybeUninit<Type>; N])> for Array<Type, N> {
+    fn from(value: (usize, [MaybeUninit<Type>; N])) -> Self {return unsafe {transmute(value)}}
 }
 
 
@@ -79,6 +90,6 @@ impl<Type, const N: usize> Into<Vec<Type>> for Array<Type, N> {
 }
 
 //> INTO -> PARTS
-const impl<Type, const N: usize> Into<(usize, MaybeUninit<[Type; N]>)> for Array<Type, N> {
-    fn into(self) -> (usize, MaybeUninit<[Type; N]>) {return unsafe {transmute(self)}}
+const impl<Type, const N: usize> Into<(usize, [MaybeUninit<Type>; N])> for Array<Type, N> {
+    fn into(self) -> (usize, [MaybeUninit<Type>; N]) {return unsafe {transmute(self)}}
 }
