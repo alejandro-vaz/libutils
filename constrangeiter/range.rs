@@ -37,7 +37,7 @@ const impl<Type: const Target> Iterator for Iterable<Type> where usize: const Tr
     type Item = Type;
     fn next(&mut self) -> Option<Self::Item> {return if self.start < self.end {
         let now = self.start;
-        self.start.add_assign(Type::ONE);
+        self.start += Type::ONE;
         Some(now)
     } else {None}}
     fn size_hint(&self) -> (usize, Option<usize>) {
@@ -48,8 +48,8 @@ const impl<Type: const Target> Iterator for Iterable<Type> where usize: const Tr
 //> ITERATOR -> DOUBLE ENDED
 const impl<Type: const Target> DoubleEndedIterator for Iterable<Type> where usize: const TryFrom<Type>, <usize as TryFrom<Type>>::Error: const Destruct {
     fn next_back(&mut self) -> Option<Self::Item> {return if self.start < self.end {
-        self.end.sub_assign(Type::ONE);
-        return Some(self.end)
+        self.end -= Type::ONE;
+        Some(self.end)
     } else {None}}
 }
 

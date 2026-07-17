@@ -289,6 +289,14 @@ fn drain() -> () {
     let subarray = array.drain(2..=5);
     assert_eq!(subarray, [1, 2, 3, 0]);
     assert_eq!(array, [0, 4, 0, 3]);
+    let last = array.drain(3..);
+    assert_eq!(last, [3]);
+    assert_eq!(array, [0, 4, 0]);
+    assert_eq!(array.len(), 3);
+    let more = array.drain(2..=2);
+    assert_eq!(more, [0]);
+    let once = array.drain(..1);
+    assert_eq!(once, [0]);
 }
 
 //> TESTS -> DIVIDE

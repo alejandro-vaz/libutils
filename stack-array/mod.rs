@@ -17,6 +17,7 @@
 #![feature(const_drop_in_place)]
 #![feature(const_array)]
 #![feature(transmute_neo)]
+#![feature(const_index)]
 #![feature(const_range)]
 #![feature(maybe_uninit_uninit_array_transpose)]
 #![feature(const_closures)]
@@ -61,8 +62,8 @@ use core::{
         RangeBounds, 
         SubAssign
     }, 
-    ptr::copy,
-    array::from_fn as arrayfn
+    array::from_fn as arrayfn,
+    ptr::copy
 };
 
 //> HEAD -> CONSTRANGEITER
@@ -81,6 +82,7 @@ pub struct Array<Type, const N: usize> {
 
 //> ARRAY -> IMPLEMENTATION
 impl<Type, const N: usize> Array<Type, N> {
+    pub const fn len(&self) -> usize {return self.length}
     pub const fn new() -> Self {return Self::default()}
     pub const fn is_full(&self) -> bool {return self.length == N}
     pub const fn repeat<const TIMES: usize>(self) -> Array<Type, {TIMES * N}> where Type: [const] Clone + [const] Destruct, [(); TIMES * N]: {
@@ -138,22 +140,31 @@ impl<Type, const N: usize> Array<Type, N> {
         self.push_mut(value);
     }
     pub const fn push_mut<'valid>(&'valid mut self, value: Type) -> &'valid mut Type {
-        assert!(self.length != N, "array capacity exceeded");
         let reference = self.data[self.length].write(value);
         self.length += 1;
         return reference;
     }
     pub const fn pop(&mut self) -> Option<Type> {return if self.length == 0 {None} else {
         self.length -= 1;
-        return Some(unsafe {replace(
-            &mut self.data[self.length], 
-            MaybeUninit::uninit()
-        ).assume_init()});
+        Some(unsafe {self.data[self.length].assume_init_read()})
+    }}
+    pub const fn pop_if(
+        &mut self, 
+        function: impl [const] FnOnce(&mut Type) -> bool + [const] Destruct
+    ) -> Option<Type> {return if self.length == 0 {None} else {
+        let last = &mut self.data[self.length - 1];
+        if function(unsafe {last.assume_init_mut()}) {
+            self.length -= 1;
+            Some(unsafe {replace(
+                last,
+                MaybeUninit::uninit()
+            ).assume_init()})
+        } else {None}
     }}
     pub const fn clear(&mut self) -> () where Type: [const] Destruct {self.truncate(0)}
     pub const fn truncate(&mut self, length: usize) -> () where Type: [const] Destruct {
         for index in (length..self.length).const_into_iter() {
-            unsafe {self.data[index].assume_init_drop()};
+            unsafe {self.data.get_unchecked_mut(index).assume_init_drop()};
         }
         self.length = length;
     }
@@ -167,21 +178,23 @@ impl<Type, const N: usize> Array<Type, N> {
     ) -> &'valid mut Type {
         assert!(index <= self.length, "tried to insert out of bounds");
         assert!(self.length != N, "array capacity exceeded");
-        if self.length != index {unsafe {copy(
-            self.data[index].as_ptr(), 
-            self.data[index + 1].as_mut_ptr(), 
+        let pointer = unsafe {self.data.as_mut_ptr().add(index)};
+        unsafe {copy(
+            pointer,
+            pointer.add(1),
             self.length - index
-        )}};
-        let reference = self.data[index].write(value);
+        )};
+        let reference = unsafe {self.data.get_unchecked_mut(index).write(value)};
         self.length += 1;
         return reference;
     }
     pub const fn remove(&mut self, index: usize) -> Type {
         assert!(index < self.length, "tried to remove out of bounds");
-        let value = unsafe {self.data[index].assume_init_read()};
+        let value = unsafe {self.data.get_unchecked(index).assume_init_read()};
+        let pointer = unsafe {self.data.as_mut_ptr().add(index)};
         unsafe {copy(
-            self.data[index + 1].as_ptr(),
-            self.data[index].as_mut_ptr(),
+            pointer.add(1),
+            pointer,
             self.length - index - 1
         )};
         self.length -= 1;
@@ -256,24 +269,23 @@ impl<Type, const N: usize> Array<Type, N> {
     ) -> Self {
         let start = match range.start_bound() {
             Bound::Excluded(_) => unreachable!(),
-            Bound::Included(bound) => {
-                assert!(*bound <= self.length);
+            Bound::Included(bound) => { // 2.. => 2
+                assert!(*bound < self.length);
                 *bound
             },
             Bound::Unbounded => 0
         };
         let end = match range.end_bound() {
-            Bound::Excluded(bound) => {
-                assert!(*bound <= self.length + 1);
+            Bound::Excluded(bound) => { // ..2 => 2
+                assert!(*bound <= self.length);
                 *bound
             },
-            Bound::Included(bound) => {
-                assert!(*bound <= self.length);
+            Bound::Included(bound) => { // ..=2 => 3
+                assert!(*bound < self.length);
                 *bound + 1
             },
             Bound::Unbounded => self.length
         };
-        assert!(start <= end);
         let mut additional = MaybeUninit::<[Type; N]>::uninit().transpose();
         let array = match end - start {
             0 => Array {
@@ -289,21 +301,22 @@ impl<Type, const N: usize> Array<Type, N> {
             },
             amount => {
                 for index in (start..end).const_into_iter() {
-                    let value = unsafe {self.data[index].assume_init_read()};
-                    additional[index - start].write(value);
+                    additional[index - start].write(unsafe {
+                        self.data[index].assume_init_read()
+                    });
                 }
-                unsafe {copy(
-                    self.data[end].as_ptr(),
-                    self.data[start].as_mut_ptr(),
-                    self.length - end
-                )};
+                for index in (end..self.length).const_into_iter() {
+                    self.data[index - end + start].write(unsafe {
+                        self.data[index].assume_init_read()
+                    });
+                }
+                self.length -= end - start;
                 Array {
                     length: amount,
                     data: additional
                 }
             }
         };
-        self.length -= end - start;
         return array;
     }
 }
@@ -323,7 +336,7 @@ impl<Type: Debug, const N: usize> Debug for Array<Type, N> {
 //> ARRAY -> EXTEND
 impl<Type, const N: usize> Extend<Type> for Array<Type, N> {
     fn extend<T: IntoIterator<Item = Type>>(&mut self, iter: T) {
-        for item in iter {self.push(item)}
+        iter.into_iter().for_each(|item| self.push(item));
     }
 }
 
@@ -343,4 +356,8 @@ const impl<Type, const N: usize> Default for Array<Type, N> {
         data: MaybeUninit::uninit().transpose(),
         length: 0
     }}
+}
+
+pub fn test(x: u8, mut array: Array<u8, 4>) -> () {
+    array.push(x);
 }
