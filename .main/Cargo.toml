@@ -1,6 +1,6 @@
 [package]
 name = "libutils"
-version = "15.0.1"
+version = "16.0.0"
 edition.workspace = true
 authors.workspace = true
 rust-version.workspace = true
@@ -16,7 +16,6 @@ path = "./lib.rs"
 
 [dependencies]
 active-reporting = {workspace = true, optional = true}
-cachetypes = {workspace = true, optional = true}
 constrangeiter = {workspace = true, optional = true}
 ebnftobnf = {workspace = true, optional = true}
 issuing = {workspace = true, optional = true}
@@ -33,7 +32,6 @@ no-alloc = [
 no-std = [
     "no-alloc",
     "dep:active-reporting",
-    "dep:cachetypes",
     "dep:ebnftobnf",
     "dep:issuing",
     "dep:stack-array"

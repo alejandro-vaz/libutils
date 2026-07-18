@@ -18,7 +18,7 @@ use std::path::PathBuf;
 
 //> ARGUMENT -> ENUM
 #[derive(Debug, Clone)]
-pub enum Argument<'valid> {
+pub enum Argument {
     Path {
         buffer: PathBuf
     },
@@ -26,31 +26,31 @@ pub enum Argument<'valid> {
         characters: Vec<char>
     },
     Flag {
-        value: &'valid str
+        value: String
     },
     Setting {
-        key: &'valid str, 
+        key: String, 
         value: CliType
     },
     Target {
-        to: &'valid str
+        to: String
     }
 } 
 
 //> ARGUMENT -> PARSING
-impl<'valid> TryFrom<&'valid str> for Argument<'valid> {
-    type Error = IoError<'valid>;
-    fn try_from(value: &'valid str) -> Result<Self, Self::Error> {return Ok(match value {
-        capture if let Some(Some((key, value))) = capture.strip_prefix("--").map(|item| {
+impl TryFrom<String> for Argument {
+    type Error = IoError<'static>;
+    fn try_from(value: String) -> Result<Self, Self::Error> {return Ok(match value {
+        ref capture if let Some(Some((key, value))) = capture.strip_prefix("--").map(|item| {
             item.split_once('=')
         }) => Argument::Setting {
-            key: key, 
-            value: CliType::try_from(value)?
+            key: key.to_string(), 
+            value: CliType::try_from(value.to_string())?
         },
-        capture if let Some(flag) = capture.strip_prefix("--") => Argument::Flag {
-            value: flag
+        ref capture if let Some(flag) = capture.strip_prefix("--") => Argument::Flag {
+            value: flag.to_string()
         },
-        capture if let Some(alias) = capture.strip_prefix('-') => Argument::Alias {
+        ref capture if let Some(alias) = capture.strip_prefix('-') => Argument::Alias {
             characters: alias.chars().collect()
         },
         other => {

@@ -27,7 +27,6 @@ mod noalloc {
 #[cfg(feature = "no-std")]
 mod nostd {
     pub extern crate active_reporting;
-    pub extern crate cachetypes;
     pub extern crate ebnftobnf;
     pub extern crate issuing;
     pub extern crate stack_array;

@@ -313,3 +313,12 @@ fn divide() -> () {
     assert_eq!(reverse, [3, 0, 0, 3]);
     assert_eq!(null, []);
 }
+
+//> TESTS -> JOIN
+#[test]
+fn join() -> () {
+    let first = Array::<u8, 3>::from([1, 2, 3]);
+    let second = Array::<u8, 7>::from([0, 1]);
+    let third = first.join(second);
+    assert_eq!(third, [1, 2, 3, 0, 1]);
+}

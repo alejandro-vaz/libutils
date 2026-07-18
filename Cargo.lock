@@ -87,13 +87,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "72f5acc6cb2ba439de613abc23857ec3d78374d8ed5ac84e9d11336e87da8649"
 
 [[package]]
-name = "cachetypes"
-version = "0.0.2"
-dependencies = [
- "hashbrown 0.17.1",
-]
-
-[[package]]
 name = "cast"
 version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -427,7 +420,7 @@ dependencies = [
 
 [[package]]
 name = "issuing"
-version = "0.4.0"
+version = "0.5.0"
 
 [[package]]
 name = "itertools"
@@ -463,10 +456,9 @@ checksum = "68ab91017fe16c622486840e4c83c9a37afeff978bd239b5293d61ece587de66"
 
 [[package]]
 name = "libutils"
-version = "15.0.1"
+version = "16.0.0"
 dependencies = [
  "active-reporting",
- "cachetypes",
  "constrangeiter",
  "ebnftobnf",
  "issuing",
@@ -925,7 +917,7 @@ checksum = "8ed6a63f02c8539c91a8685a86f4099661ba3da017932f6ebbea6de3f0fa7c90"
 
 [[package]]
 name = "stack-array"
-version = "0.7.1"
+version = "0.8.0"
 dependencies = [
  "arrayvec",
  "constrangeiter",
@@ -955,7 +947,7 @@ dependencies = [
 
 [[package]]
 name = "systemstd"
-version = "2.0.0"
+version = "2.1.0"
 dependencies = [
  "criterion",
  "issuing",

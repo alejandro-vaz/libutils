@@ -136,6 +136,21 @@ impl<Type, const N: usize> Array<Type, N> {
             data: second
         })
     }
+    pub const fn join<const M: usize>(self, other: Array<Type, M>) -> Array<Type, {N + M}> {
+        let (length, data) = self.into();
+        let (slength, sdata) = other.into();
+        let mut together = unsafe {transmute::<_, [MaybeUninit<Type>; N + M]>((data, sdata))};
+        let pointer = together.as_mut_ptr();
+        unsafe {copy(
+            pointer.add(N),
+            pointer.add(length),
+            slength
+        )}
+        return Array {
+            length: length + slength,
+            data: together
+        }
+    }
     pub const fn push(&mut self, value: Type) -> () {
         self.push_mut(value);
     }
@@ -225,7 +240,9 @@ impl<Type, const N: usize> Array<Type, N> {
         }
         self.length -= offset;
     }
-    pub const fn dedup(&mut self) -> () where Type: [const] PartialEq<Type> + [const] Destruct {
+    pub const fn dedup(
+        &mut self
+    ) -> () where Type: [const] PartialEq<Type> + [const] Destruct {
         self.dedup_by(const |first, second| (first as &Type).eq(second as &Type));
     }
     pub const fn dedup_by(
@@ -356,8 +373,4 @@ const impl<Type, const N: usize> Default for Array<Type, N> {
         data: MaybeUninit::uninit().transpose(),
         length: 0
     }}
-}
-
-pub fn test(x: u8, mut array: Array<u8, 4>) -> () {
-    array.push(x);
 }

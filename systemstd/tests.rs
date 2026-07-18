@@ -30,26 +30,21 @@ fn cli() -> () {
 //> TESTS -> ARGUMENTS
 #[test]
 fn arguments() -> () {
-    assert_matches!("myexec.exect".try_into(), Ok(Argument::Path {..}));
-    assert_matches!("rm".try_into(), Ok(Argument::Target {..}));
-    assert_matches!("-rf".try_into(), Ok(Argument::Alias {..}));
-    assert_matches!("--please".try_into(), Ok(Argument::Flag {..}));
-    assert_matches!("--opt=3".try_into(), Ok(Argument::Setting {
+    assert_matches!("myexec.exect".to_string().try_into(), Ok(Argument::Path {..}));
+    assert_matches!("rm".to_string().try_into(), Ok(Argument::Target {..}));
+    assert_matches!("-rf".to_string().try_into(), Ok(Argument::Alias {..}));
+    assert_matches!("--please".to_string().try_into(), Ok(Argument::Flag {..}));
+    assert_matches!("--opt=3".to_string().try_into(), Ok(Argument::Setting {
         value: CliType::Integer {
             value: 3
         },
         ..
     }));
-    assert_matches!(TryInto::<Argument<'static>>::try_into("--key=impossible"), Err(
-        IoError::UnknownSettingValue { 
-            value: "impossible", 
-            ..
-        }
+    assert_matches!(TryInto::<Argument>::try_into("--key=impossible".to_string()), Err(
+        IoError::UnknownSettingValue {..}
     ));
-    assert_matches!(TryInto::<Argument<'static>>::try_into("&"), Err(
-        IoError::FailureParsingArgument {
-            argument: "&"
-        }
+    assert_matches!(TryInto::<Argument>::try_into("&".to_string()), Err(
+        IoError::FailureParsingArgument {..}
     ));
 }
 

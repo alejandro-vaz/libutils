@@ -22,9 +22,9 @@ pub enum CliType {
 }
 
 //> CLITYPE -> TRY FROM STR
-impl<'valid> TryFrom<&'valid str> for CliType {
-    type Error = IoError<'valid>;
-    fn try_from(value: &'valid str) -> Result<Self, Self::Error> {
+impl TryFrom<String> for CliType {
+    type Error = IoError<'static>;
+    fn try_from(value: String) -> Result<Self, Self::Error> {
         let number = match value.parse::<u128>() {
             Ok(value) => return Ok(CliType::Integer {
                 value: value
@@ -38,7 +38,7 @@ impl<'valid> TryFrom<&'valid str> for CliType {
             Err(error) => error
         };
         return Err(IoError::UnknownSettingValue { 
-            value, 
+            value: value, 
             errors: (number, float)
         });
     }

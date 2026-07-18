@@ -71,9 +71,8 @@ pub use openmode::OpenMode;
 //^
 
 //> SYSTEM -> DATA
-static INPUT: LazyLock<Vec<String>> = LazyLock::new(|| args().collect());
-static ARGUMENTS: LazyLock<Vec<Argument<'static>>> = LazyLock::new(|| {
-    INPUT.iter().map(String::as_str).map(Argument::try_from).map(|argument| {match argument {
+static ARGUMENTS: LazyLock<Vec<Argument>> = LazyLock::new(|| {
+    args().map(Argument::try_from).map(|argument| {match argument {
         Ok(value) => value,
         Err(ioerror) => System::critical(ioerror, &["System"])
     }}).collect()
@@ -87,7 +86,7 @@ pub enum System {}
 
 //> SYSTEM -> IMPLEMENTATION
 impl System {
-    pub fn arguments() -> &'static [Argument<'static>] {return ARGUMENTS.as_slice()}
+    pub fn arguments() -> &'static [Argument] {return ARGUMENTS.as_slice()}
     pub fn path(
         filename: impl Into<PathBuf>
     ) -> Path {return Path {

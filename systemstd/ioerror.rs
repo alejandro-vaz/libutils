@@ -43,11 +43,11 @@ pub enum IoError<'valid> {
         error: FromUtf8Error
     },
     UnknownSettingValue {
-        value: &'valid str,
+        value: String,
         errors: (ParseIntError, ParseFloatError)
     },
     FailureParsingArgument {
-        argument: &'valid str
+        argument: String
     },
     CantKnowIfPathExists {
         path: &'valid PathBuf,

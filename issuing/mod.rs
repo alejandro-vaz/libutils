@@ -34,7 +34,7 @@ use core::hash::{
 //^
 
 //> ISSUE -> STRUCT
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug)]
 pub struct Issue {
     pub name: &'static str,
     pub description: Option<String> = None,
