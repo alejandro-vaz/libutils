@@ -19,12 +19,18 @@ use std::assert_matches;
 //^ TESTS
 //^
 
+//> TESTS -> PRINT
+#[test]
+fn print() -> () {
+    System::print("value");
+    System::debug("hello", false);
+}
+
 //> TESTS -> CLI
 #[test]
 #[should_panic]
 fn cli() -> () {
     let _arguments = System::arguments();
-    System::print("value");
 }
 
 //> TESTS -> ARGUMENTS

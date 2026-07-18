@@ -420,7 +420,7 @@ dependencies = [
 
 [[package]]
 name = "issuing"
-version = "0.5.0"
+version = "0.6.0"
 
 [[package]]
 name = "itertools"
@@ -947,7 +947,7 @@ dependencies = [
 
 [[package]]
 name = "systemstd"
-version = "2.1.0"
+version = "2.2.0"
 dependencies = [
  "criterion",
  "issuing",

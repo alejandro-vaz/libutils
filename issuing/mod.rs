@@ -44,31 +44,30 @@ pub struct Issue {
 
 //> ISSUE -> IMPLEMENTATION
 impl Issue {
-    pub fn assert_normal(&self) -> () {for (condition, message) in [
-        (self.name_startlowercase(), "name doesn't start with lowercase"),
-        (self.name_notempty(), "name is empty"),
-        (self.name_nopadding(), "name has whitespace padding"),
-        (self.name_nodots(), "name has dot (.) characters"),
-        (self.name_nodoublespace(), "name has double spaces in it"),
-        (self.description_notempty(), "description is empty or none")
-    ] {assert!(condition, "{message}: {self:#?}")}}
-    fn name_startlowercase(&self) -> bool {return self.name.chars().next().map(|character| {
-        return character.is_lowercase();
-    }).unwrap_or_default()}
-    fn name_notempty(&self) -> bool {return !self.name.is_empty()}
-    fn name_nopadding(&self) -> bool {return self.name.trim() == self.name}
-    fn name_nodots(&self) -> bool {self.name.chars().all(|character| character != '.')}
-    fn name_nodoublespace(&self) -> bool {
-        let mut before = false;
-        for character in self.name.chars() {
-            if character.is_whitespace() {
-                if before {return false} else {before = true;}
-            } else {before = false}
-        }
-        return true;
-    }
-    fn description_notempty(&self) -> bool {
-        if let Some("") = self.description.as_ref().map(String::as_str) {false} else {true}
+    pub fn assert_normal(self) -> Self {
+        for (condition, message) in [
+            (!self.name.is_empty(), "name is empty"),
+            (
+                self.name.chars().next().map(|c| c.is_lowercase()).unwrap_or_default(), 
+                "name doesn't start with lowercase"
+            ),
+            (self.name.trim().len() == self.name.len(), "name has whitespace padding"),
+            (self.name.chars().all(|c| c != '.'), "name has dot (.) characters"),
+            ((|| {
+                let mut before = false;
+                for character in self.name.chars() {
+                    if character.is_whitespace() {
+                        if before {return false} else {before = true}
+                    } else {before = false}
+                }
+                true
+            })(), "name has double spaces in it"),
+            (!matches!(
+                self.description.as_ref().map(String::as_str), 
+                Some("")
+            ), "description is empty or none")
+        ] {debug_assert!(condition, "{message}: {self:#?}")};
+        return self;
     }
 }
 

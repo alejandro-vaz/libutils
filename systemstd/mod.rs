@@ -57,7 +57,7 @@ pub use argument::Argument;
 pub use clitype::CliType;
 
 //> HEAD -> RICH_RUST
-use rich_rust::Console;
+use rich_rust::console::Console;
 
 //> HEAD -> PATH
 use path::Path;
@@ -72,13 +72,13 @@ pub use openmode::OpenMode;
 
 //> SYSTEM -> DATA
 static ARGUMENTS: LazyLock<Vec<Argument>> = LazyLock::new(|| {
-    args().map(Argument::try_from).map(|argument| {match argument {
+    return args().map(Argument::try_from).map(|argument| {match argument {
         Ok(value) => value,
         Err(ioerror) => System::critical(ioerror, &["System"])
-    }}).collect()
+    }}).collect();
 });
 static CONSOLE: LazyLock<Console> = LazyLock::new(|| {
-    Console::builder().highlight(false).build()
+    return Console::builder().highlight(false).build();
 });
 
 //> SYSTEM -> STRUCT
@@ -123,6 +123,7 @@ impl System {
         Err(error) => Self::critical(error, chain)
     }}
     pub fn print(value: impl Display) -> () {CONSOLE.print(&value.to_string())}
-    pub fn debug(value: impl Debug) -> () {CONSOLE.print(&format!("{value:#?}"))}
-    pub fn debug_raw(value: impl Debug) -> () {CONSOLE.print(&format!("{value:?}"))}
+    pub fn debug(value: impl Debug, raw: bool) -> () {
+        CONSOLE.print(&if raw {format!("{value:?}")} else {format!("{value:#?}")});
+    }
 }
