@@ -3,10 +3,7 @@
 //^
 
 //> HEAD -> SUPER
-use super::{
-    System,
-    argument::Argument
-};
+use super::System;
 
 //> HEAD -> SYSTEMIO
 use systemio::{
