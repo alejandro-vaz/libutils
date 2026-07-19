@@ -27,7 +27,7 @@ ebnftobnf = {version = "2.0", path = "ebnftobnf"}
 issuing = {version = "0.6", path = "issuing"}
 locks = {version = "1.0", path = "locks"}
 stack-array = {version = "0.9", path = "stack-array"}
-systemstd = {version = "2.2", path = "systemstd"}
+systemstd = {version = "3.0", path = "systemstd"}
 
 [profile.bench]
 lto = "fat"
