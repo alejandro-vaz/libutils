@@ -26,7 +26,7 @@ constrangeiter = {version = "0.0", path = "constrangeiter"}
 ebnftobnf = {version = "2.0", path = "ebnftobnf"}
 issuing = {version = "0.6", path = "issuing"}
 locks = {version = "1.0", path = "locks"}
-stack-array = {version = "0.9", path = "stack-array"}
+stack-array = {version = "0.10", path = "stack-array"}
 systemstd = {version = "3.0", path = "systemstd"}
 
 [profile.bench]

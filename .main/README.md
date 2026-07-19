@@ -7,11 +7,9 @@ This is a general utility library containing all my libraries to remove dependen
 | Crate | Description |
 |:-|:-|
 | [`active-reporting`](https://crates.io/crates/active-reporting) | A custom error wrapper for detailed logs |
-| [`bytediff`](https://crates.io/crates/bytediff) | A bytearray diff |
-| [`cachetypes`](https://crates.io/crates/cachetypes) | Common cache implementations |
 | [`constrangeiter`](https://crates.io/crates/constrangeiter) | Constant iterators for ranges |
 | [`ebnftobnf`](https://crates.io/crates/ebnftobnf) | A straightforward EBNF to BNF reducer |
-| [`issuing`](https://crates.io/crates/issuing) | A easy-to-use customizable error type |
+| [`issuing`](https://crates.io/crates/issuing) | An easy-to-use customizable error type |
 | [`locks`](https://crates.io/crates/locks) | Thread-safe type wrappers |
 | [`stack-array`](https://crates.io/crates/stack-array) | A maximum-sized array stored on the stack |
 | [`systemio`](https://crates.io/crates/systemio) | A simple generalized I/O interface |

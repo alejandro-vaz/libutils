@@ -241,26 +241,32 @@ impl<Type, const N: usize> Array<Type, N> {
     pub const fn dedup(
         &mut self
     ) -> () where Type: [const] PartialEq<Type> + [const] Destruct {self.dedup_by_key_with(
-        const |element| unsafe {transmute::<_, &mut Type>(element)}, 
-        const |first, second| first == second
+        const |element| element as *const Type,
+        const |first, second| unsafe {first.as_ref().unwrap() == second.as_ref().unwrap()}
     )}
     pub const fn dedup_with(
         &mut self,
         mut decider: impl [const] FnMut(&mut Type, &mut Type) -> bool + [const] Destruct
     ) -> () where Type: [const] Destruct {self.dedup_by_key_with(
-        const |element| unsafe {transmute::<_, &mut Type>(element)}, 
-        const |first, second| decider(*first, *second)
+        const |element| element as *mut Type, 
+        const |first, second| unsafe {decider(
+            first.as_mut().unwrap(), 
+            second.as_mut().unwrap()
+        )}
     )}
-    pub const fn dedup_by_key<Key: [const] PartialEq<Key> + [const] Destruct>(
-        &mut self,
-        transformation: impl [const] FnMut(&mut Type) -> Key + [const] Destruct
+    pub const fn dedup_by_key<
+        'valid, 
+        Key: 'valid + [const] PartialEq<Key> + [const] Destruct
+    >(
+        &'valid mut self,
+        transformation: impl for<'any> [const] FnMut(&'any mut Type) -> Key + [const] Destruct
     ) -> () where Type: [const] Destruct {self.dedup_by_key_with(
         transformation, 
         const |first, second| first == second
     )}
-    pub const fn dedup_by_key_with<Key: [const] Destruct>(
-        &mut self, 
-        mut transformation: impl [const] FnMut(&mut Type) -> Key + [const] Destruct,
+    pub const fn dedup_by_key_with<'valid, Key: 'valid + [const] Destruct>(
+        &'valid mut self, 
+        mut transformation: impl for<'any> [const] FnMut(&'any mut Type) -> Key + [const] Destruct,
         mut decider: impl [const] FnMut(&mut Key, &mut Key) -> bool + [const] Destruct
     ) -> () where Type: [const] Destruct {
         if self.length == 0 {return}
