@@ -20,6 +20,7 @@
 //> HEAD -> MODULES
 mod argument;
 mod clitype;
+mod data;
 mod descriptor;
 mod ioerror;
 mod metadata;
@@ -29,8 +30,6 @@ mod problem;
 
 //> HEAD -> STD
 use std::{
-    env::args,
-    sync::LazyLock,
     panic::set_hook,
     path::PathBuf
 };
@@ -56,32 +55,24 @@ pub use argument::Argument;
 //> HEAD -> CLITYPE
 pub use clitype::CliType;
 
-//> HEAD -> RICH_RUST
-use rich_rust::console::Console;
-
 //> HEAD -> PATH
 use path::Path;
 
 //> HEAD -> OPENMODE
 pub use openmode::OpenMode;
 
+//> HEAD -> DATA
+use data::{
+    ARGUMENTS,
+    CONSOLE
+};
+
 
 //^
 //^ SYSTEM
 //^
 
-//> SYSTEM -> DATA
-static ARGUMENTS: LazyLock<Vec<Argument>> = LazyLock::new(|| {
-    return args().map(Argument::try_from).map(|argument| {match argument {
-        Ok(value) => value,
-        Err(ioerror) => System::critical(ioerror, &["System"])
-    }}).collect();
-});
-static CONSOLE: LazyLock<Console> = LazyLock::new(|| {
-    return Console::builder().highlight(false).build();
-});
-
-//> SYSTEM -> STRUCT
+//> SYSTEM -> ENUM
 pub enum System {}
 
 //> SYSTEM -> IMPLEMENTATION

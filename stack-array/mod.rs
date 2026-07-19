@@ -27,7 +27,6 @@
 #![feature(const_clone)]
 #![feature(new_range)]
 #![feature(const_slice_make_iter)]
-#![feature(const_ops)]
 #![feature(generic_const_exprs)]
 #![feature(const_iter)]
 #![feature(const_convert)]
@@ -59,8 +58,7 @@ use core::{
     ops::{
         Bound, 
         Drop, 
-        RangeBounds, 
-        SubAssign
+        RangeBounds
     }, 
     array::from_fn as arrayfn,
     ptr::copy
@@ -242,43 +240,48 @@ impl<Type, const N: usize> Array<Type, N> {
     }
     pub const fn dedup(
         &mut self
-    ) -> () where Type: [const] PartialEq<Type> + [const] Destruct {
-        self.dedup_by(const |first, second| (first as &Type).eq(second as &Type));
-    }
-    pub const fn dedup_by(
-        &mut self, 
+    ) -> () where Type: [const] PartialEq<Type> + [const] Destruct {self.dedup_by_key_with(
+        const |element| unsafe {transmute::<_, &mut Type>(element)}, 
+        const |first, second| first == second
+    )}
+    pub const fn dedup_with(
+        &mut self,
         mut decider: impl [const] FnMut(&mut Type, &mut Type) -> bool + [const] Destruct
+    ) -> () where Type: [const] Destruct {self.dedup_by_key_with(
+        const |element| unsafe {transmute::<_, &mut Type>(element)}, 
+        const |first, second| decider(*first, *second)
+    )}
+    pub const fn dedup_by_key<Key: [const] PartialEq<Key> + [const] Destruct>(
+        &mut self,
+        transformation: impl [const] FnMut(&mut Type) -> Key + [const] Destruct
+    ) -> () where Type: [const] Destruct {self.dedup_by_key_with(
+        transformation, 
+        const |first, second| first == second
+    )}
+    pub const fn dedup_by_key_with<Key: [const] Destruct>(
+        &mut self, 
+        mut transformation: impl [const] FnMut(&mut Type) -> Key + [const] Destruct,
+        mut decider: impl [const] FnMut(&mut Key, &mut Key) -> bool + [const] Destruct
     ) -> () where Type: [const] Destruct {
-        if self.length < 2 {return}
+        if self.length == 0 {return}
         let mut offset = 0;
-        let mut first = None;
-        for index in (0..self.length).const_into_iter() {
-            let mut second = unsafe {self.data[index].assume_init_read()};
-            if first.is_none() {
-                first = Some(second);
-                continue;
-            }
-            if decider(first.as_mut().unwrap(), &mut second) {
-                drop(second);
+        let mut previouskey = transformation(unsafe {self.data[0].assume_init_mut()});
+        for index in (1..self.length).const_into_iter() {
+            let current = unsafe {self.data[index].assume_init_mut()};
+            let mut currentkey = transformation(current);
+            if decider(&mut previouskey, &mut currentkey) {
+                unsafe {(current as *mut Type).drop_in_place()};
+                drop(currentkey);
                 offset += 1;
             } else {
-                if offset == 0 {
-                    forget(first.replace(second).unwrap());
-                } else {
-                    let pointer = self.data[index - offset].write(second) as *mut Type;
-                    forget(first.replace(
-                        unsafe {pointer.read()}
-                    ).unwrap());
+                previouskey = currentkey;
+                if offset != 0 {
+                    let value = unsafe {(current as *mut Type).read()};
+                    self.data[index - offset].write(value);
                 }
             }
         }
-        self.length.sub_assign(offset);
-    }
-    pub const fn dedup_by_key<Key: [const] PartialEq<Key> + [const] Destruct>(
-        &mut self,
-        mut transformation: impl [const] FnMut(&mut Type) -> Key + [const] Destruct
-    ) -> () where Type: [const] Destruct {
-        self.dedup_by(const |first, second| transformation(first) == transformation(second));
+        self.length -= offset;
     }
     pub const fn drain(
         &mut self, 
@@ -286,18 +289,18 @@ impl<Type, const N: usize> Array<Type, N> {
     ) -> Self {
         let start = match range.start_bound() {
             Bound::Excluded(_) => unreachable!(),
-            Bound::Included(bound) => { // 2.. => 2
+            Bound::Included(bound) => {
                 assert!(*bound < self.length);
                 *bound
             },
             Bound::Unbounded => 0
         };
         let end = match range.end_bound() {
-            Bound::Excluded(bound) => { // ..2 => 2
+            Bound::Excluded(bound) => {
                 assert!(*bound <= self.length);
                 *bound
             },
-            Bound::Included(bound) => { // ..=2 => 3
+            Bound::Included(bound) => {
                 assert!(*bound < self.length);
                 *bound + 1
             },

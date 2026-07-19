@@ -29,10 +29,6 @@ pub struct Descriptor<const WRITE: bool> {
 
 //> DESCRIPTOR -> IMPLEMENTATION
 impl<const WRITE: bool> Descriptor<WRITE> {
-    //pub fn lock(&self) -> () {}
-    // try_lock
-    // try_shared_lock
-    // shared_lock
     pub fn metadata(&self) -> Result<Metadata, IoError<'static>> {
         return match self.stdfile.metadata() {
             Ok(metadata) => Ok(Metadata {
