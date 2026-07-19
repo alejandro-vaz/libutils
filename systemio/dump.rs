@@ -15,6 +15,5 @@ use issuing::Issue;
 
 //> DUMP -> TRAIT
 pub trait Dump<Object: Into<Issue>> {
-    type Argument;
-    fn dump() -> SystemIO<Object, Self::Argument>;
+    fn dump() -> SystemIO<Object>;
 }

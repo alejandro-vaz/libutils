@@ -456,7 +456,7 @@ checksum = "68ab91017fe16c622486840e4c83c9a37afeff978bd239b5293d61ece587de66"
 
 [[package]]
 name = "libutils"
-version = "18.0.0"
+version = "18.1.0"
 dependencies = [
  "active-reporting",
  "constrangeiter",
@@ -959,7 +959,7 @@ dependencies = [
 
 [[package]]
 name = "systemio"
-version = "2.0.0"
+version = "2.1.0"
 dependencies = [
  "criterion",
  "issuing",
@@ -967,7 +967,7 @@ dependencies = [
 
 [[package]]
 name = "systemstd"
-version = "3.1.0"
+version = "3.2.0"
 dependencies = [
  "criterion",
  "issuing",

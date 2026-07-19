@@ -20,8 +20,7 @@ pub use dump::Dump;
 //^
 
 //> SYSTEMIO -> STRUCT
-pub struct SystemIO<Object: Into<Issue>, Argument: 'static> {
-    pub arguments: fn() -> &'static [Argument],
+pub struct SystemIO<Object: Into<Issue>> {
     pub warning: fn(Object, &[&'static str]) -> (),
     pub error: fn(Object, &[&'static str]) -> (),
     pub critical: fn(Object, &[&'static str]) -> !
