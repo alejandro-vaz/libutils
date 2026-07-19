@@ -22,6 +22,7 @@ mod argument;
 mod clitype;
 mod data;
 mod descriptor;
+mod dump;
 mod ioerror;
 mod metadata;
 mod openmode;
@@ -66,6 +67,9 @@ use data::{
     ARGUMENTS,
     CONSOLE
 };
+
+//> HEAD -> DUMP
+pub use dump::Dump;
 
 
 //^
@@ -117,4 +121,10 @@ impl System {
     pub fn debug(value: impl Debug, raw: bool) -> () {
         CONSOLE.print(&if raw {format!("{value:?}")} else {format!("{value:#?}")});
     }
+    pub fn dump<Object: Into<Issue>>() -> Dump<Object> {return Dump {
+        arguments: || Self::arguments(),
+        warning: |object, chain| Self::warning(object, chain),
+        error: |object, chain| Self::error(object, chain),
+        critical: |object, chain| Self::critical(object, chain)
+    }}
 }
