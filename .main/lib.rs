@@ -21,6 +21,7 @@ pub use std::*;
 mod noalloc {
     pub extern crate constrangeiter;
     pub extern crate locks;
+    pub extern crate systemio;
 }
 
 //> LIBUTILS -> NO STD

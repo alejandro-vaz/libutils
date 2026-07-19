@@ -68,9 +68,6 @@ use data::{
     CONSOLE
 };
 
-//> HEAD -> DUMP
-pub use dump::Dump;
-
 
 //^
 //^ SYSTEM
@@ -87,24 +84,24 @@ impl System {
     ) -> Path {return Path {
         name: filename.into()
     }}
-    pub fn warning(error: impl Into<Issue>, chain: &[&'static str]) -> () {
+    pub fn warning(object: impl Into<Issue>, chain: &[&'static str]) -> () {
         CONSOLE.print(&Problem {
             chain: chain,
-            issue: Into::<Issue>::into(error),
+            issue: Into::<Issue>::into(object),
             severity: Some(false)
-        }.to_string())
+        }.to_string());
     }
-    pub fn error(error: impl Into<Issue>, chain: &[&'static str]) -> () {
+    pub fn error(object: impl Into<Issue>, chain: &[&'static str]) -> () {
         CONSOLE.print(&Problem {
             chain: chain,
-            issue: Into::<Issue>::into(error),
+            issue: Into::<Issue>::into(object),
             severity: Some(true)
-        }.to_string())
+        }.to_string());
     }
-    pub fn critical(error: impl Into<Issue>, chain: &[&'static str]) -> ! {
+    pub fn critical(object: impl Into<Issue>, chain: &[&'static str]) -> ! {
         CONSOLE.print(&Problem {
             chain: chain,
-            issue: Into::<Issue>::into(error),
+            issue: Into::<Issue>::into(object),
             severity: None
         }.to_string());
         set_hook(Box::new(|_| ()));
@@ -121,10 +118,4 @@ impl System {
     pub fn debug(value: impl Debug, raw: bool) -> () {
         CONSOLE.print(&if raw {format!("{value:?}")} else {format!("{value:#?}")});
     }
-    pub fn dump<Object: Into<Issue>>() -> Dump<Object> {return Dump {
-        arguments: || Self::arguments(),
-        warning: |object, chain| Self::warning(object, chain),
-        error: |object, chain| Self::error(object, chain),
-        critical: |object, chain| Self::critical(object, chain)
-    }}
 }

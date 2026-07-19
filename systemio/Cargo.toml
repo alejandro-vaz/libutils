@@ -1,0 +1,21 @@
+[package]
+name = "systemio"
+description = "A simple generalized I/O interface"
+version = "2.0.0"
+edition.workspace = true
+rust-version.workspace = true
+categories = ["command-line-interface", "config", "filesystem", "no-std", "simulation"]
+keywords = ["system", "io", "cli", "errors"]
+homepage.workspace = true
+repository.workspace = true
+license.workspace = true
+authors.workspace = true
+
+[lib]
+path = "./mod.rs"
+
+[dependencies]
+issuing = {workspace = true}
+
+[dev-dependencies]
+criterion = "0.8"
