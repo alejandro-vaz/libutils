@@ -3,10 +3,18 @@
 //^
 
 //> HEAD -> SUPER
-use super::Array;
+use super::{
+    Array,
+    errors::{
+        UnmatchedCapacity,
+        CapacityExceeded
+    }
+};
 
 //> HEAD -> ALLOC
 use alloc::vec::Vec;
+
+//> HEAD -> CONSTRANGEITER
 use constrangeiter::ConstIntoIterator;
 
 //> HEAD -> CORE
@@ -47,8 +55,8 @@ const impl<
 //> FROM -> FUNCTION
 const impl<
     Type: [const] Destruct, 
-    const N: usize, 
-    Generator: [const] FnMut(usize) -> Type + [const] Destruct
+    Generator: [const] FnMut(usize) -> Type + [const] Destruct,
+    const N: usize,
 > From<Generator> for Array<Type, N> {
     fn from(mut value: Generator) -> Self {return Array {
         length: N,
@@ -58,11 +66,12 @@ const impl<
 
 //> FROM -> VEC
 const impl<Type, const N: usize> TryFrom<Vec<Type>> for Array<Type, N> {
-    type Error = &'static str;
+    type Error = CapacityExceeded<N>;
     fn try_from(value: Vec<Type>) -> Result<Self, Self::Error> {
-
         let (pointer, length, _) = value.into_parts();
-        if length > N {return Err("vector doesn't fit into array, length > N")}
+        if length > N {return Err(CapacityExceeded {
+            expected: length
+        })}
         let mut array = Array {
             length: length,
             data: MaybeUninit::uninit().transpose()
@@ -87,6 +96,21 @@ const impl<Type, const N: usize> From<(usize, [MaybeUninit<Type>; N])> for Array
 //> INTO -> VEC
 impl<Type, const N: usize> Into<Vec<Type>> for Array<Type, N> {
     fn into(self) -> Vec<Type> {return Vec::from_iter(self.into_iter())}
+}
+
+//> INTO -> ARRAY
+impl<
+    Type, 
+    const N: usize, 
+    const LENGTH: usize
+> TryInto<[Type; LENGTH]> for Array<Type, N> where [(); N - LENGTH]: {
+    type Error = UnmatchedCapacity<LENGTH>;
+    fn try_into(self) -> Result<[Type; LENGTH], Self::Error> {
+        if self.length != LENGTH {return Err(UnmatchedCapacity {
+            present: self.length
+        })}
+        return Ok(unsafe {transmute(Into::<(usize, [MaybeUninit<Type>; N])>::into(self).1)});
+    }
 }
 
 //> INTO -> PARTS

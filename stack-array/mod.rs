@@ -38,6 +38,7 @@ extern crate alloc;
 //> HEAD -> MODULES
 mod comparisons;
 mod conversions;
+mod errors;
 mod iterators;
 mod references;
 
