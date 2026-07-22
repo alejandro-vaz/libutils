@@ -68,6 +68,12 @@ use core::{
 //> HEAD -> CONSTRANGEITER
 use constrangeiter::ConstIntoIterator;
 
+//> HEAD -> ERRORS
+pub use errors::{
+    CapacityExceeded,
+    UnmatchedCapacity
+};
+
 
 //^
 //^ ARRAY
