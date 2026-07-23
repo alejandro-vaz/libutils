@@ -322,3 +322,11 @@ fn join() -> () {
     let third = first.join(second);
     assert_eq!(third, [1, 2, 3, 0, 1]);
 }
+
+//> TESTS -> INTOFIXED
+#[test]
+fn intofixed() -> () {
+    let array = Array::<u8, 7>::from([1, 2, 3]);
+    let now: [u8; 3] = array.try_into().unwrap();
+    assert_eq!(now, [1, 2, 3]);
+}

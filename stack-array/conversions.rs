@@ -110,7 +110,11 @@ const impl<
         if length != LENGTH {return Err(UnmatchedCapacity {
             present: length
         })}
-        return Ok(unsafe {transmute(data)});
+        let (initialized, _): (
+            [MaybeUninit<Type>; LENGTH], 
+            [MaybeUninit<Type>; N - LENGTH]
+        ) = unsafe {transmute(data)};
+        return Ok(unsafe {transmute(initialized)});
     }
 }
 
