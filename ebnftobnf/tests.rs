@@ -27,7 +27,7 @@ fn invariant() -> () {
 #[test]
 fn optional() -> () {
     let input = "A: B?";
-    assert_eq!(reduce(input, Settings {..}), r"$1: B |
+    assert_eq!(reduce(input, Settings {..}), r"$1: B | 
 A: $1")
 }
 
@@ -40,7 +40,7 @@ A: B*";
         comment_start_character: '%',
         ..
     }), r"% hello
-$1: B $1 |
+$1: B $1 | 
 A: $1")
 }
 
@@ -61,6 +61,7 @@ fn big() -> () {
     let input = "A -> (B C+)*";
     assert_eq!(reduce(input, Settings {
         delimiter: " -> ",
+        single_variant_per_line: true,
         ..
-    }), "$2 -> C $2 | C\n$1 -> B $2\n$3 -> $1 $3 |\nA -> $3");
+    }), "$2 -> C $2\n$2 -> C\n$1 -> B $2\n$3 -> $1 $3\n$3 -> \nA -> $3");
 }

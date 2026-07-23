@@ -9,6 +9,8 @@ Transpiling from EBNF to BNF is an irritating process and writing a reducer that
 ## Usage
 
 ```rust
+#![feature(default_field_values)]
+
 use ebnftobnf::{
     reduce,
     Settings

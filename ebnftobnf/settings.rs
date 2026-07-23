@@ -10,5 +10,7 @@ pub struct Settings<'valid> {
     pub comment_start_character: char = '#',
     pub temporal_production_character: char = '$',
     pub delimiter: &'valid str = ": ",
-    pub start_rule: Option<&'valid str> = None
+    pub augment_start: Option<&'valid str> = None,
+    pub single_variant_per_line: bool = false,
+    pub variant_separator: &'valid str = " | "
 }

@@ -308,7 +308,7 @@ dependencies = [
 
 [[package]]
 name = "ebnftobnf"
-version = "2.0.0"
+version = "2.1.0"
 dependencies = [
  "criterion",
  "hashbrown 0.17.1",
@@ -456,7 +456,7 @@ checksum = "3eaf3ede3fee6db1a4c2ee091bf8a8b4dccdc6d17f656fb07896ee72867612f2"
 
 [[package]]
 name = "libutils"
-version = "19.1.2"
+version = "19.2.0"
 dependencies = [
  "active-reporting",
  "constrangeiter",

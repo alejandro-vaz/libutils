@@ -24,7 +24,7 @@ authors = ["Alejandro Vaz <alejandro.vaz.myt@gmail.com>"]
 [workspace.dependencies]
 active-reporting = {version = "1.1", path = "active-reporting"}
 constrangeiter = {version = "0.0", path = "constrangeiter"}
-ebnftobnf = {version = "2.0", path = "ebnftobnf"}
+ebnftobnf = {version = "2.1", path = "ebnftobnf"}
 issuing = {version = "0.6", path = "issuing"}
 locks = {version = "1.0", path = "locks"}
 stack-array = {version = "1.1", path = "stack-array"}
