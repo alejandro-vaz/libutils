@@ -278,16 +278,16 @@ impl<Type, const N: usize> Array<Type, N> {
     ) -> () where Type: [const] Destruct {
         if self.length == 0 {return}
         let mut offset = 0;
-        let mut previouskey = transformation(unsafe {self.data[0].assume_init_mut()});
+        let mut previous = transformation(unsafe {self.data[0].assume_init_mut()});
         for index in (1..self.length).const_into_iter() {
             let current = unsafe {self.data[index].assume_init_mut()};
-            let mut currentkey = transformation(current);
-            if decider(&mut previouskey, &mut currentkey) {
+            let mut key = transformation(current);
+            if decider(&mut previous, &mut key) {
                 unsafe {(current as *mut Type).drop_in_place()};
-                drop(currentkey);
+                drop(key);
                 offset += 1;
             } else {
-                previouskey = currentkey;
+                previous = key;
                 if offset != 0 {
                     let value = unsafe {(current as *mut Type).read()};
                     self.data[index - offset].write(value);

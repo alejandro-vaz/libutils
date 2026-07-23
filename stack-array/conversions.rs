@@ -98,18 +98,19 @@ impl<Type, const N: usize> Into<Vec<Type>> for Array<Type, N> {
     fn into(self) -> Vec<Type> {return Vec::from_iter(self.into_iter())}
 }
 
-//> INTO -> ARRAY
-impl<
+//> INTO -> FIXED ARRAY
+const impl<
     Type, 
     const N: usize, 
     const LENGTH: usize
 > TryInto<[Type; LENGTH]> for Array<Type, N> where [(); N - LENGTH]: {
     type Error = UnmatchedCapacity<LENGTH>;
     fn try_into(self) -> Result<[Type; LENGTH], Self::Error> {
-        if self.length != LENGTH {return Err(UnmatchedCapacity {
-            present: self.length
+        let (length, data) = Into::<(usize, [MaybeUninit<Type>; N])>::into(self);
+        if length != LENGTH {return Err(UnmatchedCapacity {
+            present: length
         })}
-        return Ok(unsafe {transmute(Into::<(usize, [MaybeUninit<Type>; N])>::into(self).1)});
+        return Ok(unsafe {transmute(data)});
     }
 }
 
