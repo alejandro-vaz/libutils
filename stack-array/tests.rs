@@ -327,6 +327,9 @@ fn join() -> () {
 #[test]
 fn intofixed() -> () {
     let array = Array::<u8, 7>::from([1, 2, 3]);
-    let now: [u8; 3] = array.try_into().unwrap();
+    let now: [u8; 3] = array.clone().try_into().unwrap();
     assert_eq!(now, [1, 2, 3]);
+    let small = array.resize::<3>();
+    let fixed = TryInto::<[u8; 3]>::try_into(small).unwrap();
+    assert_eq!(fixed, [1, 2, 3]);
 }

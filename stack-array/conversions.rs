@@ -21,7 +21,8 @@ use constrangeiter::ConstIntoIterator;
 use core::{
     mem::{
         MaybeUninit,
-        transmute_neo as transmute
+        transmute_neo as transmute,
+        forget
     },
     array::from_fn as arrayfn,
     marker::Destruct
@@ -85,7 +86,10 @@ const impl<Type, const N: usize> TryFrom<Vec<Type>> for Array<Type, N> {
 
 //> FROM -> PARTS
 const impl<Type, const N: usize> From<(usize, [MaybeUninit<Type>; N])> for Array<Type, N> {
-    fn from(value: (usize, [MaybeUninit<Type>; N])) -> Self {return unsafe {transmute(value)}}
+    fn from((length, data): (usize, [MaybeUninit<Type>; N])) -> Self {return Array {
+        length: length,
+        data: data
+    }}
 }
 
 
@@ -106,7 +110,7 @@ const impl<
 > TryInto<[Type; LENGTH]> for Array<Type, N> where [(); N - LENGTH]: {
     type Error = UnmatchedCapacity<LENGTH>;
     fn try_into(self) -> Result<[Type; LENGTH], Self::Error> {
-        let (length, data) = Into::<(usize, [MaybeUninit<Type>; N])>::into(self);
+        let (length, data) = self.into();
         if length != LENGTH {return Err(UnmatchedCapacity {
             present: length
         })}
@@ -120,5 +124,10 @@ const impl<
 
 //> INTO -> PARTS
 const impl<Type, const N: usize> Into<(usize, [MaybeUninit<Type>; N])> for Array<Type, N> {
-    fn into(self) -> (usize, [MaybeUninit<Type>; N]) {return unsafe {transmute(self)}}
+    fn into(self) -> (usize, [MaybeUninit<Type>; N]) {
+        let length = self.length;
+        let data = unsafe {self.data.as_ptr().cast::<[MaybeUninit<Type>; N]>().read()};
+        forget(self);
+        return (length, data);
+    }
 }
